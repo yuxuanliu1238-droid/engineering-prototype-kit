@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "kitVersion": "0.1.0",
+  "projectName": "请填写项目名称",
+  "prototypeFramework": "react-vite",
+  "packageManager": "pnpm",
+  "language": "javascript-jsdoc",
+  "paths": {
+    "inbox": "inbox",
+    "decisions": "docs/decisions",
+    "requirements": "docs/requirements/registry.json",
+    "requirementsSummary": "docs/requirements/requirements.md",
+    "contracts": "prototype/src/contracts",
+    "pageGuides": "docs/page-guides",
+    "scope": "docs/governance/scope-current.md",
+    "releaseOutput": "dist/releases"
+  },
+  "validation": {
+    "allowedSurfaces": [
+      "mobile",
+      "admin",
+      "web",
+      "service"
+    ],
+    "implementationStatuses": [
+      "implemented",
+      "partial",
+      "planned"
+    ]
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "工程化原型导航员"
+  short_description: "Guide product managers through gated prototype delivery"
+  default_prompt: "Use $prototype-sop-orchestrator to inspect this project and guide me through the next safe stage."

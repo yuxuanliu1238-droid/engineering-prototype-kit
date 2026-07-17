@@ -1,0 +1,53 @@
+[
+  {
+    "pageId": "example.report",
+    "title": "登记物品",
+    "role": "访客",
+    "actions": [
+      {
+        "id": "example.report.submit",
+        "preconditions": [
+          "物品名称非空",
+          "发现地点非空"
+        ],
+        "successResult": "创建本地待处理记录并进入我的记录",
+        "failureResult": "显示校验错误并保留输入"
+      }
+    ],
+    "states": [
+      "example.report.empty",
+      "example.report.validation-error"
+    ]
+  },
+  {
+    "pageId": "example.records",
+    "title": "我的记录",
+    "role": "访客",
+    "actions": [],
+    "states": [
+      "example.records.empty",
+      "example.records.pending",
+      "example.records.received"
+    ]
+  },
+  {
+    "pageId": "example.admin",
+    "title": "运营处理",
+    "role": "运营",
+    "actions": [
+      {
+        "id": "example.admin.mark-received",
+        "preconditions": [
+          "存在待处理记录"
+        ],
+        "successResult": "本地记录更新为已接收",
+        "failureResult": "保持原状态"
+      }
+    ],
+    "states": [
+      "example.admin.empty",
+      "example.admin.pending",
+      "example.admin.received"
+    ]
+  }
+]

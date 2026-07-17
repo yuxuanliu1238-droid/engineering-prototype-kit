@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>教学示例 · 园区遗失物品归还</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <span class="tag">ISOLATED EXAMPLE</span>
+        <h1>园区遗失物品归还</h1>
+      </div>
+      <p>教学示例，不构成任何新项目的正式需求。</p>
+    </header>
+    <nav>
+      <button data-page="report" class="active">登记物品</button>
+      <button data-page="records">我的记录</button>
+      <button data-page="admin">运营处理</button>
+    </nav>
+    <main>
+      <section id="report" class="page active">
+        <span class="step">访客端 · PAGE 01</span>
+        <h2>我捡到了一件物品</h2>
+        <form id="report-form">
+          <label>
+            物品名称
+            <input id="item-name" placeholder="例如：深蓝色雨伞" required />
+          </label>
+          <label>
+            发现地点
+            <input id="item-location" placeholder="例如：A 座一层大厅" required />
+          </label>
+          <button type="submit">提交登记</button>
+          <p id="form-error" role="alert"></p>
+        </form>
+      </section>
+      <section id="records" class="page">
+        <span class="step">访客端 · PAGE 02</span>
+        <h2>我的登记记录</h2>
+        <div id="record-empty" class="empty">尚未提交记录。</div>
+        <article id="record-card" hidden>
+          <span class="status">待运营处理</span>
+          <h3 id="record-name"></h3>
+          <p id="record-location"></p>
+        </article>
+      </section>
+      <section id="admin" class="page">
+        <span class="step">运营端 · PAGE 03</span>
+        <h2>待处理物品</h2>
+        <div id="admin-empty" class="empty">当前没有待处理记录。</div>
+        <article id="admin-card" hidden>
+          <span class="status">待处理</span>
+          <h3 id="admin-name"></h3>
+          <p id="admin-location"></p>
+          <button id="mark-received" type="button">标记已接收</button>
+        </article>
+      </section>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

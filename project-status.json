@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "currentStage": "initialization",
+  "stageStatus": "waiting-user",
+  "activeChangeRequest": null,
+  "lastCompletedStage": null,
+  "nextGate": "product-confirmation",
+  "updatedAt": null
+}

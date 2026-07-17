@@ -1,0 +1,30 @@
+{
+  "name": "engineering-prototype-kit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A guided starter kit for product managers building reviewable engineering prototypes with AI.",
+  "type": "module",
+  "packageManager": "pnpm@10.12.4",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "workflow:generate": "node scripts/generate-requirements.mjs",
+    "project:validate": "node scripts/validate-project.mjs",
+    "workflow:validate": "node scripts/validate-workflow.mjs",
+    "contracts:validate": "node scripts/validate-contracts.mjs",
+    "links:validate": "node scripts/validate-links.mjs",
+    "skills:validate": "node scripts/validate-skills.mjs",
+    "example:validate": "node scripts/validate-example.mjs",
+    "guardrails:test": "node scripts/test-guardrails.mjs",
+    "check": "pnpm project:validate && pnpm workflow:validate && pnpm contracts:validate && pnpm links:validate && pnpm skills:validate && pnpm example:validate && pnpm guardrails:test",
+    "dev": "pnpm --dir prototype dev",
+    "build:review": "pnpm check && pnpm --dir prototype build",
+    "build:delivery": "pnpm build:review && pnpm package:release && pnpm release:validate",
+    "package:release": "node scripts/package-release.mjs",
+    "release:validate": "node scripts/validate-release.mjs"
+  },
+  "dependencies": {
+    "fflate": "0.8.2"
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "页面契约与说明"
+  short_description: "Build stable page contracts and implementation-ready specs"
+  default_prompt: "Use $page-contract-and-spec to create or update contracts and specifications for the selected pages."

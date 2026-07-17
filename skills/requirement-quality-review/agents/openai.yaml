@@ -1,0 +1,4 @@
+interface:
+  display_name: "需求质量审查"
+  short_description: "Audit requirements, decisions, contracts, specs, and prototypes"
+  default_prompt: "Use $requirement-quality-review to run a read-only consistency audit on this project."

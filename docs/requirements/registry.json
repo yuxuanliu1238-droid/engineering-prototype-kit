@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "stageDefinitions": [
+    {
+      "id": "registered",
+      "label": "已登记",
+      "required": true
+    },
+    {
+      "id": "waiting-start",
+      "label": "待启动",
+      "required": true
+    },
+    {
+      "id": "impact-analysis",
+      "label": "影响分析",
+      "required": true
+    },
+    {
+      "id": "rule-confirmation",
+      "label": "规则确认",
+      "required": true
+    },
+    {
+      "id": "decision-record",
+      "label": "决策记录",
+      "required": false
+    },
+    {
+      "id": "page-contract",
+      "label": "页面契约",
+      "required": true
+    },
+    {
+      "id": "interactive-prototype",
+      "label": "可交互原型",
+      "required": true
+    },
+    {
+      "id": "page-spec",
+      "label": "页面说明",
+      "required": true
+    },
+    {
+      "id": "consistency-check",
+      "label": "一致性检查",
+      "required": true
+    },
+    {
+      "id": "user-review",
+      "label": "用户评审",
+      "required": true
+    },
+    {
+      "id": "synced",
+      "label": "已同步",
+      "required": true
+    }
+  ],
+  "nodeStatuses": [
+    "未开始",
+    "进行中",
+    "等待用户",
+    "已完成",
+    "已跳过",
+    "被阻塞"
+  ],
+  "items": []
+}

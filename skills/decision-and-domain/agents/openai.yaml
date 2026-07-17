@@ -1,0 +1,4 @@
+interface:
+  display_name: "决策与业务建模"
+  short_description: "Capture decisions and model testable business states"
+  default_prompt: "Use $decision-and-domain to classify confirmed decisions and draft a reviewable state model."
