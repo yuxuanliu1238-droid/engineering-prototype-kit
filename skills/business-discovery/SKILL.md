@@ -53,6 +53,7 @@ description: Organize contracts, proposals, meeting notes, screenshots, interfac
 - `docs/discovery/open-questions.md`
 
 每个待确认问题包含确认方、阻断程度和最晚确认节点。
+如果问题阻断当前 CR，同时形成 `waiting-human` 介入单，只保留一个当前必须回答的问题。
 
 ## 退出条件
 

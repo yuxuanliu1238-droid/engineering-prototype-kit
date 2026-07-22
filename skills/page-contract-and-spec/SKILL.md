@@ -52,6 +52,8 @@ description: Create or update structured page contracts and readable page specif
 
 修改后运行 `pnpm contracts:validate`。如果原型行为变化，同时运行与风险等级匹配的页面和链接检查。
 
+关联 CR 时，分别登记 `contract、prototype、page-guide` 产物，并用 `supports` 关联验收 ID。
+
 ## 完成标准
 
 - 页面、动作和状态 ID 唯一。

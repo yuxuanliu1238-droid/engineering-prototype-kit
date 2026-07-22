@@ -3,8 +3,21 @@
   "summary": "示例：允许上传物品照片",
   "currentStageId": "waiting-start",
   "overallStatus": "未同步",
+  "executionState": "locked",
+  "aiPolicy": "unassessed",
+  "waitingReason": null,
+  "readinessChecklist": [
+    { "id": "goal-clear", "status": "not-assessed", "evidence": [] },
+    { "id": "scope-clear", "status": "not-assessed", "evidence": [] },
+    { "id": "acceptance-testable", "status": "not-assessed", "evidence": [] },
+    { "id": "dependencies-clear", "status": "not-assessed", "evidence": [] },
+    { "id": "rules-confirmed", "status": "not-assessed", "evidence": [] },
+    { "id": "authorization-confirmed", "status": "not-assessed", "evidence": [] },
+    { "id": "risk-reviewed", "status": "not-assessed", "evidence": [] }
+  ],
+  "artifacts": [],
   "pageIds": [],
   "actionIds": [],
   "stateIds": [],
-  "note": "仅登记，尚未授权影响分析或实施。"
+  "note": "仅登记，尚未评估 AI 策略，不具备执行条件。"
 }

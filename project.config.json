@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "kitVersion": "0.1.0",
+  "kitVersion": "0.2.0",
   "projectName": "请填写项目名称",
   "prototypeFramework": "react-vite",
   "packageManager": "pnpm",

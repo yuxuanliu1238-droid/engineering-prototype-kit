@@ -1,6 +1,6 @@
 ---
 name: prototype-sop-orchestrator
-description: Inspect and guide an AI-assisted engineering prototype project through initialization, business discovery, demo planning, prototype implementation, decisions, contracts, quality review, change control, and delivery. Use when a product manager asks where to start, what to do next, to continue an existing project, or to coordinate a multi-stage prototype workflow without crossing approval gates.
+description: Inspect and guide an AI-assisted engineering prototype project through gated stages while classifying execution state, AI policy, readiness, human intervention, and completion artifacts. Use when a product manager asks where to start, what can run now, why work is blocked, what to do next, to continue an existing project, or to coordinate prototype delivery without crossing approval gates.
 ---
 
 # 工程化原型导航员
@@ -14,6 +14,8 @@ description: Inspect and guide an AI-assisted engineering prototype project thro
 3. `project-status.json`。
 4. `README.md` 和 `START-HERE.md`。
 5. 当前阶段对应的事实源。
+
+处理 CR 时读取 `docs/requirements/task-control-model.md` 和当前 CR 完整记录。
 
 详细阶段、门禁和路由见 `references/stage-map.md`。
 
@@ -39,13 +41,15 @@ description: Inspect and guide an AI-assisted engineering prototype project thro
 
 ## 执行规则
 
-1. 每次只推进一个可独立验收的阶段。
-2. 先说明当前阶段、目标、允许事项和禁止事项。
-3. 遇到会改变产品结果的歧义，进入 `waiting-user`，不自行选择。
-4. 阶段完成后记录证据，再建议下一阶段。
-5. 不因上一阶段完成而自动启动下一阶段。
-6. 不自动创建正式后端、数据库、鉴权或生产配置。
-7. 不自动冻结版本或把 CR 更新为已同步。
+1. 先声明本轮模式：`PLAN、EXECUTE、REVIEW、DELIVER`。
+2. 同时报告阶段、执行状态、AI 策略和确定性推导的就绪结论。
+3. `PLAN` 只分析、提问和拆分；`EXECUTE` 必须是 `execution-allowed + execution-ready`。
+4. 每次只推进一个可独立验收的阶段。
+5. 遇到会改变产品结果的歧义，写入 `waiting-human` 介入单，不自行选择。
+6. 阶段完成后记录类型化产物，再建议解锁下一阶段。
+7. 不因检查通过而自动启动下一阶段。
+8. 不自动创建正式后端、数据库、鉴权或生产配置。
+9. 不自动冻结版本或把 CR 更新为已同步。
 
 ## 新人交互
 
@@ -62,11 +66,13 @@ description: Inspect and guide an AI-assisted engineering prototype project thro
 
 - 当前项目类型；
 - 当前阶段和状态；
+- 本轮模式、AI 策略和就绪结论；
 - 本轮目标；
 - 实际读取的事实源；
 - 允许与禁止事项；
 - 当前发现；
 - 需要谁确认；
+- 如果等待人工，唯一问题、影响和恢复条件；
 - 下一项唯一建议；
 - 是否已经获得下一阶段授权。
 
@@ -76,4 +82,5 @@ description: Inspect and guide an AI-assisted engineering prototype project thro
 - 没有越过人工门禁。
 - 没有修改无关文件。
 - 当前阶段有可核对证据。
+- 完成产物已标明支撑的验收事实。
 - 下一步明确但未被自动启动。

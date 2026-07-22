@@ -1,6 +1,6 @@
 ---
 name: change-and-delivery-governance
-description: Register and process change requests through explicit authorization gates, determine impact and validation scope, collect review evidence, and build review or delivery artifacts. Use when a user says record a requirement, start or synchronize a CR, decide which checks to run, prepare a review, package a ZIP, or create a release candidate without silently closing or freezing work.
+description: Register and process change requests through explicit authorization, readiness, human-intervention, evidence, and delivery gates. Use when a user says record, plan, start, implement, review, synchronize, unblock, or deliver a CR; asks whether AI may execute; or needs typed artifacts and validation without silently closing or freezing work.
 ---
 
 # 变更与交付治理
@@ -12,6 +12,7 @@ description: Register and process change requests through explicit authorization
 3. `docs/review/change-request-flow.md`。
 4. `docs/requirements/registry.json`。
 5. 当前 Scope、决策、状态机、契约、原型和页面说明。
+6. `docs/requirements/task-control-model.md`。
 
 详细操作与授权表达见 `references/change-delivery-workflow.md`。
 
@@ -22,6 +23,9 @@ description: Register and process change requests through explicit authorization
 - 分配唯一 CR 编号；
 - 保存原文、来源、日期和备注；
 - 当前节点设为 `waiting-start`；
+- `executionState` 设为 `locked`，`aiPolicy` 设为 `unassessed`；
+- 七项就绪检查设为 `not-assessed`；
+- `waitingReason` 为 `null`，`artifacts` 为空数组；
 - Page、Action、State ID 保持空数组；
 - 生成需求池并运行校验。
 
@@ -33,7 +37,9 @@ description: Register and process change requests through explicit authorization
 
 ## 授权实施
 
-只有用户明确说“开始处理、实现、同步 CR-xxx”后，才能按固定顺序同步。发现新增影响时暂停，不扩大范围。
+用户明确授权后，先回写 `aiPolicy` 和授权证据，再完成目标、范围、验收、依赖、规则、授权和风险检查。只有结论为 `execution-ready` 时才允许实施。
+
+结论为 `planning-ready` 时只能做影响分析、提问和拆分。发现新增影响时进入 `waiting-human`，不扩大范围。
 
 完成实现后进入用户评审，不自动更新为已同步。
 
@@ -58,3 +64,5 @@ description: Register and process change requests through explicit authorization
 - 用户评审入口；
 - 当前 CR 节点；
 - 下一阶段是否授权。
+- 类型化产物及其支撑的验收 ID。
+- 执行状态、AI 策略和就绪结论。

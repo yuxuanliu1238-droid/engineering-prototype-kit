@@ -22,6 +22,7 @@ const requiredPaths = [
   "docs/decisions/negative.md",
   "docs/domain/state-machines.md",
   "docs/requirements/registry.json",
+  "docs/requirements/task-control-model.md",
   "docs/review/review-baseline.md",
   "docs/review/change-request-flow.md",
   "docs/governance/scope-current.md",
@@ -37,8 +38,8 @@ for (const relativePath of requiredPaths) {
 const config = await readJson("project.config.json");
 if (config.schemaVersion !== 1) errors.push("project.config.json schemaVersion 必须为 1");
 if (!hasText(config.projectName)) errors.push("projectName 必须存在");
-if (config.packageManager !== "pnpm") errors.push("V0.1 只支持 pnpm");
-if (config.prototypeFramework !== "react-vite") errors.push("V0.1 只支持 react-vite");
+if (config.packageManager !== "pnpm") errors.push("V0.2 只支持 pnpm");
+if (config.prototypeFramework !== "react-vite") errors.push("V0.2 只支持 react-vite");
 
 const status = await readJson("project-status.json");
 const stages = [

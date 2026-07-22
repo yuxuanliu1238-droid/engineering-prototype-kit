@@ -52,6 +52,7 @@ description: Classify review feedback into positive decisions, negative decision
 - 候选阶段：输出确认清单，不落盘正式决策。
 - 确认阶段：更新 `docs/decisions/`。
 - 建模阶段：更新 `docs/domain/`，并列出仍待确认项。
+- 关联 CR 时，将正式决策登记为 `decision` 产物，并标明其支撑的验收事实。
 
 ## 退出条件
 

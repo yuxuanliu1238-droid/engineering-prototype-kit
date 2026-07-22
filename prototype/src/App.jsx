@@ -17,16 +17,54 @@ const readinessItems = [
   "知道首轮只做业务探索，不直接建设正式系统",
 ];
 
+const taskChecks = ["目标明确", "范围清晰", "验收可验证", "实施已授权"];
+
+const policies = [
+  ["planning-only", "仅允许规划"],
+  ["execution-allowed", "允许范围内实施"],
+];
+
 export default function App() {
   const [checked, setChecked] = useState([]);
+  const [taskChecked, setTaskChecked] = useState([]);
+  const [policy, setPolicy] = useState("planning-only");
   const ready = checked.length === readinessItems.length;
   const completedText = useMemo(
     () => `${checked.length}/${readinessItems.length}`,
     [checked.length],
   );
+  const taskVerdict = useMemo(() => {
+    if (policy === "planning-only" && taskChecked.includes(0)) {
+      return {
+        code: "planning-ready",
+        state: "ready",
+        text: "可以分析、提问和拆分，不得修改目标文件。",
+      };
+    }
+    if (policy === "execution-allowed" && taskChecked.length === taskChecks.length) {
+      return {
+        code: "execution-ready",
+        state: "ready",
+        text: "授权和就绪条件都已满足，可在范围内实施。",
+      };
+    }
+    return {
+      code: "needs-input",
+      state: "locked",
+      text: "授权不等于已就绪；补齐缺失项后才能解锁。",
+    };
+  }, [policy, taskChecked]);
 
   function toggle(index) {
     setChecked((current) =>
+      current.includes(index)
+        ? current.filter((item) => item !== index)
+        : [...current, index],
+    );
+  }
+
+  function toggleTaskCheck(index) {
+    setTaskChecked((current) =>
       current.includes(index)
         ? current.filter((item) => item !== index)
         : [...current, index],
@@ -38,7 +76,7 @@ export default function App() {
       <section className="hero">
         <nav>
           <span className="brand">Prototype OS</span>
-          <span className="version">Starter Kit · V0.1</span>
+          <span className="version">Starter Kit · V0.2</span>
         </nav>
 
         <div className="hero-grid">
@@ -114,6 +152,74 @@ export default function App() {
         </div>
       </section>
 
+      <section className="control-plane">
+        <div className="section-heading">
+          <div>
+            <p className="eyebrow">TASK CONTROL</p>
+            <h2>先判断能不能做，再让 AI 开始做。</h2>
+          </div>
+          <p>
+            阶段记录交付位置，执行状态记录当前是否可执行，两者不再混用。
+          </p>
+        </div>
+
+        <div className="control-grid">
+          <div className="control-editor">
+            <div className="control-block">
+              <span className="micro">AI POLICY</span>
+              <div className="policy-options">
+                {policies.map(([value, label]) => (
+                  <button
+                    className={policy === value ? "active" : ""}
+                    key={value}
+                    onClick={() => setPolicy(value)}
+                    type="button"
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="control-block">
+              <span className="micro">READINESS CHECK</span>
+              <div className="task-checks">
+                {taskChecks.map((item, index) => (
+                  <button
+                    className={taskChecked.includes(index) ? "checked" : ""}
+                    key={item}
+                    onClick={() => toggleTaskCheck(index)}
+                    type="button"
+                  >
+                    <span>{taskChecked.includes(index) ? "✓" : ""}</span>
+                    {item}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <aside className="verdict-card" aria-live="polite">
+            <span className="micro">DETERMINISTIC VERDICT</span>
+            <strong>{taskVerdict.code}</strong>
+            <dl>
+              <div>
+                <dt>当前阶段</dt>
+                <dd>impact-analysis</dd>
+              </div>
+              <div>
+                <dt>执行状态</dt>
+                <dd>{taskVerdict.state}</dd>
+              </div>
+              <div>
+                <dt>AI 策略</dt>
+                <dd>{policy}</dd>
+              </div>
+            </dl>
+            <p>{taskVerdict.text}</p>
+          </aside>
+        </div>
+      </section>
+
       <section className="guardrails">
         <div>
           <p className="eyebrow">BUILT-IN GUARDRAILS</p>
@@ -130,7 +236,7 @@ export default function App() {
           </div>
           <div>
             <strong>完成有证据</strong>
-            <p>修改文件、检查结果、评审结论和遗留风险缺一不可。</p>
+            <p>产物必须有类型、位置，并说明支撑哪条验收事实。</p>
           </div>
         </div>
       </section>
