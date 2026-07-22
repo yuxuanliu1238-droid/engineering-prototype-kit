@@ -6,6 +6,16 @@
 - 只有用户明确表达“开始处理、实现、同步 CR-xxx”才进入影响分析。
 - 影响分析完成前，不根据标题填写 Page、Action 或 State ID。
 - 用户最终评审前，不得更新为“已同步”。
+- 用户表达授权后仍需通过就绪检查；授权不等于可立即实施。
+
+## 任务控制
+
+- 新登记 CR 固定为 `executionState: locked` 和 `aiPolicy: unassessed`。
+- 只允许分析、提问或拆分时使用 `planning-only`。
+- 只有范围内实施获得明确授权时才能使用 `execution-allowed`。
+- 敏感、高风险或不可自动验证的任务使用 `human-only`。
+- 任务进入 `ready` 或 `in-progress` 前，执行 `docs/requirements/task-control-model.md` 的就绪检查。
+- 等待人工时，不只写“需确认”，必须形成可恢复的介入单。
 
 ## 固定流程
 
@@ -27,3 +37,5 @@
 - 可选节点完成或有理由跳过。
 - 相关检查通过。
 - 存在明确用户确认日期和证据。
+- `executionState` 为 `completed`。
+- 类型化产物覆盖验收事实，且至少包含用户确认。

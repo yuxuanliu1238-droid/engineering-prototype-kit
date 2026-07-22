@@ -28,6 +28,8 @@ const requiredEntries = [
   "package.json",
   "pnpm-lock.yaml",
   "project.config.json",
+  "docs/requirements/task-control-model.md",
+  "docs/review/v0.2-verification.md",
   "prototype/dist/index.html",
   "skills/prototype-sop-orchestrator/SKILL.md",
   "skills/business-discovery/SKILL.md",

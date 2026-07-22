@@ -39,6 +39,18 @@ const requirement = JSON.parse(
 if (requirement.currentStageId !== "waiting-start") {
   errors.push("教学示例 CR 必须保持待启动");
 }
+if (requirement.executionState !== "locked" || requirement.aiPolicy !== "unassessed") {
+  errors.push("教学示例 CR 登记后必须保持 locked + unassessed");
+}
+if (requirement.waitingReason !== null || requirement.artifacts.length) {
+  errors.push("教学示例 CR 未启动时不得预填人工介入或产物");
+}
+if (
+  requirement.readinessChecklist.length !== 7 ||
+  requirement.readinessChecklist.some((check) => check.status !== "not-assessed")
+) {
+  errors.push("教学示例 CR 就绪检查必须从未评估开始");
+}
 if (
   [...requirement.pageIds, ...requirement.actionIds, ...requirement.stateIds].length
 ) {
@@ -48,4 +60,8 @@ if (
 const decisions = await fs.readFile(path.join(exampleRoot, "decisions.md"), "utf8");
 if (!/只属于本示例/.test(decisions)) errors.push("示例决策缺少隔离声明");
 
-printResult("教学示例校验", errors, "2 个角色、3 个页面、2 条决策、1 条未启动 CR");
+printResult(
+  "教学示例校验",
+  errors,
+  "2 个角色、3 个页面、2 条决策、1 条受任务控制的未启动 CR",
+);

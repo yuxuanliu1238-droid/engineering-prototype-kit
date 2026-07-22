@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "stageDefinitions": [
     {
       "id": "registered",
@@ -65,5 +65,48 @@
     "已跳过",
     "被阻塞"
   ],
+  "taskControlDefinitions": {
+    "executionStates": [
+      "locked",
+      "ready",
+      "in-progress",
+      "waiting-human",
+      "completed",
+      "cancelled"
+    ],
+    "aiPolicies": [
+      "unassessed",
+      "planning-only",
+      "execution-allowed",
+      "human-only"
+    ],
+    "readinessStatuses": [
+      "not-assessed",
+      "met",
+      "not-met",
+      "not-applicable"
+    ],
+    "waitingReasonCodes": [
+      "missing-information",
+      "rule-ambiguity",
+      "authorization-required",
+      "review-required",
+      "validation-failed",
+      "risk-exceeded",
+      "dependency-blocked"
+    ],
+    "artifactTypes": [
+      "decision",
+      "plan",
+      "contract",
+      "prototype",
+      "page-guide",
+      "test-report",
+      "review-report",
+      "user-confirmation",
+      "commit",
+      "release"
+    ]
+  },
   "items": []
 }
