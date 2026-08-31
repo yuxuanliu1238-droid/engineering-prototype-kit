@@ -1,6 +1,6 @@
 ---
 name: decision-and-domain
-description: Classify review feedback into positive decisions, negative decisions, visual preferences, unresolved business questions, and technical questions, then model core domain objects and testable state machines after confirmation. Use when feedback changes product outcomes, multiple pages disagree on state meaning, or a rule must be protected from accidental restoration.
+description: Turn explicitly confirmed conclusions into source-traceable decisions, domain objects, and testable state machines with an explicit matrix for source state, display state, external evidence, responsibility owners, and immutable rules. Use when feedback changes outcomes, pages disagree on state meaning, or a confirmed rule must be protected from accidental restoration.
 ---
 
 # 决策与业务建模
@@ -13,7 +13,7 @@ description: Classify review feedback into positive decisions, negative decision
 4. `docs/domain/`。
 5. 当前页面契约和原型，仅在判断影响时读取。
 
-决策字段和状态压力测试见 `references/decision-state-checklist.md`。
+决策字段、状态—证据—责任矩阵和状态压力测试见 `references/decision-state-checklist.md`。
 
 ## 模式一：评审反馈分类
 
@@ -29,16 +29,17 @@ description: Classify review feedback into positive decisions, negative decision
 - 超出当前范围；
 - 历史背景。
 
-每条候选决策说明来源、结论、适用范围、影响和验收方式。只有用户明确确认后才能写入正式决策。
+每条候选决策说明原始来源、确认来源、结论、适用范围、影响和验收方式。只有用户明确确认后才能写入正式决策。
 
 ## 模式二：领域对象与状态机
 
 1. 识别核心对象及其职责。
-2. 分离必须独立的状态维度。
-3. 只采用系统能够确认的事件。
-4. 定义合法流转、禁止流转、失败、取消、异常旁路和终态。
-5. 将展示态定义为源状态组合，不创建展示态源字段。
-6. 生成正常、异常、边界、重复和乱序事件场景。
+2. 先建立状态—证据—责任矩阵，区分源状态、展示态、外部证据、责任方和不可变规则。
+3. 分离必须独立的状态维度。
+4. 只采用系统能够确认的事件。
+5. 定义合法流转、禁止流转、失败、取消、异常旁路和终态。
+6. 将展示态定义为源状态组合，不创建展示态源字段。
+7. 生成正常、异常、边界、重复和乱序事件场景。
 
 ## 禁止
 
@@ -52,7 +53,7 @@ description: Classify review feedback into positive decisions, negative decision
 - 候选阶段：输出确认清单，不落盘正式决策。
 - 确认阶段：更新 `docs/decisions/`。
 - 建模阶段：更新 `docs/domain/`，并列出仍待确认项。
-- 关联 CR 时，将正式决策登记为 `decision` 产物，并标明其支撑的验收事实。
+- 关联 CR 时，将正式决策登记为 `decision` 产物，保留 `sourceRefs`，并标明其支撑的验收事实。
 
 ## 退出条件
 

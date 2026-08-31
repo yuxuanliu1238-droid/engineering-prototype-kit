@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "scope": {
+    "changeId": "ISOLATED-SAMPLE",
+    "summary": "A generic profile form adds confirmation before discarding unsaved edits.",
+    "sourceRefs": [
+      "fixture:generic-profile-contract",
+      "fixture:generic-profile-change"
+    ],
+    "authorizationBasis": "Isolated validation sample only"
+  },
+  "riskAssessment": {
+    "level": "medium",
+    "reasons": [
+      "The change introduces a cancel-and-recovery state transition."
+    ],
+    "dimensions": [
+      "state-transition",
+      "cancel-recovery"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "profile-save-success",
+      "priority": "required",
+      "pageIds": [
+        "PAGE-DEMO-PROFILE"
+      ],
+      "stateIds": [
+        "STATE-EDITING",
+        "STATE-SAVED"
+      ],
+      "actionIds": [
+        "ACTION-SAVE"
+      ],
+      "exceptions": [],
+      "viewports": [
+        "mobile"
+      ],
+      "expectedOutcome": "Saving valid edits shows the saved state without losing entered values.",
+      "evidenceRequirements": [
+        "Show the edited value before the action and the saved result after the action."
+      ]
+    },
+    {
+      "id": "profile-discard-cancel",
+      "priority": "required",
+      "pageIds": [
+        "PAGE-DEMO-PROFILE"
+      ],
+      "stateIds": [
+        "STATE-EDITING",
+        "STATE-DISCARD-CONFIRMATION"
+      ],
+      "actionIds": [
+        "ACTION-CANCEL-DISCARD"
+      ],
+      "exceptions": [
+        "unsaved-edit-discard"
+      ],
+      "viewports": [
+        "mobile"
+      ],
+      "expectedOutcome": "Cancelling the discard confirmation returns to editing with unsaved values intact.",
+      "evidenceRequirements": [
+        "Show the unsaved value, the confirmation state, and the restored editing state."
+      ]
+    }
+  ],
+  "sufficiency": {
+    "status": "insufficient",
+    "coveredScenarioIds": [
+      "profile-save-success"
+    ],
+    "missing": [
+      {
+        "scenarioId": "profile-discard-cancel",
+        "reason": "No fresh evidence shows that cancelling preserves unsaved values."
+      }
+    ]
+  }
+}

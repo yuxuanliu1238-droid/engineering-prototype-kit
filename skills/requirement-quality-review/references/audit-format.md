@@ -19,3 +19,17 @@
 - `waiting-human` 只写“需讨论”而无唯一问题，必须判结构缺失。
 - `completed` 只有普通链接而无类型化产物，必须阻断。
 - 产物存在但 `supports` 不覆盖任何验收 ID，应报证据缺失。
+
+## 证据新鲜度与退役残留对抗矩阵
+
+| 样本 | 应判定为问题 | 判断依据 |
+|---|---|---|
+| `stale-fingerprint` | 是 | 报告指纹与当前覆盖文件不一致，旧的通过结果已经过期 |
+| `incomplete-covered-files` | 是 | 指纹匹配但遗漏了与验收项直接相关的变化文件，覆盖范围不足 |
+| `failed-or-not-run-report` | 是 | 指纹新鲜不能把失败或未执行的报告变成通过证据 |
+| `retired-id-active-residue` | 是 | 已退役 Page、Action 或 State ID 仍出现在当前契约、路由、原型、测试、fixture 或生成内容 |
+| `retired-id-history-trace` | 否 | 旧 ID 只存在于明确标记的归档、不可变快照或历史报告，用于追溯 |
+| `removed-copy-current-output` | 是 | 已删除内容仍进入当前正文、接口建议、待确认池或生成交付内容 |
+| `removed-copy-archive-only` | 否 | 已删除内容仅保留在有明确历史语义的材料中 |
+
+先核对退役或删除依据及生效点，再搜索当前事实源和生成链路，最后单独检查历史目录。不能仅凭字符串命中就把历史追溯误判为当前残留。

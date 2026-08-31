@@ -1,6 +1,6 @@
 ---
 name: business-discovery
-description: Organize contracts, proposals, meeting notes, screenshots, interface notes, and verbal requirements into confirmed facts, goals, roles, core objects, flows, assumptions, open questions, dependencies, and risks. Use before planning a demo, preparing a business interview, or when source materials conflict and must not be silently turned into requirements.
+description: Classify contracts, proposals, meeting notes, raw transcripts, screenshots, interface notes, and verbal requirements by source type, authority, confirmation, and owner before extracting facts, assumptions, questions, roles, flows, dependencies, or risks. Use before demo planning or whenever unconfirmed or conflicting material must remain traceable and must not be promoted into decisions, contracts, or prototype requirements.
 ---
 
 # 业务探索
@@ -12,11 +12,11 @@ description: Organize contracts, proposals, meeting notes, screenshots, interfac
 3. `docs/discovery/` 现有材料。
 4. 用户指定资料和 `inbox/` 中相关文件。
 
-读取 `references/discovery-checklist.md` 执行新人防遗漏检查。
+读取 `references/discovery-checklist.md` 执行来源分类和新人防遗漏检查。
 
 ## 工作流
 
-1. 列出实际读取材料及来源。
+1. 列出实际读取材料及来源，按来源类型、权威性、确认状态和责任方登记，为每份材料保留可定位的来源引用。
 2. 提取明确陈述，不先总结成需求。
 3. 分类为：
    - 已确认事实；
@@ -33,6 +33,13 @@ description: Organize contracts, proposals, meeting notes, screenshots, interfac
 4. 同一问题存在不同说法时列出冲突。
 5. 标明谁发起、谁处理、谁履约、谁处理异常、谁查看和谁统计。
 6. 生成下一轮访谈问题和首版 Demo 验证目标。
+
+## 来源与下游边界
+
+- `inbox/`、会议纪要、截图和口头描述默认属于 `source-material`，不是已确认业务事实。
+- 只有存在明确确认记录时，条目才可标为已确认事实；同时保留原始来源和确认来源。
+- 业务探索只整理输入，不直接创建 `decision`、页面契约、原型或交付证据。
+- 下游需要采用某条结论时，交给 `$decision-and-domain` 确认，或交给 `$change-and-delivery-governance` 纳入 CR 门禁。
 
 ## 禁止
 
@@ -62,3 +69,4 @@ description: Organize contracts, proposals, meeting notes, screenshots, interfac
 - 主流程可以完整讲述。
 - Demo 验证目标明确。
 - 阻断问题已确认或显式记录为假设。
+- 关键事实、冲突和问题均可追溯到来源。

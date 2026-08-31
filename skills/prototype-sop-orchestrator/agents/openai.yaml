@@ -1,4 +1,4 @@
 interface:
   display_name: "工程化原型导航员"
-  short_description: "Guide stages, AI policy, readiness, and safe prototype delivery"
+  short_description: "Route stages, specialists, evidence, review, and delivery gates"
   default_prompt: "Use $prototype-sop-orchestrator to inspect the stage, execution state, AI policy, readiness, and next safe action."

@@ -1,4 +1,4 @@
 interface:
   display_name: "变更与交付治理"
-  short_description: "Control CR readiness, authorization, evidence, and delivery"
+  short_description: "Gate CR authorization, traceable evidence, review, and delivery"
   default_prompt: "Use $change-and-delivery-governance to register or process a CR with explicit AI policy, readiness, and evidence."

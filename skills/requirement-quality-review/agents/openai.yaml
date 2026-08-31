@@ -1,4 +1,4 @@
 interface:
   display_name: "需求质量审查"
-  short_description: "Audit task control, evidence, and prototype consistency"
+  short_description: "Audit traceability, freshness, validation, and gate consistency"
   default_prompt: "Use $requirement-quality-review to run a read-only audit of task control, evidence, and product consistency."

@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "skills": [
+    {
+      "name": "prototype-sop-orchestrator",
+      "primaryResponsibility": "stage-routing",
+      "role": "orchestrator"
+    },
+    {
+      "name": "business-discovery",
+      "primaryResponsibility": "source-classification",
+      "role": "specialist"
+    },
+    {
+      "name": "change-and-delivery-governance",
+      "primaryResponsibility": "cr-control-and-delivery",
+      "role": "specialist"
+    },
+    {
+      "name": "decision-and-domain",
+      "primaryResponsibility": "confirmed-decision-and-state",
+      "role": "specialist"
+    },
+    {
+      "name": "page-contract-and-spec",
+      "primaryResponsibility": "page-contract-and-specification",
+      "role": "specialist"
+    },
+    {
+      "name": "requirement-quality-review",
+      "primaryResponsibility": "read-only-consistency-audit",
+      "role": "specialist"
+    },
+    {
+      "name": "prototype-change-retrospective",
+      "primaryResponsibility": "scoped-change-retrospective",
+      "role": "specialist"
+    },
+    {
+      "name": "scenario-evidence-capture",
+      "primaryResponsibility": "evidence-selection-by-risk",
+      "role": "specialist"
+    }
+  ],
+  "candidateDecisions": [
+    {
+      "name": "scenario-evidence-capture",
+      "decision": "create",
+      "implementationKind": "skill",
+      "ownedBy": "scenario-evidence-capture",
+      "coordinatedBy": "change-and-delivery-governance"
+    },
+    {
+      "name": "prototype-change-retrospective",
+      "decision": "create",
+      "implementationKind": "skill",
+      "ownedBy": "prototype-change-retrospective",
+      "coordinatedBy": "change-and-delivery-governance"
+    }
+  ],
+  "deterministicCapabilities": [
+    {
+      "id": "requirements-generation",
+      "script": "scripts/generate-requirements.mjs"
+    },
+    {
+      "id": "contract-validation",
+      "script": "scripts/validate-contracts.mjs"
+    },
+    {
+      "id": "review-evidence-validation",
+      "script": "scripts/validate-workflow.mjs"
+    },
+    {
+      "id": "delivery-packaging",
+      "script": "scripts/package-release.mjs"
+    },
+    {
+      "id": "retrospective-scope-collection",
+      "script": "skills/prototype-change-retrospective/scripts/collect-scope.mjs"
+    },
+    {
+      "id": "scenario-evidence-plan-validation",
+      "script": "skills/scenario-evidence-capture/scripts/validate-evidence-plan.mjs"
+    }
+  ],
+  "optionalCapabilities": [
+    {
+      "id": "screenshot-or-evidence-index",
+      "activation": "explicit-user-request",
+      "futureImplementationKind": "deterministic-script"
+    }
+  ]
+}

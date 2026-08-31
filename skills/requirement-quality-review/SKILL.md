@@ -1,6 +1,6 @@
 ---
 name: requirement-quality-review
-description: Run a read-only audit across task control, decisions, state machines, page contracts, runnable prototypes, page specifications, readiness evidence, and typed artifacts. Use when checking structural completeness, authorization, human-intervention packets, consistency, removed-item residue, review readiness, or P0/P1/P2 evidence before fixes.
+description: Run a read-only audit across task control, decisions, state machines, contracts, prototypes, specifications, source fingerprints, retired IDs, removed-item residue, validation coverage, and review versus delivery gates. Use when checking authorization, consistency, evidence freshness or completeness, readiness, or P0/P1/P2 findings before any fix is authorized.
 ---
 
 # 需求质量审查
@@ -27,8 +27,10 @@ description: Run a read-only audit across task control, decisions, state machine
 3. 需求口径一致性审查。
 4. 决策落地一致性审查。
 5. 产物与验收标准覆盖审查。
-6. 按“同一基线规则 + 同一业务根因 + 同一修正动作”去重。
-7. 汇总 P0/P1/P2 和确认优先级。
+6. 事实源追踪、证据新鲜度和分级验证覆盖审查。
+7. 评审确认与正式交付授权分离审查。
+8. 按“同一基线规则 + 同一业务根因 + 同一修正动作”去重。
+9. 汇总 P0/P1/P2 和确认优先级。
 
 ## 判断规则
 
@@ -40,6 +42,10 @@ description: Run a read-only audit across task control, decisions, state machine
 - `ready/in-progress` 不得绕过 AI 授权和就绪检查。
 - `waiting-human` 必须有唯一可回答问题和恢复条件。
 - 完成产物必须能对应验收事实，不能只是无类型链接。
+- 类型化产物必须能追溯到实际事实源；旧验证记录不能证明后续变更已通过。
+- 源码指纹匹配只证明报告列出的覆盖文件未变；覆盖文件遗漏、报告未通过或验收项未覆盖时仍不能作为充分证据。
+- Page、Action、State 退役后，当前事实源、路由、测试、fixture 或生成内容中的残留必须报告；历史快照和归档中的追溯记录不应误报。
+- 检查点确认不等于正式交付授权，未明确请求的二进制产物不得生成。
 - 历史材料不能压制当前决策。
 
 ## 输出
@@ -60,3 +66,4 @@ description: Run a read-only audit across task control, decisions, state machine
 - 没有重复问题。
 - 没有把缺失误判成冲突。
 - 每条问题可追溯且有明确回写目标。
+- 复盘只形成审查发现，不直接修改或启动 CR；后续交给 `$change-and-delivery-governance`。

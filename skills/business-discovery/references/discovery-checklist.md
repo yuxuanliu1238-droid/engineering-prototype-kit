@@ -1,5 +1,21 @@
 # 业务探索防遗漏清单
 
+## 来源分类字段
+
+每份材料先记录：`sourceType`、`authority`、`effectiveScope`、`confirmationStatus`、`owner`、`capturedAt` 和 `sourceRef`。来源被读取不等于内容获得确认；确认记录只确认其明确覆盖的结论。
+
+| 来源类型 | 默认权威性 | 可证明内容 | 采用前检查 |
+|---|---|---|---|
+| `confirmed-record` | 在明确范围和版本内可作为事实依据 | 已确认结论及确认方 | 是否仍有效、是否被后续结论替代 |
+| `agreement-or-policy` | 仅在有效版本和适用范围内具有约束力 | 已签署或正式发布的条款 | 版本、适用对象、责任方和生效时间 |
+| `meeting-notes` | `source-material` | 会议中记录的说法和问题 | 原始发言、记录人、是否另有确认记录 |
+| `raw-transcript` | `source-material` | 原始表述和上下文 | 说话人、时间、缺失片段和明确确认范围 |
+| `chat-or-verbal` | `source-material` | 当时提出的意图或反馈 | 身份、上下文、是否构成授权或确认 |
+| `screenshot-or-prototype` | 实现或展示证据 | 当时可见内容和行为 | 版本、状态、是否与当前契约一致 |
+| `interface-note-or-log` | 技术观察或外部证据 | 已观察到的字段、事件或结果 | 来源系统、时间、完整性和业务责任方 |
+
+## 业务问题
+
 - 谁发起业务？
 - 谁处理？
 - 谁承担最终履约？

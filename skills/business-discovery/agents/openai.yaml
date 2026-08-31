@@ -1,4 +1,4 @@
 interface:
   display_name: "业务探索"
-  short_description: "Separate facts, assumptions, roles, flows, and risks"
+  short_description: "Classify sourced facts, assumptions, conflicts, and risks"
   default_prompt: "Use $business-discovery to organize the materials in inbox without inventing requirements."

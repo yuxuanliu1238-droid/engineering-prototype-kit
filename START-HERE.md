@@ -25,7 +25,9 @@ Codex 会先检查项目状态和资料，不会直接生成完整系统，也�
 5. 页面契约：记录页面动作、状态和验收事实。
 6. 质量审查：先报告冲突，经你确认后再修复。
 7. 需求变更：登记不等于实施，实施必须单独授权。
-8. 评审交付：检查通过后再生成静态站点和 ZIP。
+8. 评审与交付：先生成评审站；只有你明确要求正式交付后才生成 ZIP。
+
+套件与宿主项目各自使用自己的 pnpm 版本和锁文件。需要核对环境时，查看 [`docs/technical-review/package-manager-compatibility.md`](docs/technical-review/package-manager-compatibility.md)，不要复制或覆盖另一项目的锁文件。
 
 ## 如何判断启动成功
 

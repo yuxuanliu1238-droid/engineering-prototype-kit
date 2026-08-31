@@ -1,0 +1,4 @@
+interface:
+  display_name: "场景证据选择"
+  short_description: "Choose risk-based scenarios and assess evidence sufficiency"
+  default_prompt: "Use $scenario-evidence-capture to choose the smallest sufficient review scenario set for this prototype change."

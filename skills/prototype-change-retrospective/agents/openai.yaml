@@ -1,0 +1,4 @@
+interface:
+  display_name: "原型修改复盘"
+  short_description: "Review scoped changes without reading unrelated repository files"
+  default_prompt: "Use $prototype-change-retrospective to review the specified CR changes and separate reusable methods from project-specific facts."

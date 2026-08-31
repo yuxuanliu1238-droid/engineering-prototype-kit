@@ -1,6 +1,6 @@
 ---
 name: prototype-sop-orchestrator
-description: Inspect and guide an AI-assisted engineering prototype project through gated stages while classifying execution state, AI policy, readiness, human intervention, and completion artifacts. Use when a product manager asks where to start, what can run now, why work is blocked, what to do next, to continue an existing project, or to coordinate prototype delivery without crossing approval gates.
+description: Route an AI-assisted engineering prototype through gated stages by reporting execution state, AI policy, readiness, human intervention, evidence, and the next authorized action. Use when a product manager asks where to start, what can run, why work is blocked, what to do next, how to continue, review, or deliver, whether a page is ready for review, or to retrospect on recent scoped changes without crossing specialist or approval boundaries.
 ---
 
 # 工程化原型导航员
@@ -38,6 +38,18 @@ description: Inspect and guide an AI-assisted engineering prototype project thro
 - 页面契约和页面说明：使用 `$page-contract-and-spec`。
 - 一致性和需求质量检查：使用 `$requirement-quality-review`。
 - CR 登记、影响分析、验证和交付：使用 `$change-and-delivery-governance`。
+- “复盘最近修改”、复盘指定 CR 或时间范围：使用 `$prototype-change-retrospective`；只读取用户指定范围和直接关联差异。
+- “检查这个页面是否可以评审”、选择必要验证场景或判断证据是否充分：使用 `$scenario-evidence-capture`；实际采集和索引仍交给确定性脚本。
+
+“给我评审”先由 `$change-and-delivery-governance` 核对授权范围和当前检查点；需要选择场景时再转 `$scenario-evidence-capture`，需要一致性结论时再转 `$requirement-quality-review`。
+
+## 职责边界
+
+- 本 Skill 只判断阶段、声明 `PLAN、EXECUTE、REVIEW、DELIVER` 模式并路由，不替代专项 Skill 写事实、决策、契约、审查结论或交付授权。
+- 场景截图、证据索引、PRD 摘要、契约校验和 ZIP 打包由确定性脚本执行；本 Skill 只把请求路由到相应治理阶段。
+- 评审前的风险场景选择和证据充分性判断使用 `$scenario-evidence-capture`；实际截图、索引和构建仍由确定性脚本处理，并由 `$change-and-delivery-governance` 控制授权与登记。
+- 修改复盘使用 `$prototype-change-retrospective` 形成只读分类结论，再由 `$change-and-delivery-governance` 控制是否登记或启动修正。
+- 结构化边界以 `skills/skill-boundaries.json` 为准，校验脚本负责防止职责漂移和重复入口。
 
 ## 执行规则
 
@@ -50,6 +62,7 @@ description: Inspect and guide an AI-assisted engineering prototype project thro
 7. 不因检查通过而自动启动下一阶段。
 8. 不自动创建正式后端、数据库、鉴权或生产配置。
 9. 不自动冻结版本或把 CR 更新为已同步。
+10. 不因评审确认自动进入交付，也不因旧验证记录存在而宣称当前证据新鲜。
 
 ## 新人交互
 

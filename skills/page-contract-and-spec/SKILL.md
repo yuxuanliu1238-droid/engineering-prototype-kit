@@ -1,6 +1,6 @@
 ---
 name: page-contract-and-spec
-description: Create or update structured page contracts and readable page specifications from confirmed decisions, state machines, and a runnable prototype. Use when formal pages need stable Page, Action, and State IDs; when prototype behavior must become testable acceptance facts; or when page documentation must be synchronized without inventing APIs or restoring removed fields.
+description: Create source-traceable page contracts and readable specifications from confirmed decisions, state machines, and runnable prototype behavior, including merge, deletion, and Page, Action, or State ID retirement control. Use when behavior must become testable acceptance facts or documentation must synchronize without inventing APIs, restoring removed fields, reusing retired IDs, or treating screenshots as requirements.
 ---
 
 # 页面契约与说明
@@ -15,7 +15,7 @@ description: Create or update structured page contracts and readable page specif
 6. 当前页面说明。
 7. 关联 CR。
 
-字段说明和模板见 `references/contract-spec-format.md`。
+字段说明、页面合并/删除和 ID 退役清单见 `references/contract-spec-format.md`。
 
 ## 页面契约
 
@@ -47,12 +47,15 @@ description: Create or update structured page contracts and readable page specif
 - 未确认接口只写占位，不得写真实 URL 或错误码。
 - 原型和契约不一致时报告同步未完成。
 - ID 进入正式契约后不随意修改。
+- 页面合并、删除或替换时先完成 ID 退役清单；退役 ID 不复用，历史材料保留追溯但不得继续出现在当前入口、契约或生成内容中。
 
 ## 验证
 
 修改后运行 `pnpm contracts:validate`。如果原型行为变化，同时运行与风险等级匹配的页面和链接检查。
 
-关联 CR 时，分别登记 `contract、prototype、page-guide` 产物，并用 `supports` 关联验收 ID。
+关联 CR 时，分别登记 `contract、prototype、page-guide` 产物，用 `supports` 关联验收 ID，并用 `sourceRefs` 指向采用的决策、状态机、原型或治理依据。
+
+契约校验、链接检查和证据索引属于确定性脚本职责。本 Skill 负责选择与解释验证范围，不用自然语言代替脚本结果。截图、截图索引和正式格式文档只在用户明确要求时生成；后续需要自动化时新增脚本，不新增同名治理 Skill。
 
 ## 完成标准
 
@@ -61,3 +64,4 @@ description: Create or update structured page contracts and readable page specif
 - 验收事实可观察。
 - 页面说明没有覆盖高优先级事实。
 - 未实现能力没有伪装为已实现。
+- 合并或删除页面的旧 Page、Action、State 引用已清理或明确保留为历史追溯。

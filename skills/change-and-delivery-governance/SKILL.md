@@ -1,6 +1,6 @@
 ---
 name: change-and-delivery-governance
-description: Register and process change requests through explicit authorization, readiness, human-intervention, evidence, and delivery gates. Use when a user says record, plan, start, implement, review, synchronize, unblock, or deliver a CR; asks whether AI may execute; or needs typed artifacts and validation without silently closing or freezing work.
+description: Govern change requests through explicit authorization scope, readiness, checkpoints, source-traceable evidence, validation levels, human intervention, review, and delivery gates. Use when a user requests record-only, read-only analysis, prototype-only work, full synchronization, read-only review, or formal delivery, without silently expanding scope, closing work, or turning review approval into release permission.
 ---
 
 # 变更与交付治理
@@ -37,7 +37,7 @@ description: Register and process change requests through explicit authorization
 
 ## 授权实施
 
-用户明确授权后，先回写 `aiPolicy` 和授权证据，再完成目标、范围、验收、依赖、规则、授权和风险检查。只有结论为 `execution-ready` 时才允许实施。
+先按 `references/change-delivery-workflow.md` 识别授权范围，明确本轮允许和暂缓的产物。用户明确授权后，先回写 `aiPolicy` 和授权证据，再完成目标、范围、验收、依赖、规则、授权和风险检查。只有结论为 `execution-ready` 时才允许实施。
 
 结论为 `planning-ready` 时只能做影响分析、提问和拆分。发现新增影响时进入 `waiting-human`，不扩大范围。
 
@@ -52,7 +52,11 @@ description: Register and process change requests through explicit authorization
 3. 共享逻辑或结构；
 4. 多入口或正式交付。
 
-只使用 `package.json` 真实命令。评审构建与正式 ZIP 分开。
+只使用 `package.json` 真实命令。为每个检查点记录验收 ID、验证等级、必需检查和类型化产物；产物用 `sourceRefs` 指向实际事实源，用结构化检查 ID 说明覆盖范围。缺少来源、检查未覆盖或证据早于相关变更时，不得声称检查点就绪。
+
+用户确认检查点只关闭该评审批次，不自动授权下一批次、整个 CR 或正式交付。正式 ZIP、截图集、Word、PDF 和其他二进制交付物必须有独立明确请求；评审构建与正式交付命令分开执行。
+
+场景与证据充分性由 `$scenario-evidence-capture` 按风险判断，实际捕获和索引属于确定性脚本职责；本 Skill 只控制授权并登记来源、新鲜度、检查覆盖和验收支撑关系。修改复盘由 `$prototype-change-retrospective` 只读分类，质量问题由 `$requirement-quality-review` 审查；是否登记或启动修正仍由本 Skill 控制。
 
 ## 完成证据
 
@@ -66,3 +70,5 @@ description: Register and process change requests through explicit authorization
 - 下一阶段是否授权。
 - 类型化产物及其支撑的验收 ID。
 - 执行状态、AI 策略和就绪结论。
+- 事实源追踪、证据新鲜度和验证检查覆盖结论。
+- 评审状态与正式交付状态各自的授权依据。
