@@ -1,0 +1,31 @@
+{
+  "id": "CR-900",
+  "summary": "匿名示例：调整入口提示并等待评审",
+  "currentStageId": "user-review",
+  "executionState": "waiting-human",
+  "aiPolicy": "execution-allowed",
+  "pageIds": ["sample.entry"],
+  "actionIds": ["sample.entry.open"],
+  "stateIds": ["sample-entry-default"],
+  "readinessChecklist": [
+    {"id": "goal-clear", "status": "met", "evidence": ["sample:goal"]},
+    {"id": "scope-clear", "status": "met", "evidence": ["sample:scope"]},
+    {"id": "acceptance-testable", "status": "met", "evidence": ["sample:acceptance"]},
+    {"id": "dependencies-clear", "status": "not-applicable", "evidence": []},
+    {"id": "rules-confirmed", "status": "not-applicable", "evidence": []},
+    {"id": "authorization-confirmed", "status": "met", "evidence": ["sample:authorization"]},
+    {"id": "risk-reviewed", "status": "met", "evidence": ["sample:risk"]}
+  ],
+  "waitingReason": {
+    "code": "review-required",
+    "question": "是否确认匿名示例的入口提示？",
+    "requestedFrom": "产品负责人",
+    "impact": "未确认时只保持评审状态，不关闭任务。",
+    "resumeWhen": "收到明确的评审结论。"
+  },
+  "artifacts": [
+    {"type": "prototype", "location": "sample:prototype", "supports": ["entry-review"]},
+    {"type": "test-report", "location": "sample:check-report", "supports": ["entry-review"]}
+  ],
+  "pendingQuestions": ["是否确认本次匿名评审样本？"]
+}

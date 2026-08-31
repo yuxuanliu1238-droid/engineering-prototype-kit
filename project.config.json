@@ -1,6 +1,11 @@
 {
   "schemaVersion": 1,
   "kitVersion": "0.2.0",
+  "versioning": {
+    "versionAuthority": "package.json",
+    "directoryNameIsVersionAuthority": false,
+    "legacyDirectoryName": "engineering-prototype-kit-v0.1"
+  },
   "projectName": "请填写项目名称",
   "prototypeFramework": "react-vite",
   "packageManager": "pnpm",
@@ -13,7 +18,9 @@
     "contracts": "prototype/src/contracts",
     "pageGuides": "docs/page-guides",
     "scope": "docs/governance/scope-current.md",
-    "releaseOutput": "dist/releases"
+    "releaseOutput": "dist/releases",
+    "checkReports": "dist/check-reports",
+    "reviewPackages": "dist/review-packages"
   },
   "validation": {
     "allowedSurfaces": [

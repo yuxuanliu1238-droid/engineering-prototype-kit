@@ -23,8 +23,19 @@
 ```bash
 pnpm install
 pnpm check
-pnpm build:delivery
+pnpm build:review
 ```
+
+`pnpm build:delivery` 会生成正式 ZIP，只在用户明确要求交付时运行。
+
+源码指纹和 Markdown 评审包使用项目内通用脚本生成，规则见 `docs/review/evidence-and-review-packages.md`。隔离测试不读取宿主项目的业务台账、页面 ID 或文案。
+
+## 版本与目录名
+
+- `package.json.version` 是套件版本的唯一权威，`project.config.json.kitVersion` 必须与它一致。
+- 当前工作区目录 `engineering-prototype-kit-v0.1` 是保留的历史名称，不代表套件仍为 V0.1。
+- 正式发布包由脚本按当前包版本命名；目录重命名属于独立迁移，不在普通版本升级中自动执行。
+- pnpm、Node、独立锁文件和宿主项目兼容边界见 [`docs/technical-review/package-manager-compatibility.md`](docs/technical-review/package-manager-compatibility.md)。
 
 ## 事实源分工
 
@@ -44,6 +55,8 @@ pnpm build:delivery
 ## V0.2 相对 V0.1
 
 V0.1 重点防止越权和事实污染；V0.2 在保留原有门禁的基础上，增加任务可执行性判断和完成证据闭环。详见 `docs/requirements/task-control-model.md`。
+
+六个项目内 Skills 的唯一主职责、候选 Skill 结论和确定性脚本边界记录在 `skills/skill-boundaries.json`，并由 `pnpm skills:validate` 校验。
 
 ## 当前边界
 

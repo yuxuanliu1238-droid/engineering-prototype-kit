@@ -25,10 +25,14 @@ const requiredPaths = [
   "docs/requirements/task-control-model.md",
   "docs/review/review-baseline.md",
   "docs/review/change-request-flow.md",
+  "docs/review/evidence-and-review-packages.md",
+  "docs/technical-review/package-manager-compatibility.md",
   "docs/governance/scope-current.md",
   "prototype/package.json",
   "prototype/src/contracts/index.js",
   "skills/prototype-sop-orchestrator/SKILL.md",
+  "scripts/source-fingerprint.mjs",
+  "scripts/review-package.mjs",
 ];
 
 for (const relativePath of requiredPaths) {
@@ -36,10 +40,26 @@ for (const relativePath of requiredPaths) {
 }
 
 const config = await readJson("project.config.json");
+const packageJson = await readJson("package.json");
 if (config.schemaVersion !== 1) errors.push("project.config.json schemaVersion 必须为 1");
 if (!hasText(config.projectName)) errors.push("projectName 必须存在");
 if (config.packageManager !== "pnpm") errors.push("V0.2 只支持 pnpm");
 if (config.prototypeFramework !== "react-vite") errors.push("V0.2 只支持 react-vite");
+if (config.kitVersion !== packageJson.version) {
+  errors.push("project.config.json kitVersion 必须与 package.json version 一致");
+}
+if (config.versioning?.versionAuthority !== "package.json") {
+  errors.push("versioning.versionAuthority 必须为 package.json");
+}
+if (config.versioning?.directoryNameIsVersionAuthority !== false) {
+  errors.push("目录名不得作为套件版本权威");
+}
+if (!/^pnpm@\d+\.\d+\.\d+$/.test(packageJson.packageManager ?? "")) {
+  errors.push("package.json packageManager 必须声明精确 pnpm 版本");
+}
+if (!hasText(config.versioning?.legacyDirectoryName)) {
+  errors.push("versioning.legacyDirectoryName 必须记录历史目录名");
+}
 
 const status = await readJson("project-status.json");
 const stages = [

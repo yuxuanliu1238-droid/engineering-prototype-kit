@@ -29,14 +29,21 @@ const requiredEntries = [
   "pnpm-lock.yaml",
   "project.config.json",
   "docs/requirements/task-control-model.md",
+  "docs/technical-review/package-manager-compatibility.md",
   "docs/review/v0.2-verification.md",
+  "docs/review/evidence-and-review-packages.md",
   "prototype/dist/index.html",
+  "skills/skill-boundaries.json",
   "skills/prototype-sop-orchestrator/SKILL.md",
   "skills/business-discovery/SKILL.md",
   "skills/decision-and-domain/SKILL.md",
   "skills/page-contract-and-spec/SKILL.md",
   "skills/requirement-quality-review/SKILL.md",
-  "skills/change-and-delivery-governance/SKILL.md"
+  "skills/change-and-delivery-governance/SKILL.md",
+  "skills/prototype-change-retrospective/SKILL.md",
+  "skills/scenario-evidence-capture/SKILL.md",
+  "scripts/source-fingerprint.mjs",
+  "scripts/review-package.mjs",
 ].map((entry) => `${prefix}${entry}`);
 
 const missingEntries = requiredEntries.filter((entry) => !entries.includes(entry));
