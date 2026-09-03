@@ -19,6 +19,10 @@ description: Create source-traceable page contracts and readable specifications 
 
 ## 页面契约
 
+快速验证不创建正式页面契约。持续迭代中，轻量需求只做目标页面检查；标准需求建立页面、动作、状态和可观察验收事实；高风险需求再增加实际触发的权限、异常、外部系统和恢复要求。
+
+V0.3 业务实例的条件性事实源固定为 `prototype/src/contracts/contracts.json`。每个页面必须记录 `sourceCrId`，且页面 ID 必须出现在来源 CR 的触达页面中；来源 CR 未进入实施阶段时不得创建正式契约。高风险按触发因素填写 `riskControls.permissions、dataScope、specialistConfirmations`，以及必要的 `integrations` 和 `exceptions`。
+
 每个正式页面包含：
 
 - 稳定 Page ID、端、角色、目标和实现状态；
@@ -31,7 +35,7 @@ description: Create source-traceable page contracts and readable specifications 
 
 ## 页面说明
 
-区分：
+页面说明是契约和原型的确定性生成视图，不直接维护第二份事实。生成内容区分：
 
 - 当前原型已实现；
 - 部分实现；
@@ -51,7 +55,7 @@ description: Create source-traceable page contracts and readable specifications 
 
 ## 验证
 
-修改后运行 `pnpm contracts:validate`。如果原型行为变化，同时运行与风险等级匹配的页面和链接检查。
+在 Kit 中修改后运行 `pnpm contracts:validate`；业务实例在契约存在时运行 `pnpm page-guides:generate` 和 `pnpm check`。未触发页面契约时，不得因契约目录不存在报错。如果原型行为变化，同时运行与风险等级匹配的页面和链接检查。
 
 关联 CR 时，分别登记 `contract、prototype、page-guide` 产物，用 `supports` 关联验收 ID，并用 `sourceRefs` 指向采用的决策、状态机、原型或治理依据。
 

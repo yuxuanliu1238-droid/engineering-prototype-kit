@@ -1,7 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { printResult, readJson, ROOT } from "./project-lib.mjs";
-import { renderRequirements, validateRegistryData } from "./workflow-lib.mjs";
+import { renderRequirements, validateRegistryData } from "./workflow-v3-lib.mjs";
 
 const config = await readJson("project.config.json");
 const registry = await readJson(config.paths.requirements);

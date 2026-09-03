@@ -1,63 +1,13 @@
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "stageDefinitions": [
-    {
-      "id": "registered",
-      "label": "已登记",
-      "required": true
-    },
-    {
-      "id": "waiting-start",
-      "label": "待启动",
-      "required": true
-    },
-    {
-      "id": "impact-analysis",
-      "label": "影响分析",
-      "required": true
-    },
-    {
-      "id": "rule-confirmation",
-      "label": "规则确认",
-      "required": true
-    },
-    {
-      "id": "decision-record",
-      "label": "决策记录",
-      "required": false
-    },
-    {
-      "id": "page-contract",
-      "label": "页面契约",
-      "required": true
-    },
-    {
-      "id": "interactive-prototype",
-      "label": "可交互原型",
-      "required": true
-    },
-    {
-      "id": "page-spec",
-      "label": "页面说明",
-      "required": true
-    },
-    {
-      "id": "consistency-check",
-      "label": "一致性检查",
-      "required": true
-    },
-    {
-      "id": "user-review",
-      "label": "用户评审",
-      "required": true
-    },
-    {
-      "id": "synced",
-      "label": "已同步",
-      "required": true
-    }
+    { "id": "recorded", "label": "已记录", "required": true },
+    { "id": "analysis-confirmation", "label": "分析确认", "required": true },
+    { "id": "implementation", "label": "实施中", "required": true },
+    { "id": "awaiting-review", "label": "待评审", "required": true },
+    { "id": "completed", "label": "已完成", "required": true }
   ],
-  "nodeStatuses": [
+  "activityStatuses": [
     "未开始",
     "进行中",
     "等待用户",
@@ -71,6 +21,7 @@
       "ready",
       "in-progress",
       "waiting-human",
+      "paused",
       "completed",
       "cancelled"
     ],
@@ -96,6 +47,7 @@
       "dependency-blocked"
     ],
     "artifactTypes": [
+      "business-baseline",
       "decision",
       "plan",
       "contract",
@@ -103,10 +55,41 @@
       "page-guide",
       "test-report",
       "review-report",
+      "review-confirmation",
       "user-confirmation",
+      "migration-report",
       "commit",
       "release"
-    ]
+    ],
+    "riskLevels": ["light", "standard", "high"],
+    "riskTriggers": [
+      "product-outcome",
+      "prohibited-restoration",
+      "lifecycle",
+      "role-responsibility",
+      "failure-recovery",
+      "external-system",
+      "batch-async",
+      "permissions",
+      "data-scope",
+      "money",
+      "destructive",
+      "sensitive-data",
+      "security"
+    ],
+    "evidenceSourceTypes": [
+      "meeting",
+      "feishu",
+      "email",
+      "jira",
+      "customer-site",
+      "document",
+      "command",
+      "review",
+      "legacy-reference",
+      "other"
+    ],
+    "evidenceStatuses": ["candidate", "confirmed", "rejected", "legacy"]
   },
   "items": []
 }

@@ -1,11 +1,20 @@
 {
   "id": "CR-001",
   "summary": "示例：允许上传物品照片",
-  "currentStageId": "waiting-start",
-  "overallStatus": "未同步",
+  "originalRequest": "允许访客在登记遗失物品时上传照片",
+  "source": "教学示例",
+  "proposedAt": "2026-09-01",
+  "currentStageId": "recorded",
   "executionState": "locked",
   "aiPolicy": "unassessed",
-  "waitingReason": null,
+  "executionScope": {
+    "objective": "评估上传照片是否有助于运营识别物品",
+    "included": [],
+    "excluded": [],
+    "deferred": []
+  },
+  "riskAssessment": null,
+  "activities": [],
   "readinessChecklist": [
     { "id": "goal-clear", "status": "not-assessed", "evidence": [] },
     { "id": "scope-clear", "status": "not-assessed", "evidence": [] },
@@ -15,9 +24,18 @@
     { "id": "authorization-confirmed", "status": "not-assessed", "evidence": [] },
     { "id": "risk-reviewed", "status": "not-assessed", "evidence": [] }
   ],
+  "waitingReason": null,
+  "pauseReason": null,
+  "cancellationReason": null,
+  "evidence": [],
   "artifacts": [],
+  "reviewConfirmation": null,
   "pageIds": [],
   "actionIds": [],
   "stateIds": [],
-  "note": "仅登记，尚未评估 AI 策略，不具备执行条件。"
+  "documents": [],
+  "remainingRisks": [],
+  "openQuestions": [
+    "上传格式、大小和失败处理尚未确认"
+  ]
 }

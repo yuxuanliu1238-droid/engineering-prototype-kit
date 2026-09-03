@@ -2,9 +2,19 @@
 
 ## 契约字段
 
-`pageId`、`surface`、`title`、`goal`、`implementationStatus`、`preview`、`sections`、`actions`、`states`、`rules`、`dataFields`、`integrations`、`exceptions`、`acceptanceCriteria`。
+基础字段：`schemaVersion`、`sourceCrId`、`pageId`、`surface`、`title`、`goal`、`implementationStatus`、`preview`、`sections`、`actions`、`states`、`rules`、`dataFields`、`integrations`、`exceptions`、`acceptanceCriteria`。
 
-## 页面说明最低覆盖
+高风险按触发因素增加：
+
+- 权限：`riskControls.permissions`；
+- 数据范围：`riskControls.dataScope`；
+- 资金、删除、敏感数据或安全：`riskControls.specialistConfirmations`；
+- 外部系统：至少一项 `integrations`；
+- 失败恢复或批量异步：至少一项 `exceptions`。
+
+## 页面说明生成
+
+页面说明由 `contracts.json` 确定性生成，产品经理不直接维护 `docs/page-guides/pages.md`。生成视图最低覆盖：
 
 - 目标、角色和入口；
 - 页面区块和可见字段；

@@ -14,8 +14,8 @@ description: Run a read-only audit across task control, decisions, state machine
 1. `AGENTS.md`。
 2. `docs/review/review-baseline.md`。
 3. `docs/review/review-checklist.md`。
-4. 当前有效决策和状态机。
-5. 受审页面契约、原型和说明。
+4. 当前有效业务基线，以及需求实际触达的决策和状态机。
+5. 受审页面契约（如已触发）、原型和生成说明。
 6. 受审 CR 的执行状态、AI 策略、就绪检查、人工介入和产物。
 
 统一字段、分级和对抗用例见 `references/audit-format.md`。
@@ -47,6 +47,9 @@ description: Run a read-only audit across task control, decisions, state machine
 - Page、Action、State 退役后，当前事实源、路由、测试、fixture 或生成内容中的残留必须报告；历史快照和归档中的追溯记录不应误报。
 - 检查点确认不等于正式交付授权，未明确请求的二进制产物不得生成。
 - 历史材料不能压制当前决策。
+- 快速验证不得因缺少正式 CR、领域模型或页面契约而报缺失。
+- 持续迭代只检查风险活动要求和本条需求触达范围，未审计模块不冒充已治理。
+- AI 不得自行确认风险、业务规则、模式切换或需求完成。
 
 ## 输出
 

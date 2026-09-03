@@ -11,7 +11,7 @@ description: Govern change requests through explicit authorization scope, readin
 2. `project.config.json` 和 `project-status.json`。
 3. `docs/review/change-request-flow.md`。
 4. `docs/requirements/registry.json`。
-5. 当前 Scope、决策、状态机、契约、原型和页面说明。
+5. 当前业务基线，以及本条需求实际触达的决策、状态机、契约、原型和生成视图。
 6. `docs/requirements/task-control-model.md`。
 
 详细操作与授权表达见 `references/change-delivery-workflow.md`。
@@ -22,18 +22,18 @@ description: Govern change requests through explicit authorization scope, readin
 
 - 分配唯一 CR 编号；
 - 保存原文、来源、日期和备注；
-- 当前节点设为 `waiting-start`；
+- 当前阶段设为 `recorded`；
 - `executionState` 设为 `locked`，`aiPolicy` 设为 `unassessed`；
 - 七项就绪检查设为 `not-assessed`；
 - `waitingReason` 为 `null`，`artifacts` 为空数组；
-- Page、Action、State ID 保持空数组；
-- 生成需求池并运行校验。
+- 风险未确认时不生成活动清单，Page、Action、State ID 保持空数组；
+- 生成可读需求视图并运行校验。
 
 不得实施业务修改。
 
-## 影响分析
+## 风险确认与影响分析
 
-只读定位角色、端、Page、Action、State、决策、状态机、数据、外部系统、页面说明和测试影响。会改变产品结果的歧义必须等待确认。
+AI 提出 `light、standard、high` 及触发因素，产品经理确认。高风险降级必须记录理由和补偿措施。随后只读定位角色、端、Page、Action、State、决策、状态机、数据、外部系统、页面说明和测试影响。会改变产品结果的歧义必须等待确认。
 
 ## 授权实施
 
@@ -41,7 +41,7 @@ description: Govern change requests through explicit authorization scope, readin
 
 结论为 `planning-ready` 时只能做影响分析、提问和拆分。发现新增影响时进入 `waiting-human`，不扩大范围。
 
-完成实现后进入用户评审，不自动更新为已同步。
+完成实现后进入 `awaiting-review`，不自动更新为 `completed`。
 
 ## 验证与交付
 
@@ -66,9 +66,10 @@ description: Govern change requests through explicit authorization scope, readin
 - 未执行项；
 - 遗留风险；
 - 用户评审入口；
-- 当前 CR 节点；
+- 当前 CR 主阶段；
 - 下一阶段是否授权。
 - 类型化产物及其支撑的验收 ID。
 - 执行状态、AI 策略和就绪结论。
 - 事实源追踪、证据新鲜度和验证检查覆盖结论。
 - 评审状态与正式交付状态各自的授权依据。
+- 产品经理默认状态卡：阶段、结论、原因、责任人和下一动作。

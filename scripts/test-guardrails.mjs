@@ -1,23 +1,19 @@
 import { validateContractsData } from "./contract-lib.mjs";
 import { printResult, readJson } from "./project-lib.mjs";
 import {
-  EXPECTED_AI_POLICIES,
-  EXPECTED_ARTIFACT_TYPES,
-  EXPECTED_EXECUTION_STATES,
-  EXPECTED_NODE_STATUSES,
-  EXPECTED_READINESS_CHECK_IDS,
-  EXPECTED_READINESS_STATUSES,
-  EXPECTED_STAGE_IDS,
-  EXPECTED_WAITING_REASON_CODES,
+  deriveStatusCard,
+  makeActivities,
+  makeEmptyRegistry,
+  makeReadiness,
   validateRegistryData,
-} from "./workflow-lib.mjs";
+} from "./workflow-v3-lib.mjs";
 
 const errors = [];
 const config = await readJson("project.config.json");
 
 function expectError(label, actualErrors, pattern) {
   if (!actualErrors.some((error) => pattern.test(error))) {
-    errors.push(`${label} 未被正确拦截`);
+    errors.push(`${label} 未被正确拦截：${actualErrors.join("；")}`);
   }
 }
 
@@ -27,181 +23,244 @@ function expectNoErrors(label, actualErrors) {
   }
 }
 
-function makeNodes() {
-  return EXPECTED_STAGE_IDS.map((stageId, index) => ({
-    stageId,
-    status: index === 0 ? "已完成" : EXPECTED_NODE_STATUSES[0],
-  }));
+function makeRisk(level = "standard", overrides = {}) {
+  const risk = {
+    recommendedLevel: level,
+    confirmedLevel: level,
+    triggers: level === "high" ? ["product-outcome"] : [],
+    rationale: "测试风险判断",
+    proposedBy: "ai",
+    confirmedBy: "product:test",
+    confirmedAt: "2026-01-01",
+    downgradeReason: null,
+    compensationMeasures: [],
+    ...overrides,
+  };
+  return risk;
 }
 
-function makeReadiness(status = "not-assessed") {
-  return EXPECTED_READINESS_CHECK_IDS.map((id) => ({
-    id,
-    status,
-    evidence: status === "met" ? [`test:${id}`] : [],
-  }));
+function makeItem(overrides = {}) {
+  const item = {
+    id: "CR-001",
+    summary: "示例需求",
+    originalRequest: "记录需求但尚未授权实施",
+    source: "test",
+    proposedAt: "2026-01-01",
+    currentStageId: "recorded",
+    executionState: "locked",
+    aiPolicy: "unassessed",
+    executionScope: {
+      objective: "验证任务控制",
+      included: [],
+      excluded: [],
+      deferred: [],
+    },
+    riskAssessment: null,
+    activities: [],
+    waitingReason: null,
+    pauseReason: null,
+    cancellationReason: null,
+    readinessChecklist: makeReadiness(),
+    artifacts: [],
+    reviewConfirmation: null,
+    pageIds: [],
+    actionIds: [],
+    stateIds: [],
+    documents: [],
+    evidence: [],
+    remainingRisks: [],
+    openQuestions: [],
+    ...overrides,
+  };
+  if (item.riskAssessment && overrides.activities === undefined) {
+    item.activities = makeActivities(item.riskAssessment);
+  }
+  return item;
 }
 
 function makeRegistry(item) {
-  return {
-    schemaVersion: 2,
-    stageDefinitions: EXPECTED_STAGE_IDS.map((id) => ({
-      id,
-      label: id,
-      required: id !== "decision-record",
-    })),
-    nodeStatuses: EXPECTED_NODE_STATUSES,
-    taskControlDefinitions: {
-      executionStates: EXPECTED_EXECUTION_STATES,
-      aiPolicies: EXPECTED_AI_POLICIES,
-      readinessStatuses: EXPECTED_READINESS_STATUSES,
-      waitingReasonCodes: EXPECTED_WAITING_REASON_CODES,
-      artifactTypes: EXPECTED_ARTIFACT_TYPES,
-    },
-    items: [item],
-  };
+  return { ...makeEmptyRegistry(), items: [item] };
 }
 
-const baseItem = {
-  id: "CR-001",
-  summary: "示例需求",
-  originalRequest: "记录需求但尚未授权实施",
-  source: "test",
-  proposedAt: "2026-01-01",
-  currentStageId: "waiting-start",
-  overallStatus: "未同步",
-  executionState: "locked",
-  aiPolicy: "unassessed",
-  waitingReason: null,
-  readinessChecklist: makeReadiness(),
-  artifacts: [],
-  pageIds: [],
-  actionIds: [],
-  stateIds: [],
-  documents: [],
-  evidence: [],
-  nodes: makeNodes(),
-};
-
-const unauthorizedItem = structuredClone(baseItem);
-unauthorizedItem.pageIds = ["sample.page"];
-const unauthorized = makeRegistry(unauthorizedItem);
+const prefilledImpact = makeItem({ pageIds: ["sample.page"] });
 expectError(
-  "未完成影响分析却预填页面",
-  validateRegistryData(unauthorized),
-  /尚未完成影响分析/,
+  "分析确认前预填页面",
+  validateRegistryData(makeRegistry(prefilledImpact)),
+  /尚未进入实施阶段/,
 );
 
-const syncedWithoutReview = structuredClone(unauthorized);
-syncedWithoutReview.items[0].currentStageId = "synced";
-syncedWithoutReview.items[0].overallStatus = "已同步";
-syncedWithoutReview.items[0].pageIds = [];
-expectError(
-  "无用户证据却标记已同步",
-  validateRegistryData(syncedWithoutReview),
-  /缺少 userConfirmationDate/,
-);
-
-const readyWithoutAuthorization = makeRegistry({
-  ...structuredClone(baseItem),
-  currentStageId: "impact-analysis",
-  overallStatus: "同步中",
-  executionState: "ready",
-});
+const readyWithoutAuthorization = makeItem({ executionState: "ready" });
 expectError(
   "未评估 AI 策略却进入可执行",
-  validateRegistryData(readyWithoutAuthorization),
+  validateRegistryData(makeRegistry(readyWithoutAuthorization)),
   /未满足就绪条件/,
 );
 
-const executionWithoutReadiness = makeRegistry({
-  ...structuredClone(baseItem),
-  currentStageId: "impact-analysis",
-  overallStatus: "同步中",
+const executionWithoutReadiness = makeItem({
+  currentStageId: "implementation",
   executionState: "in-progress",
   aiPolicy: "execution-allowed",
+  riskAssessment: makeRisk("standard"),
 });
 expectError(
   "已授权但未完成就绪检查",
-  validateRegistryData(executionWithoutReadiness),
+  validateRegistryData(makeRegistry(executionWithoutReadiness)),
   /未满足就绪条件/,
 );
 
-const waitingWithoutPacket = makeRegistry({
-  ...structuredClone(baseItem),
-  executionState: "waiting-human",
-});
+const waitingWithoutPacket = makeItem({ executionState: "waiting-human" });
 expectError(
   "等待人工但缺少介入单",
-  validateRegistryData(waitingWithoutPacket),
+  validateRegistryData(makeRegistry(waitingWithoutPacket)),
   /waitingReason 必须是对象/,
 );
 
-const completedWithoutArtifacts = makeRegistry({
-  ...structuredClone(baseItem),
-  executionState: "completed",
-});
+const pausedWithoutReason = makeItem({ executionState: "paused" });
 expectError(
-  "无类型化产物却声称完成",
-  validateRegistryData(completedWithoutArtifacts),
-  /已完成但缺少类型化产物/,
+  "暂停但缺少恢复条件",
+  validateRegistryData(makeRegistry(pausedWithoutReason)),
+  /pauseReason 必须是对象/,
 );
 
-const invalidArtifactType = makeRegistry({
-  ...structuredClone(baseItem),
+const cancelledWithoutReason = makeItem({ executionState: "cancelled" });
+expectError(
+  "取消但缺少原因",
+  validateRegistryData(makeRegistry(cancelledWithoutReason)),
+  /cancellationReason 缺失/,
+);
+
+const invalidDowngradeRisk = makeRisk("high", {
+  confirmedLevel: "standard",
+  triggers: ["permissions"],
+});
+const invalidDowngrade = makeItem({
+  currentStageId: "analysis-confirmation",
+  riskAssessment: invalidDowngradeRisk,
+});
+expectError(
+  "高风险无理由降级",
+  validateRegistryData(makeRegistry(invalidDowngrade)),
+  /高风险降级必须记录理由/,
+);
+
+const mismatchedActivities = makeItem({
+  currentStageId: "analysis-confirmation",
+  riskAssessment: makeRisk("light"),
+  activities: [],
+});
+expectError(
+  "风险活动清单缺失",
+  validateRegistryData(makeRegistry(mismatchedActivities)),
+  /activities 与风险等级和触发因素不一致/,
+);
+
+const completedWithoutReview = makeItem({
+  currentStageId: "completed",
+  executionState: "completed",
+  aiPolicy: "execution-allowed",
+  riskAssessment: makeRisk("light"),
+  readinessChecklist: makeReadiness("met"),
+});
+expectError(
+  "无产品评审却声称完成",
+  validateRegistryData(makeRegistry(completedWithoutReview)),
+  /缺少有效产品评审确认/,
+);
+
+const invalidArtifact = makeItem({
   artifacts: [{ type: "chat-message", location: "chat:1", supports: [] }],
 });
 expectError(
   "非法产物类型",
-  validateRegistryData(invalidArtifactType),
+  validateRegistryData(makeRegistry(invalidArtifact)),
   /artifacts\[0\]\.type 无效/,
 );
 
-const planningReady = makeRegistry({
-  ...structuredClone(baseItem),
-  currentStageId: "impact-analysis",
-  overallStatus: "同步中",
+const planningRisk = makeRisk("light");
+const planningReady = makeItem({
+  currentStageId: "analysis-confirmation",
   executionState: "ready",
   aiPolicy: "planning-only",
+  riskAssessment: planningRisk,
   readinessChecklist: makeReadiness().map((check) =>
     check.id === "goal-clear"
       ? { ...check, status: "met", evidence: ["request:CR-001"] }
       : check,
   ),
 });
-expectNoErrors("合法规划就绪", validateRegistryData(planningReady));
+expectNoErrors("合法规划就绪", validateRegistryData(makeRegistry(planningReady)));
 
-const executionReady = makeRegistry({
-  ...structuredClone(baseItem),
-  currentStageId: "interactive-prototype",
-  overallStatus: "同步中",
+const validCancelled = makeItem({
+  executionState: "cancelled",
+  cancellationReason: "产品经理确认不再继续本条需求",
+});
+expectNoErrors("合法取消并保留原因", validateRegistryData(makeRegistry(validCancelled)));
+
+const executionRisk = makeRisk("standard");
+const executionReady = makeItem({
+  currentStageId: "implementation",
   executionState: "in-progress",
   aiPolicy: "execution-allowed",
+  riskAssessment: executionRisk,
   readinessChecklist: makeReadiness("met"),
 });
-expectNoErrors("合法实施就绪", validateRegistryData(executionReady));
+expectNoErrors("合法实施就绪", validateRegistryData(makeRegistry(executionReady)));
 
-const completedNodes = makeNodes().map((node) => ({ ...node, status: "已完成" }));
-const validSynced = makeRegistry({
-  ...structuredClone(baseItem),
-  currentStageId: "synced",
-  overallStatus: "已同步",
+const completedRisk = makeRisk("high", {
+  triggers: ["product-outcome", "lifecycle", "failure-recovery", "permissions"],
+});
+const completedActivities = makeActivities(completedRisk).map((activity) => ({
+  ...activity,
+  status: "已完成",
+  evidence: [`test:${activity.id}`],
+  result: "检查通过",
+}));
+const validCompleted = makeItem({
+  currentStageId: "completed",
   executionState: "completed",
   aiPolicy: "execution-allowed",
+  riskAssessment: completedRisk,
+  activities: completedActivities,
   readinessChecklist: makeReadiness("met"),
   artifacts: [
     { type: "test-report", location: "command:pnpm-check", supports: ["AC-001"] },
     {
       type: "user-confirmation",
       location: "review:2026-01-02",
-      supports: ["user-review"],
+      supports: ["product-review"],
     },
   ],
-  evidence: ["review:2026-01-02"],
-  userConfirmationDate: "2026-01-02",
-  nodes: completedNodes,
+  reviewConfirmation: {
+    outcome: "approved",
+    continueBuild: true,
+    confirmedScope: ["本次需求"],
+    excludedScope: [],
+    confirmedRules: ["测试规则"],
+    nonBlockingQuestions: [],
+    evidenceIds: [],
+    confirmedBy: "product:test",
+    confirmedAt: "2026-01-02",
+  },
 });
-expectNoErrors("合法已同步闭环", validateRegistryData(validSynced));
+expectNoErrors("合法完成闭环", validateRegistryData(makeRegistry(validCompleted)));
+
+const waitingCardItem = makeItem({
+  executionState: "waiting-human",
+  waitingReason: {
+    code: "rule-ambiguity",
+    question: "部分失败是否保留成功结果？",
+    requestedFrom: "产品经理",
+    impact: "未确认前无法实现批量结果处理",
+    resumeWhen: "产品经理确认部分失败规则",
+  },
+});
+const waitingCard = deriveStatusCard(waitingCardItem);
+if (
+  waitingCard.owner !== "产品经理" ||
+  waitingCard.nextAction !== "部分失败是否保留成功结果？"
+) {
+  errors.push("简化状态卡未正确展示责任人和下一动作");
+}
 
 const invalidContract = [
   {
@@ -247,5 +306,5 @@ expectError(
 printResult(
   "护栏对抗测试",
   errors,
-  "8 类风险被阻断，3 条合法路径未被误拦截",
+  "10 类 V0.3 风险被阻断，4 条合法路径和简化状态卡通过",
 );

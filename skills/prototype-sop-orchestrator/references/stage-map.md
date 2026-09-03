@@ -1,16 +1,6 @@
-# 阶段路由
+# V0.3 模式与阶段路由
 
-| 阶段 | 默认模式 | 允许写入 | 人工门禁 | 下一阶段 |
-|---|---|---|---|---|
-| initialization | PLAN | 空白模板配置 | 确认开始探索 | business-discovery |
-| business-discovery | PLAN | `docs/discovery/` | 确认 Demo 基础 | demo-planning |
-| demo-planning | PLAN | Demo 计划 | 确认实施范围 | prototype |
-| prototype | EXECUTE | `prototype/` | 业务评审 | decision-domain |
-| decision-domain | PLAN / EXECUTE | `docs/decisions/`、`docs/domain/` | 确认正式结论 | page-contract |
-| page-contract | EXECUTE | 契约与页面说明 | 确认覆盖范围 | quality-review |
-| quality-review | REVIEW | 审查报告 | 确认修复项 | user-review |
-| user-review | REVIEW | 评审证据 | 产品经理确认 | delivery |
-| delivery | DELIVER | `dist/` | 明确交付授权 | 完成或新 CR |
+## 项目模式
 
 任何阶段都不得自动跳过人工门禁。
 进入 `EXECUTE` 前必须同时满足 `execution-allowed` 和 `execution-ready`。
@@ -28,3 +18,26 @@
 | 检查页面是否可以评审、需要验证哪些场景、证据是否充分 | REVIEW | `$scenario-evidence-capture` | Skill 选择场景并判断充分性；脚本负责采集、索引和格式校验 |
 
 宽泛的“给我评审”先进入变更治理核对当前检查点和授权，再按需要转场景证据或质量审查；不得同时把多个专项 Skill 当成事实写入者。
+
+## 模式与阶段路由
+
+| 当前情况 | AI 允许动作 | 人工门禁 | 下一步 |
+|---|---|---|---|
+| 信息不足 | 业务探索、识别缺口 | 产品经理确认场景 | 推荐模式 |
+| rapid-validation | 维护业务验证简报和 Demo | 产品经理确认范围与假设 | 需求评审 |
+| 评审后待切换 | 生成切换影响预览 | 有效评审、继续建设、确认人和证据 | continuous-iteration |
+| continuous-iteration | 按 CR 风险活动实施 | 单条 CR 授权与最终评审 | 完成或下一条 CR |
+
+快速验证切换持续迭代不得由 AI 自动执行。切换时初始化空 CR 台账，不自动创建领域模型、页面契约或 B 端专项模块。
+
+## 持续迭代 CR
+
+| 主阶段 | 默认动作 | 主要门禁 | 下一阶段 |
+|---|---|---|---|
+| recorded | 保存原始请求和来源 | 产品经理确认 AI 策略 | analysis-confirmation |
+| analysis-confirmation | 风险、影响、规则、范围与验收 | 产品经理确认风险和实施授权 | implementation |
+| implementation | 执行动态活动并登记证据 | 就绪检查持续满足 | awaiting-review |
+| awaiting-review | 展示结果、检查和遗留风险 | 产品经理最终评审 | completed 或退回 |
+| completed | 保留确认和类型化产物 | 不自动启动新 CR | 新授权 |
+
+`waiting-human、paused、cancelled` 是执行状态，不新增主阶段。进入 `EXECUTE` 前必须同时满足 `execution-allowed` 和 `execution-ready`。

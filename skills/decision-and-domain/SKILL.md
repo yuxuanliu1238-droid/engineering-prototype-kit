@@ -8,9 +8,9 @@ description: Turn explicitly confirmed conclusions into source-traceable decisio
 ## 必读
 
 1. `AGENTS.md`。
-2. `docs/discovery/`。
-3. `docs/decisions/README.md`、`positive.md`、`negative.md`。
-4. `docs/domain/`。
+2. `docs/business-baseline.md`。
+3. `docs/decisions/decisions.md`（存在时）。
+4. `docs/domain/business-model.md`（需求触达时才创建）。
 5. 当前页面契约和原型，仅在判断影响时读取。
 
 决策字段、状态—证据—责任矩阵和状态压力测试见 `references/decision-state-checklist.md`。
@@ -51,8 +51,8 @@ description: Turn explicitly confirmed conclusions into source-traceable decisio
 ## 输出
 
 - 候选阶段：输出确认清单，不落盘正式决策。
-- 确认阶段：更新 `docs/decisions/`。
-- 建模阶段：更新 `docs/domain/`，并列出仍待确认项。
+- 确认阶段：更新单一逻辑入口 `docs/decisions/decisions.md`，用采用、禁止、已替代区分。
+- 建模阶段：只有生命周期、角色责任或关键异常被触达时，更新 `docs/domain/business-model.md` 并列出仍待确认项。
 - 关联 CR 时，将正式决策登记为 `decision` 产物，保留 `sourceRefs`，并标明其支撑的验收事实。
 
 ## 退出条件

@@ -13,23 +13,23 @@ description: Route an AI-assisted engineering prototype through gated stages by 
 2. `project.config.json`。
 3. `project-status.json`。
 4. `README.md` 和 `START-HERE.md`。
-5. 当前阶段对应的事实源。
+5. 当前模式对应的业务材料；信息不足时只做探索。
 
 处理 CR 时读取 `docs/requirements/task-control-model.md` 和当前 CR 完整记录。
 
 详细阶段、门禁和路由见 `references/stage-map.md`。
 
-## 判断项目类型
+## 判断项目类型与模式
 
-先判断当前目录属于：
+先判断当前目录属于 Kit 工具仓库还是独立业务实例，再根据用户明确提供的场景推荐：
 
-- 空白启动包；
-- 已有前端原型；
-- 处于需求同步中的项目；
-- 准备评审或交付的项目；
-- 已进入正式研发的项目。
+- `rapid-validation`：客户现场、售前、概念 Demo 或新方向探索；
+- `continuous-iteration`：评审后继续建设、持续加功能或旧项目改造；
+- 信息不足：只做业务探索。
 
-已有内容时先审计，不覆盖、不重新初始化。
+AI 只推荐，产品经理确认。已有内容时先审计，不覆盖、不重新初始化；存在代码不构成自动进入持续迭代的理由。
+
+快速模式还必须先读取 `project-status.json.validationProfile`：确认主要评审目标和输入充分度。“不充分”时只做探索；“部分充分”时先确认 Demo 蓝图；材料充分且场景简单时可随 Demo 一起确认，不额外增加等待门禁。
 
 ## 路由
 
@@ -53,16 +53,20 @@ description: Route an AI-assisted engineering prototype through gated stages by 
 
 ## 执行规则
 
-1. 先声明本轮模式：`PLAN、EXECUTE、REVIEW、DELIVER`。
-2. 同时报告阶段、执行状态、AI 策略和确定性推导的就绪结论。
+1. 先声明项目工作模式，再说明本轮动作：`PLAN、EXECUTE、REVIEW、DELIVER`。
+2. 持续迭代 CR 默认只向产品经理展示阶段、结论、原因、责任人和下一动作；完整控制字段按需展开。
 3. `PLAN` 只分析、提问和拆分；`EXECUTE` 必须是 `execution-allowed + execution-ready`。
-4. 每次只推进一个可独立验收的阶段。
+4. 每次只推进一个已授权、可独立验收的活动或主阶段。
 5. 遇到会改变产品结果的歧义，写入 `waiting-human` 介入单，不自行选择。
-6. 阶段完成后记录类型化产物，再建议解锁下一阶段。
+6. 实施活动完成后记录类型化产物并进入待评审；产品经理确认后才能完成需求。
 7. 不因检查通过而自动启动下一阶段。
 8. 不自动创建正式后端、数据库、鉴权或生产配置。
-9. 不自动冻结版本或把 CR 更新为已同步。
+9. 不自动切换工作模式、冻结版本或把 CR 更新为已完成、已同步。
 10. 不因评审确认自动进入交付，也不因旧验证记录存在而宣称当前证据新鲜。
+11. 快速 Demo 以“核心流程 + 必要配置 + 代表性异常 + 可见反馈 + 可恢复数据”为完成结构，仅实现当前评审目标触达的部分。
+12. 多场景或复杂评审可启用独立 `/review`，业务系统使用 `/app`；从评审场景进入后，评审上下文和返回入口必须在业务菜单间持续存在。
+13. 未指定视觉形态时采用 B 端默认结构：业务菜单、筛选、列表/详情、状态、最后一列操作和抽屉/弹窗反馈；不得因此补写业务规则。
+14. 反馈先分类为呈现调整、业务结论、Kit 通用改进或项目专属，说明影响范围后实施；AI 检查通过不替代产品经理复核。
 
 ## 新人交互
 
@@ -78,7 +82,7 @@ description: Route an AI-assisted engineering prototype through gated stages by 
 每次导航输出：
 
 - 当前项目类型；
-- 当前阶段和状态；
+- 当前模式、阶段和状态；
 - 本轮模式、AI 策略和就绪结论；
 - 本轮目标；
 - 实际读取的事实源；

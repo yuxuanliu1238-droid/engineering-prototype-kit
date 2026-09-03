@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { printResult, ROOT } from "./project-lib.mjs";
+import { makeEmptyRegistry, validateRegistryData } from "./workflow-v3-lib.mjs";
 
 const errors = [];
 const exampleRoot = path.join(ROOT, "examples/parcel-return-demo");
@@ -36,14 +37,17 @@ if (new Set(actionIds).size !== actionIds.length) errors.push("教学示例 Acti
 const requirement = JSON.parse(
   await fs.readFile(path.join(exampleRoot, "requirements.json"), "utf8"),
 );
-if (requirement.currentStageId !== "waiting-start") {
-  errors.push("教学示例 CR 必须保持待启动");
+if (requirement.currentStageId !== "recorded") {
+  errors.push("教学示例 CR 必须保持已记录阶段");
 }
 if (requirement.executionState !== "locked" || requirement.aiPolicy !== "unassessed") {
   errors.push("教学示例 CR 登记后必须保持 locked + unassessed");
 }
-if (requirement.waitingReason !== null || requirement.artifacts.length) {
+if (requirement.waitingReason !== null || requirement.artifacts.length || requirement.activities.length) {
   errors.push("教学示例 CR 未启动时不得预填人工介入或产物");
+}
+if (requirement.riskAssessment !== null) {
+  errors.push("教学示例 CR 未经产品经理确认前不得预填风险等级");
 }
 if (
   requirement.readinessChecklist.length !== 7 ||
@@ -51,6 +55,7 @@ if (
 ) {
   errors.push("教学示例 CR 就绪检查必须从未评估开始");
 }
+errors.push(...validateRegistryData({ ...makeEmptyRegistry(), items: [requirement] }));
 if (
   [...requirement.pageIds, ...requirement.actionIds, ...requirement.stateIds].length
 ) {
@@ -63,5 +68,5 @@ if (!/只属于本示例/.test(decisions)) errors.push("示例决策缺少隔离
 printResult(
   "教学示例校验",
   errors,
-  "2 个角色、3 个页面、2 条决策、1 条受任务控制的未启动 CR",
+  "2 个角色、3 个页面、2 条决策、1 条 Schema v3 已记录且未授权 CR",
 );
