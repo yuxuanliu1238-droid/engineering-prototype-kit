@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "reviewCenterEnabled": {{REVIEW_CENTER_ENABLED_BOOL}},
+  "reviewRoute": "/review",
+  "businessRoute": "/app",
+  "scenarios": [
+    {
+      "id": "core-flow",
+      "category": "主流程",
+      "name": "核心流程演示",
+      "validationQuestion": "当前核心流程、信息呈现和操作反馈是否支持本轮评审目标？",
+      "entryPath": "/app?scenario=core-flow",
+      "preconditions": ["加载可恢复的演示数据"],
+      "expectedResult": "核心流程可以走通，并显示可见结果反馈",
+      "sources": ["ai-candidate"],
+      "assumptions": ["当前场景仅用于验证原型结构"],
+      "openQuestions": [],
+      "owner": "产品经理",
+      "status": "pending"
+    }
+  ]
+}

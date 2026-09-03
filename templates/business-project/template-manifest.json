@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "templateVersion": "0.3.0",
+  "modes": [
+    "rapid-validation",
+    "continuous-iteration"
+  ],
+  "files": [
+    {
+      "source": "shared/docs/business-baseline.md",
+      "target": "docs/business-baseline.md",
+      "inclusion": "always",
+      "ownership": "business"
+    },
+    {
+      "source": "shared/docs/review/review-confirmation.md",
+      "target": "docs/review/review-confirmation.md",
+      "inclusion": "always",
+      "ownership": "business"
+    },
+    {
+      "source": "shared/docs/demo-blueprint.md",
+      "target": "docs/demo-blueprint.md",
+      "inclusion": "on-demand",
+      "activationId": "demo-blueprint",
+      "ownership": "business"
+    },
+    {
+      "source": "continuous/docs/decisions/decisions.md",
+      "target": "docs/decisions/decisions.md",
+      "inclusion": "continuous-iteration",
+      "ownership": "business"
+    },
+    {
+      "source": "continuous/docs/requirements/README.md",
+      "target": "docs/requirements/README.md",
+      "inclusion": "continuous-iteration",
+      "ownership": "kit-managed"
+    },
+    {
+      "source": "continuous/docs/page-guides/README.md",
+      "target": "docs/page-guides/README.md",
+      "inclusion": "continuous-iteration",
+      "ownership": "generated-view"
+    },
+    {
+      "source": "optional/domain/docs/business-model.md",
+      "target": "docs/domain/business-model.md",
+      "inclusion": "on-demand",
+      "activationId": "domain-lifecycle",
+      "ownership": "business"
+    },
+    {
+      "source": "optional/b2b/permissions-and-data-scope.md",
+      "target": "docs/scenarios/permissions-and-data-scope.md",
+      "inclusion": "on-demand",
+      "activationId": "b2b-permissions",
+      "ownership": "business"
+    },
+    {
+      "source": "optional/b2b/approval-and-handoff.md",
+      "target": "docs/scenarios/approval-and-handoff.md",
+      "inclusion": "on-demand",
+      "activationId": "b2b-approval",
+      "ownership": "business"
+    },
+    {
+      "source": "optional/b2b/batch-and-async.md",
+      "target": "docs/scenarios/batch-and-async.md",
+      "inclusion": "on-demand",
+      "activationId": "b2b-batch-async",
+      "ownership": "business"
+    },
+    {
+      "source": "optional/b2b/external-integration.md",
+      "target": "docs/scenarios/external-integration.md",
+      "inclusion": "on-demand",
+      "activationId": "b2b-external-integration",
+      "ownership": "business"
+    },
+    {
+      "source": "optional/b2b/exception-and-sla.md",
+      "target": "docs/scenarios/exception-and-sla.md",
+      "inclusion": "on-demand",
+      "activationId": "b2b-exception-sla",
+      "ownership": "business"
+    }
+  ],
+  "generatedViews": [
+    {
+      "target": "docs/page-guides",
+      "sources": [
+        "prototype/src/contracts/contracts.json",
+        "prototype/index.html",
+        "prototype/src"
+      ]
+    },
+    {
+      "target": "docs/requirements/requirements.md",
+      "template": "internal/generated-views/requirements.md",
+      "sources": [
+        "docs/requirements/registry.json"
+      ]
+    }
+  ],
+  "internalOnly": [
+    "skills",
+    "scripts",
+    "examples",
+    "templates",
+    "docs/design",
+    "docs/review/v0.1-verification.md",
+    "docs/review/v0.2-verification.md"
+  ]
+}

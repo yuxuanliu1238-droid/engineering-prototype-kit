@@ -22,6 +22,10 @@ const requiredPaths = [
   "docs/decisions/negative.md",
   "docs/domain/state-machines.md",
   "docs/requirements/registry.json",
+  "docs/design/v0.3-product-model.md",
+  "docs/design/v0.3-material-system.md",
+  "docs/design/v0.3-runtime-and-migration.md",
+  "docs/review/v0.3-verification.md",
   "docs/requirements/task-control-model.md",
   "docs/review/review-baseline.md",
   "docs/review/change-request-flow.md",
@@ -33,6 +37,14 @@ const requiredPaths = [
   "skills/prototype-sop-orchestrator/SKILL.md",
   "scripts/source-fingerprint.mjs",
   "scripts/review-package.mjs",
+  "templates/business-project/template-manifest.json",
+  "scripts/workflow-v3-lib.mjs",
+  "scripts/page-guide-lib.mjs",
+  "scripts/rapid-validation-lib.mjs",
+  "scripts/business-runtime.mjs",
+  "scripts/create-project.mjs",
+  "scripts/migrate-v02-to-v03.mjs",
+  "scripts/upgrade-project.mjs",
 ];
 
 for (const relativePath of requiredPaths) {
@@ -41,10 +53,11 @@ for (const relativePath of requiredPaths) {
 
 const config = await readJson("project.config.json");
 const packageJson = await readJson("package.json");
-if (config.schemaVersion !== 1) errors.push("project.config.json schemaVersion 必须为 1");
+if (config.schemaVersion !== 2) errors.push("project.config.json schemaVersion 必须为 2");
+if (config.instanceKind !== "kit") errors.push("Kit 根项目 instanceKind 必须为 kit");
 if (!hasText(config.projectName)) errors.push("projectName 必须存在");
-if (config.packageManager !== "pnpm") errors.push("V0.2 只支持 pnpm");
-if (config.prototypeFramework !== "react-vite") errors.push("V0.2 只支持 react-vite");
+if (config.packageManager !== "pnpm") errors.push("V0.3 只支持 pnpm");
+if (config.prototypeFramework !== "react-vite") errors.push("V0.3 只支持 react-vite");
 if (config.kitVersion !== packageJson.version) {
   errors.push("project.config.json kitVersion 必须与 package.json version 一致");
 }
@@ -62,21 +75,10 @@ if (!hasText(config.versioning?.legacyDirectoryName)) {
 }
 
 const status = await readJson("project-status.json");
-const stages = [
-  "initialization",
-  "business-discovery",
-  "demo-planning",
-  "prototype",
-  "decision-domain",
-  "page-contract",
-  "quality-review",
-  "user-review",
-  "delivery",
-];
-if (!stages.includes(status.currentStage)) errors.push("project-status.currentStage 无效");
-if (!["waiting-user", "in-progress", "completed", "blocked"].includes(status.stageStatus)) {
-  errors.push("project-status.stageStatus 无效");
-}
+if (status.schemaVersion !== 2) errors.push("project-status schemaVersion 必须为 2");
+if (status.currentMode !== null) errors.push("Kit 根项目不得确认业务模式");
+if (status.modeState !== "unassessed") errors.push("Kit 根项目模式状态必须为 unassessed");
+if (!Array.isArray(status.modeHistory)) errors.push("project-status.modeHistory 必须是数组");
 
 const secretPatterns = [
   /sk-[A-Za-z0-9_-]{20,}/,

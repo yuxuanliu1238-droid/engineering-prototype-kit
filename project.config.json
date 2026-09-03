@@ -1,12 +1,13 @@
 {
-  "schemaVersion": 1,
-  "kitVersion": "0.2.0",
+  "schemaVersion": 2,
+  "instanceKind": "kit",
+  "kitVersion": "0.3.0",
   "versioning": {
     "versionAuthority": "package.json",
     "directoryNameIsVersionAuthority": false,
     "legacyDirectoryName": "engineering-prototype-kit-v0.1"
   },
-  "projectName": "请填写项目名称",
+  "projectName": "engineering-prototype-kit",
   "prototypeFramework": "react-vite",
   "packageManager": "pnpm",
   "language": "javascript-jsdoc",

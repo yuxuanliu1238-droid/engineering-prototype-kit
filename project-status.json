@@ -1,9 +1,9 @@
 {
-  "schemaVersion": 1,
-  "currentStage": "initialization",
-  "stageStatus": "waiting-user",
+  "schemaVersion": 2,
+  "currentMode": null,
+  "modeState": "unassessed",
+  "modeHistory": [],
   "activeChangeRequest": null,
-  "lastCompletedStage": null,
-  "nextGate": "product-confirmation",
-  "updatedAt": null
+  "nextGate": "future-version-explicit-authorization",
+  "updatedAt": "2026-09-02"
 }

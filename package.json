@@ -1,6 +1,6 @@
 {
   "name": "engineering-prototype-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "A guided starter kit for product managers building reviewable engineering prototypes with AI.",
   "type": "module",
@@ -20,14 +20,23 @@
     "skills:test-enhancements": "node scripts/test-existing-skill-enhancements.mjs",
     "skills:test-routing": "node scripts/test-orchestrator-routing.mjs",
     "review-evidence:test": "node scripts/test-review-evidence.mjs",
+    "templates:validate": "node scripts/validate-templates.mjs",
+    "project:create": "node scripts/create-project.mjs",
+    "project:switch-mode": "node scripts/switch-project-mode.mjs",
+    "project:migrate": "node scripts/migrate-v02-to-v03.mjs",
+    "project:upgrade": "node scripts/upgrade-project.mjs",
+    "project-tools:test": "node scripts/test-project-tools.mjs",
     "example:validate": "node scripts/validate-example.mjs",
     "guardrails:test": "node scripts/test-guardrails.mjs",
-    "check": "pnpm project:validate && pnpm workflow:validate && pnpm contracts:validate && pnpm links:validate && pnpm skills:validate && pnpm skills:test-retrospective && pnpm skills:test-scenario-evidence && pnpm skills:test-enhancements && pnpm skills:test-routing && pnpm review-evidence:test && pnpm example:validate && pnpm guardrails:test",
+    "check": "pnpm project:validate && pnpm workflow:validate && pnpm contracts:validate && pnpm links:validate && pnpm skills:validate && pnpm skills:test-retrospective && pnpm skills:test-scenario-evidence && pnpm skills:test-enhancements && pnpm skills:test-routing && pnpm review-evidence:test && pnpm templates:validate && pnpm example:validate && pnpm guardrails:test && pnpm project-tools:test",
     "dev": "pnpm --dir prototype dev",
     "build:review": "pnpm check && pnpm --dir prototype build",
-    "build:delivery": "pnpm build:review && pnpm package:release && pnpm release:validate",
+    "build:delivery": "pnpm build:kit-release",
+    "build:kit-release": "pnpm build:review && pnpm package:kit-release && pnpm kit-release:validate",
     "package:release": "node scripts/package-release.mjs",
-    "release:validate": "node scripts/validate-release.mjs"
+    "release:validate": "node scripts/validate-release.mjs",
+    "package:kit-release": "node scripts/package-release.mjs",
+    "kit-release:validate": "node scripts/validate-release.mjs"
   },
   "dependencies": {
     "fflate": "0.8.2"
