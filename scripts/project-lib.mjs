@@ -1,3 +1,4 @@
+import { safePath } from "./safe-path.mjs";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -5,13 +6,13 @@ import { fileURLToPath } from "node:url";
 export const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 export async function readJson(relativePath) {
-  const absolutePath = path.join(ROOT, relativePath);
+  const absolutePath = safePath(ROOT, relativePath);
   return JSON.parse(await fs.readFile(absolutePath, "utf8"));
 }
 
 export async function pathExists(relativePath) {
   try {
-    await fs.access(path.join(ROOT, relativePath));
+    await fs.access(safePath(ROOT, relativePath));
     return true;
   } catch {
     return false;
@@ -59,7 +60,35 @@ export function requireStringArray(value, label, errors) {
   return true;
 }
 
+export function validationResult(errors, source = "project") {
+  return {
+    valid: errors.length === 0,
+    issues: [...new Set(errors)].map((reason) => ({
+      code: /证据|报告|验收/.test(reason)
+        ? "EVIDENCE_REQUIRED"
+        : /路径|符号链接/.test(reason)
+          ? "UNSAFE_PATH"
+          : /就绪|授权|跳过|评审/.test(reason)
+            ? "WORKFLOW_BLOCKED"
+            : "INVALID_INPUT",
+      field:
+        reason.match(/(?:items\[\d+\]|config\.paths|project[^\s]*\.json)[^\s：]*/)?.[0] || source,
+      reason,
+      nextAction: /证据|报告|验收/.test(reason)
+        ? "补齐当前有效引用并重新执行检查"
+        : /授权|评审/.test(reason)
+          ? "请产品经理确认当前范围与授权来源"
+          : "修正指出的字段或文件后重新检查",
+    })),
+  };
+}
+
 export function printResult(label, errors, successDetail) {
+  if (process.env.KIT_VALIDATION_JSON === "1") {
+    console.log(JSON.stringify(validationResult(errors, label), null, 2));
+    if (errors.length) process.exitCode = 1;
+    return errors.length === 0;
+  }
   if (errors.length) {
     console.error(`${label}失败（${errors.length} 项）：`);
     for (const error of [...new Set(errors)]) console.error(`- ${error}`);

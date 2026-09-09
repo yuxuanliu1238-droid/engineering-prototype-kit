@@ -40,6 +40,11 @@
       "name": "scenario-evidence-capture",
       "primaryResponsibility": "evidence-selection-by-risk",
       "role": "specialist"
+    },
+    {
+      "name": "development-handoff",
+      "primaryResponsibility": "reviewed-development-scope-and-task-context",
+      "role": "specialist"
     }
   ],
   "candidateDecisions": [
@@ -55,6 +60,13 @@
       "decision": "create",
       "implementationKind": "skill",
       "ownedBy": "prototype-change-retrospective",
+      "coordinatedBy": "change-and-delivery-governance"
+    },
+    {
+      "name": "development-handoff",
+      "decision": "create",
+      "implementationKind": "skill",
+      "ownedBy": "development-handoff",
       "coordinatedBy": "change-and-delivery-governance"
     }
   ],
@@ -82,6 +94,18 @@
     {
       "id": "scenario-evidence-plan-validation",
       "script": "skills/scenario-evidence-capture/scripts/validate-evidence-plan.mjs"
+    },
+    {
+      "id": "development-handoff-generation",
+      "script": "scripts/generate-development-task-list.mjs"
+    },
+    {
+      "id": "development-handoff-validation",
+      "script": "scripts/validate-development-handoff.mjs"
+    },
+    {
+      "id": "development-task-prompt-generation",
+      "script": "scripts/generate-development-task-prompt.mjs"
     }
   ],
   "optionalCapabilities": [

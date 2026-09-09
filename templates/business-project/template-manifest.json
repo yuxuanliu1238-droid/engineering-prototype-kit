@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "templateVersion": "0.3.0",
+  "templateVersion": "0.4.0",
   "modes": [
     "rapid-validation",
     "continuous-iteration"
@@ -84,6 +84,13 @@
       "inclusion": "on-demand",
       "activationId": "b2b-exception-sla",
       "ownership": "business"
+    },
+    {
+      "source": "optional/development-handoff/README.md",
+      "target": "docs/development/README.md",
+      "inclusion": "on-demand",
+      "activationId": "development-handoff",
+      "ownership": "kit-managed"
     }
   ],
   "generatedViews": [
@@ -101,6 +108,14 @@
       "sources": [
         "docs/requirements/registry.json"
       ]
+    },
+    {
+      "target": "docs/development/development-task-list.md",
+      "template": "internal/generated-views/development-task-list.md",
+      "sources": [
+        "docs/development/development-handoff.json"
+      ],
+      "activationId": "development-handoff"
     }
   ],
   "internalOnly": [
@@ -111,5 +126,125 @@
     "docs/design",
     "docs/review/v0.1-verification.md",
     "docs/review/v0.2-verification.md"
+  ],
+  "runtimeFiles": [
+    {
+      "source": "scripts/project-lib.mjs",
+      "target": ".prototype-kit/project-lib.mjs"
+    },
+    {
+      "source": "scripts/workflow-v3-lib.mjs",
+      "target": ".prototype-kit/workflow-v3-lib.mjs"
+    },
+    {
+      "source": "scripts/contract-lib.mjs",
+      "target": ".prototype-kit/contract-lib.mjs"
+    },
+    {
+      "source": "scripts/page-guide-lib.mjs",
+      "target": ".prototype-kit/page-guide-lib.mjs"
+    },
+    {
+      "source": "scripts/rapid-validation-lib.mjs",
+      "target": ".prototype-kit/rapid-validation-lib.mjs"
+    },
+    {
+      "source": "scripts/safe-path.mjs",
+      "target": ".prototype-kit/safe-path.mjs"
+    },
+    {
+      "source": "scripts/evidence-policy.mjs",
+      "target": ".prototype-kit/evidence-policy.mjs"
+    },
+    {
+      "source": "scripts/archive-policy.mjs",
+      "target": ".prototype-kit/archive-policy.mjs"
+    },
+    {
+      "source": "scripts/source-fingerprint.mjs",
+      "target": ".prototype-kit/source-fingerprint.mjs"
+    },
+    {
+      "source": "scripts/review-package.mjs",
+      "target": ".prototype-kit/review-package.mjs"
+    },
+    {
+      "source": "scripts/check-runner.mjs",
+      "target": ".prototype-kit/check-runner.mjs"
+    },
+    {
+      "source": "scripts/task-context.mjs",
+      "target": ".prototype-kit/task-context.mjs"
+    },
+    {
+      "source": "scripts/business-runtime.mjs",
+      "target": ".prototype-kit/business-cli.mjs"
+    },
+    {
+      "source": "scripts/development-handoff-lib.mjs",
+      "target": ".prototype-kit/development-handoff-lib.mjs",
+      "capability": "developmentHandoff"
+    },
+    {
+      "source": "scripts/development-task-prompt-lib.mjs",
+      "target": ".prototype-kit/development-task-prompt-lib.mjs",
+      "capability": "developmentHandoff"
+    },
+    {
+      "source": "scripts/cli-lib.mjs",
+      "target": ".prototype-kit/cli-lib.mjs"
+    },
+    {
+      "source": "scripts/workflow/model.mjs",
+      "target": ".prototype-kit/workflow/model.mjs"
+    },
+    {
+      "source": "scripts/workflow/policy.mjs",
+      "target": ".prototype-kit/workflow/policy.mjs"
+    },
+    {
+      "source": "scripts/workflow/validate.mjs",
+      "target": ".prototype-kit/workflow/validate.mjs"
+    },
+    {
+      "source": "scripts/workflow/render.mjs",
+      "target": ".prototype-kit/workflow/render.mjs"
+    },
+    {
+      "source": "scripts/handoff/model.mjs",
+      "target": ".prototype-kit/handoff/model.mjs",
+      "capability": "developmentHandoff"
+    },
+    {
+      "source": "scripts/handoff/validate.mjs",
+      "target": ".prototype-kit/handoff/validate.mjs",
+      "capability": "developmentHandoff"
+    },
+    {
+      "source": "scripts/handoff/coverage.mjs",
+      "target": ".prototype-kit/handoff/coverage.mjs",
+      "capability": "developmentHandoff"
+    },
+    {
+      "source": "scripts/handoff/render.mjs",
+      "target": ".prototype-kit/handoff/render.mjs",
+      "capability": "developmentHandoff"
+    },
+    {
+      "source": "scripts/runtime/common.mjs",
+      "target": ".prototype-kit/runtime/common.mjs"
+    },
+    {
+      "source": "scripts/runtime/generate.mjs",
+      "target": ".prototype-kit/runtime/generate.mjs"
+    },
+    {
+      "source": "scripts/runtime/validate.mjs",
+      "target": ".prototype-kit/runtime/validate.mjs"
+    },
+    {
+      "source": "scripts/runtime/package.mjs",
+      "target": ".prototype-kit/runtime/package.mjs"
+    }
   ]
 }

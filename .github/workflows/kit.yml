@@ -1,0 +1,37 @@
+name: Kit verification
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.12.4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check
+      - run: pnpm quality:check
+      - run: pnpm --dir prototype build
+      - run: pnpm install:test
+        env:
+          KIT_INSTALL_ONLINE: '1'
+      - name: Install browser test runtime
+        run: |
+          npm install --prefix "$RUNNER_TEMP/kit-browser" playwright@1.62.1
+          "$RUNNER_TEMP/kit-browser/node_modules/.bin/playwright" install --with-deps chromium
+      - name: Verify browser interactions
+        run: PLAYWRIGHT_MODULE="$RUNNER_TEMP/kit-browser/node_modules/playwright/index.mjs" pnpm browser:test
+      - run: pnpm package:kit-release && pnpm kit-release:validate && node scripts/test-release-unpack.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kit-verification
+          path: dist/verification/

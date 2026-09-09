@@ -16,6 +16,7 @@
 | 检查一致性、过期证据或已删除内容残留 | REVIEW | `$requirement-quality-review` | 只读给出证据，不顺带修复 |
 | 复盘最近修改、指定 CR 或时间范围 | REVIEW | `$prototype-change-retrospective` | 只读指定范围及直接关联差异，不默认扫描整个仓库 |
 | 检查页面是否可以评审、需要验证哪些场景、证据是否充分 | REVIEW | `$scenario-evidence-capture` | Skill 选择场景并判断充分性；脚本负责采集、索引和格式校验 |
+| 生成研发任务清单、整理研发评审差异、为 TASK 生成提示词 | PLAN / REVIEW | `$development-handoff` | 清单正式化需产品与研发确认；生成提示词不构成实施授权 |
 
 宽泛的“给我评审”先进入变更治理核对当前检查点和授权，再按需要转场景证据或质量审查；不得同时把多个专项 Skill 当成事实写入者。
 
@@ -35,7 +36,7 @@
 | 主阶段 | 默认动作 | 主要门禁 | 下一阶段 |
 |---|---|---|---|
 | recorded | 保存原始请求和来源 | 产品经理确认 AI 策略 | analysis-confirmation |
-| analysis-confirmation | 风险、影响、规则、范围与验收 | 产品经理确认风险和实施授权 | implementation |
+| analysis-confirmation | 风险、影响、规则、范围与验收；启用产研交接时形成任务清单草稿、研发评审差异和正式清单 | 产品经理确认风险和实施授权；产研交接正式化还需产品与研发确认 | implementation |
 | implementation | 执行动态活动并登记证据 | 就绪检查持续满足 | awaiting-review |
 | awaiting-review | 展示结果、检查和遗留风险 | 产品经理最终评审 | completed 或退回 |
 | completed | 保留确认和类型化产物 | 不自动启动新 CR | 新授权 |

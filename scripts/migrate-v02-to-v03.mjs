@@ -1,3 +1,7 @@
+import { parseOptions } from "./cli-lib.mjs";
+import { applyTransaction, restoreTransaction, snapshotFiles } from "./transaction-lib.mjs";
+import { safePath } from "./safe-path.mjs";
+import { runtimeEntries } from "./runtime-manifest.mjs";
 import { createHash } from "node:crypto";
 import { execFile } from "node:child_process";
 import { promises as fs } from "node:fs";
@@ -30,16 +34,11 @@ const STAGE_MAP = {
 };
 
 function parseArgs(argv) {
-  const result = { apply: false };
-  for (let index = 0; index < argv.length; index += 1) {
-    const arg = argv[index];
-    if (arg === "--apply") result.apply = true;
-    else if (arg.startsWith("--")) {
-      result[arg.slice(2)] = argv[index + 1];
-      index += 1;
-    }
-  }
-  return result;
+  const result = parseOptions(argv, {
+    values: ["project", "mode", "confirmed-by", "risk-map", "review-map", "rollback"],
+    flags: ["apply"],
+  });
+  return { apply: false, ...result };
 }
 
 async function readJson(file) {
@@ -55,12 +54,8 @@ async function exists(file) {
   }
 }
 
-function safeProjectPath(projectRoot, relativePath) {
-  const absolutePath = path.resolve(projectRoot, relativePath);
-  if (absolutePath !== projectRoot && !absolutePath.startsWith(`${projectRoot}${path.sep}`)) {
-    throw new Error(`配置路径越出目标项目：${relativePath}`);
-  }
-  return absolutePath;
+function safeProjectPath(root, relative) {
+  return safePath(root, relative);
 }
 
 function legacyEvidence(item) {
@@ -79,28 +74,33 @@ function legacyEvidence(item) {
 }
 
 function activitySourceId(id) {
-  return {
-    "scope-confirmation": "impact-analysis",
-    implementation: "interactive-prototype",
-    "page-check": "consistency-check",
-    "product-review": "user-review",
-  }[id] || id;
+  return (
+    {
+      "scope-confirmation": "impact-analysis",
+      implementation: "interactive-prototype",
+      "page-check": "consistency-check",
+      "product-review": "user-review",
+    }[id] || id
+  );
 }
 
 function migrateItem(item, risk, review) {
   const currentStageId = STAGE_MAP[item.currentStageId];
   const evidence = legacyEvidence(item);
-  const riskAssessment = currentStageId === "recorded" && !risk ? null : {
-    recommendedLevel: risk.recommendedLevel || risk.confirmedLevel,
-    confirmedLevel: risk.confirmedLevel,
-    triggers: risk.triggers || [],
-    rationale: risk.rationale,
-    proposedBy: "ai",
-    confirmedBy: risk.confirmedBy,
-    confirmedAt: risk.confirmedAt,
-    downgradeReason: risk.downgradeReason ?? null,
-    compensationMeasures: risk.compensationMeasures || [],
-  };
+  const riskAssessment =
+    currentStageId === "recorded" && !risk
+      ? null
+      : {
+          recommendedLevel: risk.recommendedLevel || risk.confirmedLevel,
+          confirmedLevel: risk.confirmedLevel,
+          triggers: risk.triggers || [],
+          rationale: risk.rationale,
+          proposedBy: "ai",
+          confirmedBy: risk.confirmedBy,
+          confirmedAt: risk.confirmedAt,
+          downgradeReason: risk.downgradeReason ?? null,
+          compensationMeasures: risk.compensationMeasures || [],
+        };
   const oldNodes = new Map((item.nodes || []).map((node) => [node.stageId, node]));
   const activities = makeActivities(riskAssessment).map((activity) => {
     const old = oldNodes.get(activitySourceId(activity.id));
@@ -111,6 +111,9 @@ function migrateItem(item, risk, review) {
         status: override.status,
         evidence: override.evidence || [],
         result: override.result ?? null,
+        ...(override.status === "已跳过"
+          ? { skipReason: override.result, skipConfirmationRef: override.evidence?.[0] }
+          : {}),
       };
     }
     if (currentStageId === "completed" && activity.id === "product-review" && review) {
@@ -133,7 +136,9 @@ function migrateItem(item, risk, review) {
     };
   });
 
-  const activatesImpactIds = ["implementation", "awaiting-review", "completed"].includes(currentStageId);
+  const activatesImpactIds = ["implementation", "awaiting-review", "completed"].includes(
+    currentStageId,
+  );
   const migrated = {
     id: item.id,
     summary: item.summary,
@@ -165,7 +170,8 @@ function migrateItem(item, risk, review) {
     remainingRisks: ["迁移记录尚未完成 V0.3 语义复核"],
     openQuestions: [
       "首次触达本需求时复核风险、范围与历史证据",
-      ...(!activatesImpactIds && [...(item.pageIds || []), ...(item.actionIds || []), ...(item.stateIds || [])].length
+      ...(!activatesImpactIds &&
+      [...(item.pageIds || []), ...(item.actionIds || []), ...(item.stateIds || [])].length
         ? ["V0.2 已记录的影响 ID 保留在迁移证据中，进入实施阶段后再确认激活"]
         : []),
     ],
@@ -187,28 +193,7 @@ function migrateItem(item, risk, review) {
 }
 
 async function rollbackLatest(projectRoot) {
-  const backupsRoot = path.join(projectRoot, ".prototype-kit", "backups");
-  const entries = (await fs.readdir(backupsRoot, { withFileTypes: true }))
-    .filter((entry) => entry.isDirectory() && entry.name.startsWith("migration-v02-v03-"))
-    .map((entry) => entry.name)
-    .sort();
-  const latest = entries.at(-1);
-  if (!latest) throw new Error("没有可恢复的 V0.2 → V0.3 迁移备份");
-  const backupRoot = path.join(backupsRoot, latest);
-  const manifest = await readJson(path.join(backupRoot, "backup-manifest.json"));
-  for (const entry of manifest.files) {
-    const target = safeProjectPath(projectRoot, entry.path);
-    if (entry.existed === false) {
-      await fs.rm(target, { force: true });
-      continue;
-    }
-    const source = path.join(backupRoot, "files", entry.path);
-    await fs.mkdir(path.dirname(target), { recursive: true });
-    await fs.copyFile(source, target);
-    const checksum = createHash("sha256").update(await fs.readFile(target)).digest("hex");
-    if (checksum !== entry.sha256) throw new Error(`恢复后摘要不一致：${entry.path}`);
-  }
-  console.log(`已恢复迁移前文件：${latest}`);
+  console.log(await restoreTransaction(projectRoot, "migration-v02-v03"));
 }
 
 const args = parseArgs(process.argv.slice(2));
@@ -219,10 +204,16 @@ if (args.rollback === "latest") {
   process.exit(0);
 }
 
-const configPath = path.join(projectRoot, "project.config.json");
+const configPath = safePath(projectRoot, "project.config.json");
 const config = await readJson(configPath);
-const registryPath = safeProjectPath(projectRoot, config.paths?.requirements || "docs/requirements/registry.json");
-const summaryPath = safeProjectPath(projectRoot, config.paths?.requirementsSummary || "docs/requirements/requirements.md");
+const registryPath = safeProjectPath(
+  projectRoot,
+  config.paths?.requirements || "docs/requirements/registry.json",
+);
+const summaryPath = safeProjectPath(
+  projectRoot,
+  config.paths?.requirementsSummary || "docs/requirements/requirements.md",
+);
 const registry = await readJson(registryPath);
 if (registry.schemaVersion !== 2) throw new Error("目标需求台账不是 Schema v2，未执行迁移");
 const riskMap = args["risk-map"] ? await readJson(path.resolve(args["risk-map"])) : {};
@@ -238,20 +229,27 @@ if (!args["confirmed-by"]?.trim()) {
 }
 
 for (const item of registry.items || []) {
-  if (!STAGE_MAP[item.currentStageId]) questions.push(`${item.id} 的旧阶段无法映射：${item.currentStageId}`);
+  if (!STAGE_MAP[item.currentStageId])
+    questions.push(`${item.id} 的旧阶段无法映射：${item.currentStageId}`);
   const mappedStage = STAGE_MAP[item.currentStageId];
   if (mappedStage !== "recorded" && !riskMap[item.id]) {
     questions.push(`${item.id} 缺少产品经理确认的 V0.3 风险等级`);
   }
   const activityOverrides = riskMap[item.id]?.activityOverrides;
   if (activityOverrides !== undefined) {
-    if (!activityOverrides || typeof activityOverrides !== "object" || Array.isArray(activityOverrides)) {
+    if (
+      !activityOverrides ||
+      typeof activityOverrides !== "object" ||
+      Array.isArray(activityOverrides)
+    ) {
       questions.push(`${item.id} 的 activityOverrides 必须是按活动 ID 索引的对象`);
     } else {
-      const expectedActivityIds = new Set(makeActivities({
-        confirmedLevel: riskMap[item.id]?.confirmedLevel,
-        triggers: riskMap[item.id]?.triggers || [],
-      }).map((activity) => activity.id));
+      const expectedActivityIds = new Set(
+        makeActivities({
+          confirmedLevel: riskMap[item.id]?.confirmedLevel,
+          triggers: riskMap[item.id]?.triggers || [],
+        }).map((activity) => activity.id),
+      );
       for (const [activityId, override] of Object.entries(activityOverrides)) {
         if (!expectedActivityIds.has(activityId)) {
           questions.push(`${item.id} 的活动映射包含当前风险清单之外的活动：${activityId}`);
@@ -270,7 +268,8 @@ for (const item of registry.items || []) {
   if (mappedStage === "completed") {
     if (!reviewMap[item.id]) questions.push(`${item.id} 缺少可追溯的产品评审确认映射`);
     const types = new Set((item.artifacts || []).map((artifact) => artifact.type));
-    if (!types.has("user-confirmation")) questions.push(`${item.id} 缺少历史 user-confirmation 产物`);
+    if (!types.has("user-confirmation"))
+      questions.push(`${item.id} 缺少历史 user-confirmation 产物`);
     if (!["test-report", "review-report"].some((type) => types.has(type))) {
       questions.push(`${item.id} 缺少历史测试或评审报告产物`);
     }
@@ -280,7 +279,9 @@ for (const item of registry.items || []) {
 if (!questions.length) {
   try {
     migrated = makeEmptyRegistry();
-    migrated.items = (registry.items || []).map((item) => migrateItem(item, riskMap[item.id], reviewMap[item.id]));
+    migrated.items = (registry.items || []).map((item) =>
+      migrateItem(item, riskMap[item.id], reviewMap[item.id]),
+    );
     const candidateErrors = validateRegistryData(migrated);
     questions.push(...candidateErrors.map((error) => `结构化迁移仍需确认：${error}`));
   } catch (error) {
@@ -288,14 +289,7 @@ if (!questions.length) {
   }
 }
 
-const migrationRuntimeSources = new Map([
-  [".prototype-kit/project-lib.mjs", "scripts/project-lib.mjs"],
-  [".prototype-kit/workflow-v3-lib.mjs", "scripts/workflow-v3-lib.mjs"],
-  [".prototype-kit/contract-lib.mjs", "scripts/contract-lib.mjs"],
-  [".prototype-kit/page-guide-lib.mjs", "scripts/page-guide-lib.mjs"],
-  [".prototype-kit/rapid-validation-lib.mjs", "scripts/rapid-validation-lib.mjs"],
-  [".prototype-kit/business-cli.mjs", "scripts/business-runtime.mjs"],
-]);
+const migrationRuntimeSources = new Map([...runtimeEntries().map((e) => [e.target, e.source])]);
 const migrationRuntimeContents = new Map();
 let legacyPackage = null;
 for (const [target, source] of migrationRuntimeSources) {
@@ -307,11 +301,11 @@ for (const [target, source] of migrationRuntimeSources) {
     if (!current.equals(desired)) questions.push(`${target} 已存在且内容无法确定是否可覆盖`);
   }
 }
-if (await exists(path.join(projectRoot, ".prototype-kit", "manifest.json"))) {
+if (await exists(safePath(projectRoot, ".prototype-kit/manifest.json"))) {
   questions.push("目标项目已存在 V0.3 管理清单，不能重复执行 V0.2 迁移");
 }
 try {
-  legacyPackage = await readJson(path.join(projectRoot, "package.json"));
+  legacyPackage = await readJson(safePath(projectRoot, "package.json"));
 } catch {
   questions.push("目标 V0.2 项目缺少可读取的 package.json，无法安装最小业务运行命令");
 }
@@ -328,7 +322,7 @@ for (const requiredPath of [
   }
 }
 
-const reportDirectory = path.join(projectRoot, "dist", "migrations");
+const reportDirectory = safePath(projectRoot, "dist/migrations");
 await fs.mkdir(reportDirectory, { recursive: true });
 const reportPath = path.join(reportDirectory, "v0.2-to-v0.3-impact-report.md");
 const report = [
@@ -363,7 +357,11 @@ if (questions.length) {
     `请一次性补齐以下 ${questions.length} 个无法确定的映射后再授权应用：${questions.join("；")}。`,
   );
 }
-await fs.writeFile(reportPath, `${report.join("\n")}\n`, "utf8");
+await fs.writeFile(
+  safePath(projectRoot, path.relative(projectRoot, reportPath)),
+  `${report.join("\n")}\n`,
+  "utf8",
+);
 console.log(`已生成迁移影响报告：${reportPath}`);
 
 if (!args.apply) {
@@ -384,7 +382,12 @@ if ((await readJson(tempRegistry)).schemaVersion !== 3) throw new Error("临时�
 
 const timestamp = new Date().toISOString();
 const timestampSlug = timestamp.replaceAll(":", "-");
-const backupRoot = path.join(projectRoot, ".prototype-kit", "backups", `migration-v02-v03-${timestamp.replaceAll(":", "-")}`);
+const backupRoot = path.join(
+  projectRoot,
+  ".prototype-kit",
+  "backups",
+  `migration-v02-v03-${timestamp.replaceAll(":", "-")}`,
+);
 const evidenceRelativePath = `.prototype-kit/migrations/${timestampSlug}.json`;
 const internalCandidates = [
   "skills",
@@ -402,11 +405,12 @@ const internalCandidates = [
 ];
 const retainedInternalPaths = [];
 for (const relativePath of internalCandidates) {
-  if (await exists(safeProjectPath(projectRoot, relativePath))) retainedInternalPaths.push(relativePath);
+  if (await exists(safeProjectPath(projectRoot, relativePath)))
+    retainedInternalPaths.push(relativePath);
 }
 
-const oldStatus = (await exists(path.join(projectRoot, "project-status.json")))
-  ? await readJson(path.join(projectRoot, "project-status.json"))
+const oldStatus = (await exists(safePath(projectRoot, "project-status.json")))
+  ? await readJson(safePath(projectRoot, "project-status.json"))
   : null;
 const upgradedConfig = {
   ...config,
@@ -414,7 +418,8 @@ const upgradedConfig = {
   instanceKind: "business-project",
   kitVersion: KIT_VERSION,
   projectName: config.projectName || path.basename(projectRoot),
-  packageName: config.packageName || packageNameFor(config.projectName || path.basename(projectRoot)),
+  packageName:
+    config.packageName || packageNameFor(config.projectName || path.basename(projectRoot)),
   paths: {
     ...(config.paths || {}),
     requirements: path.relative(projectRoot, registryPath).split(path.sep).join("/"),
@@ -427,7 +432,11 @@ const upgradedConfig = {
   },
   validation: {
     allowedSurfaces: config.validation?.allowedSurfaces || ["mobile", "admin", "web", "service"],
-    implementationStatuses: config.validation?.implementationStatuses || ["implemented", "partial", "planned"],
+    implementationStatuses: config.validation?.implementationStatuses || [
+      "implemented",
+      "partial",
+      "planned",
+    ],
   },
   legacyMigration: {
     fromKitVersion: config.kitVersion || "0.2.x",
@@ -439,14 +448,16 @@ const upgradedStatus = {
   schemaVersion: 2,
   currentMode: "continuous-iteration",
   modeState: "confirmed",
-  modeHistory: [{
-    mode: "continuous-iteration",
-    recommendedBy: "ai",
-    recommendationReason: "V0.2 项目已有正式 CR 台账，产品经理确认按持续迭代模式迁移",
-    confirmedBy: args["confirmed-by"].trim(),
-    confirmedAt: timestamp,
-    evidence: "V0.2 → V0.3 迁移明确授权",
-  }],
+  modeHistory: [
+    {
+      mode: "continuous-iteration",
+      recommendedBy: "ai",
+      recommendationReason: "V0.2 项目已有正式 CR 台账，产品经理确认按持续迭代模式迁移",
+      confirmedBy: args["confirmed-by"].trim(),
+      confirmedAt: timestamp,
+      evidence: "V0.2 → V0.3 迁移明确授权",
+    },
+  ],
   validationProfile: {
     focuses: ["business-solution"],
     primaryFocus: "business-solution",
@@ -471,7 +482,12 @@ const upgradedStatus = {
   updatedAt: timestamp,
 };
 const legacyScripts = { ...(legacyPackage.scripts || {}) };
-for (const commandName of ["check", "workflow:generate", "page-guides:generate", "package:review"]) {
+for (const commandName of [
+  "check",
+  "workflow:generate",
+  "page-guides:generate",
+  "package:review",
+]) {
   if (legacyScripts[commandName] && !legacyScripts[`legacy:${commandName}`]) {
     legacyScripts[`legacy:${commandName}`] = legacyScripts[commandName];
   }
@@ -486,7 +502,8 @@ const upgradedPackage = {
     check: "node .prototype-kit/business-cli.mjs check",
     "workflow:generate": "node .prototype-kit/business-cli.mjs generate",
     "page-guides:generate": "node .prototype-kit/business-cli.mjs generate-page-guides",
-    "package:review": "pnpm --dir prototype build && node .prototype-kit/business-cli.mjs package-review",
+    "package:review":
+      "pnpm --dir prototype build && node .prototype-kit/business-cli.mjs package-review",
   },
   dependencies: {
     ...(legacyPackage.dependencies || {}),
@@ -495,13 +512,23 @@ const upgradedPackage = {
 };
 
 const templateRoot = path.join(ROOT, "templates/business-project");
-const baselineTemplate = (await fs.readFile(path.join(templateRoot, "shared/docs/business-baseline.md"), "utf8"))
+const baselineTemplate = (
+  await fs.readFile(path.join(templateRoot, "shared/docs/business-baseline.md"), "utf8")
+)
   .replace("当前形态：业务验证简报", "当前形态：持续迭代最小基线")
   .replace("当前模式：待产品经理确认", "当前模式：continuous-iteration")
-  .concat("\n## 10. V0.2 兼容说明\n\n现有业务正文保持原位置，当前只建立最小入口。未被新需求触达的历史模块保持“未审计”，不得据此宣称已完成全项目治理。\n");
-const reviewTemplate = await fs.readFile(path.join(templateRoot, "shared/docs/review/review-confirmation.md"));
-const requirementsReadme = await fs.readFile(path.join(templateRoot, "continuous/docs/requirements/README.md"));
-const pageGuidesReadme = await fs.readFile(path.join(templateRoot, "continuous/docs/page-guides/README.md"));
+  .concat(
+    "\n## 10. V0.2 兼容说明\n\n现有业务正文保持原位置，当前只建立最小入口。未被新需求触达的历史模块保持“未审计”，不得据此宣称已完成全项目治理。\n",
+  );
+const reviewTemplate = await fs.readFile(
+  path.join(templateRoot, "shared/docs/review/review-confirmation.md"),
+);
+const requirementsReadme = await fs.readFile(
+  path.join(templateRoot, "continuous/docs/requirements/README.md"),
+);
+const pageGuidesReadme = await fs.readFile(
+  path.join(templateRoot, "continuous/docs/page-guides/README.md"),
+);
 const decisionsCompatibility = Buffer.from(
   "# 决策台账\n\n> V0.2 兼容入口：历史正向、负向决策保持原文件，不自动合并或改写。新需求首次触达相关规则时，由产品经理确认后再转入本台账。\n\n## 未审计历史入口\n\n- `positive.md`：如存在，仅作为历史来源；\n- `negative.md`：如存在，仅作为历史来源。\n",
 );
@@ -514,15 +541,23 @@ const materialDefaults = new Map([
   ["docs/page-guides/README.md", pageGuidesReadme],
 ]);
 const plannedWrites = new Map([
-  [path.relative(projectRoot, registryPath).split(path.sep).join("/"), await fs.readFile(tempRegistry)],
-  [path.relative(projectRoot, summaryPath).split(path.sep).join("/"), await fs.readFile(tempSummary)],
+  [
+    path.relative(projectRoot, registryPath).split(path.sep).join("/"),
+    await fs.readFile(tempRegistry),
+  ],
+  [
+    path.relative(projectRoot, summaryPath).split(path.sep).join("/"),
+    await fs.readFile(tempSummary),
+  ],
   ["project.config.json", Buffer.from(`${JSON.stringify(upgradedConfig, null, 2)}\n`)],
   ["project-status.json", Buffer.from(`${JSON.stringify(upgradedStatus, null, 2)}\n`)],
   ["package.json", Buffer.from(`${JSON.stringify(upgradedPackage, null, 2)}\n`)],
 ]);
-for (const [relativePath, content] of migrationRuntimeContents) plannedWrites.set(relativePath, content);
+for (const [relativePath, content] of migrationRuntimeContents)
+  plannedWrites.set(relativePath, content);
 for (const [relativePath, content] of materialDefaults) {
-  if (!(await exists(safeProjectPath(projectRoot, relativePath)))) plannedWrites.set(relativePath, content);
+  if (!(await exists(safeProjectPath(projectRoot, relativePath))))
+    plannedWrites.set(relativePath, content);
 }
 
 const migrationEvidence = {
@@ -533,17 +568,23 @@ const migrationEvidence = {
   confirmedBy: args["confirmed-by"].trim(),
   stageMap: STAGE_MAP,
   backup: path.relative(projectRoot, backupRoot),
-  originalRegistrySha256: createHash("sha256").update(await fs.readFile(registryPath)).digest("hex"),
+  originalRegistrySha256: createHash("sha256")
+    .update(await fs.readFile(registryPath))
+    .digest("hex"),
   originalItems: registry.items || [],
   originalProjectStatus: oldStatus,
   retainedInternalPaths,
 };
-plannedWrites.set(evidenceRelativePath, Buffer.from(`${JSON.stringify(migrationEvidence, null, 2)}\n`));
+plannedWrites.set(
+  evidenceRelativePath,
+  Buffer.from(`${JSON.stringify(migrationEvidence, null, 2)}\n`),
+);
 
 const requirementsRelativePath = path.relative(projectRoot, registryPath).split(path.sep).join("/");
 const summaryRelativePath = path.relative(projectRoot, summaryPath).split(path.sep).join("/");
 const ownershipFor = (relativePath) => {
-  if (migrationRuntimeContents.has(relativePath) || relativePath === "project.config.json") return "kit-managed";
+  if (migrationRuntimeContents.has(relativePath) || relativePath === "project.config.json")
+    return "kit-managed";
   if (relativePath === summaryRelativePath) return "generated-view";
   return "business";
 };
@@ -561,7 +602,9 @@ for (const relativePath of [
   requirementsRelativePath,
   summaryRelativePath,
 ]) {
-  const content = plannedWrites.get(relativePath) || await fs.readFile(safeProjectPath(projectRoot, relativePath));
+  const content =
+    plannedWrites.get(relativePath) ||
+    (await fs.readFile(safeProjectPath(projectRoot, relativePath)));
   manifestFiles.push({
     path: relativePath,
     ownership: ownershipFor(relativePath),
@@ -576,8 +619,12 @@ const projectManifest = {
   legacyCompatibility: true,
   files: manifestFiles.sort((left, right) => left.path.localeCompare(right.path)),
 };
-plannedWrites.set(".prototype-kit/manifest.json", Buffer.from(`${JSON.stringify(projectManifest, null, 2)}\n`));
+plannedWrites.set(
+  ".prototype-kit/manifest.json",
+  Buffer.from(`${JSON.stringify(projectManifest, null, 2)}\n`),
+);
 
+const expectedWrites = await snapshotFiles(projectRoot, [...plannedWrites.keys()]);
 const stagingRoot = await fs.mkdtemp(path.join(os.tmpdir(), "epk-v03-project-validation-"));
 const stagingPaths = new Set([
   ...plannedWrites.keys(),
@@ -589,7 +636,9 @@ const stagingPaths = new Set([
   "prototype/src/App.jsx",
 ]);
 for (const relativePath of stagingPaths) {
-  const content = plannedWrites.get(relativePath) || await fs.readFile(safeProjectPath(projectRoot, relativePath));
+  const content =
+    plannedWrites.get(relativePath) ||
+    (await fs.readFile(safeProjectPath(projectRoot, relativePath)));
   const target = path.join(stagingRoot, relativePath);
   await fs.mkdir(path.dirname(target), { recursive: true });
   await fs.writeFile(target, content);
@@ -603,28 +652,8 @@ try {
   throw new Error(`迁移临时业务项目校验失败：${error.stderr || error.stdout || error.message}`);
 }
 
-const backupFiles = [
-  ...plannedWrites.keys(),
-].filter((value, index, array) => array.indexOf(value) === index);
-const backupManifest = { createdAt: timestamp, files: [] };
-for (const relativePath of backupFiles) {
-  const source = safeProjectPath(projectRoot, relativePath);
-  if (await exists(source)) {
-    const content = await fs.readFile(source);
-    const target = path.join(backupRoot, "files", relativePath);
-    await fs.mkdir(path.dirname(target), { recursive: true });
-    await fs.writeFile(target, content);
-    backupManifest.files.push({ path: relativePath, existed: true, sha256: createHash("sha256").update(content).digest("hex") });
-  } else {
-    backupManifest.files.push({ path: relativePath, existed: false, sha256: null });
-  }
-}
-await fs.mkdir(backupRoot, { recursive: true });
-await fs.writeFile(path.join(backupRoot, "backup-manifest.json"), `${JSON.stringify(backupManifest, null, 2)}\n`, "utf8");
-
-for (const [relativePath, content] of plannedWrites) {
-  const target = safeProjectPath(projectRoot, relativePath);
-  await fs.mkdir(path.dirname(target), { recursive: true });
-  await fs.writeFile(target, content);
-}
-console.log(`迁移已应用；备份位于 ${path.relative(projectRoot, backupRoot)}`);
+const transactionBackup = await applyTransaction(projectRoot, "migration-v02-v03", plannedWrites, {
+  expected: expectedWrites,
+});
+await fs.rm(stagingRoot, { recursive: true, force: true });
+console.log(`迁移已应用；备份位于 ${transactionBackup}`);

@@ -1,3 +1,4 @@
+import { safePath } from "./safe-path.mjs";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,13 +10,23 @@ function list(values, empty = "无") {
 
 function readinessLines(checks = []) {
   return checks.length
-    ? checks.map((check) => `- \`${check.id}\`：${check.status}${check.evidence?.length ? `（证据：${check.evidence.join("、")}）` : ""}`).join("\n")
+    ? checks
+        .map(
+          (check) =>
+            `- \`${check.id}\`：${check.status}${check.evidence?.length ? `（证据：${check.evidence.join("、")}）` : ""}`,
+        )
+        .join("\n")
     : "- 未提供";
 }
 
 function artifactLines(artifacts = []) {
   return artifacts.length
-    ? artifacts.map((artifact) => `- \`${artifact.type}\`：${artifact.location}（支撑：${artifact.supports.join("、")}）`).join("\n")
+    ? artifacts
+        .map(
+          (artifact) =>
+            `- \`${artifact.type}\`：${artifact.location}（支撑：${artifact.supports.join("、")}）`,
+        )
+        .join("\n")
     : "- 无";
 }
 
@@ -59,7 +70,7 @@ export function renderReviewPackage(item, options = {}) {
     "",
     "## 待确认项",
     "",
-    list(item.pendingQuestions),
+    list(item.openQuestions ?? item.pendingQuestions),
     "",
   ];
   return lines.join("\n");
@@ -82,7 +93,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const registry = await readJson(config.paths.requirements);
   const item = registry.items.find((candidate) => candidate.id === args.cr);
   if (!item) throw new Error(`未找到需求：${args.cr}`);
-  const outputPath = path.resolve(ROOT, args.output);
+  const outputPath = safePath(ROOT, args.output);
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await fs.writeFile(outputPath, renderReviewPackage(item), "utf8");
   console.log(`评审包已生成：${path.relative(ROOT, outputPath)}`);

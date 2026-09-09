@@ -5,7 +5,7 @@
 ## 1. 当前总览
 
 - 需求总数：{{totalCount}}
-- 实施中：{{implementationCount}}
+- 实施阶段：{{implementationCount}}
 - 等待确认：{{waitingHumanCount}}
 - 待评审：{{awaitingReviewCount}}
 - 高风险：{{highRiskCount}}

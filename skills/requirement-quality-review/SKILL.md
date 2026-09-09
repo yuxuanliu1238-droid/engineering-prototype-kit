@@ -9,9 +9,9 @@ description: Run a read-only audit across task control, decisions, state machine
 
 只报告问题，不修改源文件。用户确认问题后，另行进入修复任务。
 
-## 必读
+## 按需事实源
 
-1. `AGENTS.md`。
+1. 复用已核对的 `AGENTS.md`，源文件变化时再读。
 2. `docs/review/review-baseline.md`。
 3. `docs/review/review-checklist.md`。
 4. 当前有效业务基线，以及需求实际触达的决策和状态机。

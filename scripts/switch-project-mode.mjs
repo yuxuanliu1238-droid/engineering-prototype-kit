@@ -1,19 +1,19 @@
+import { parseOptions } from "./cli-lib.mjs";
+import os from "node:os";
+
+import { safePath } from "./safe-path.mjs";
+import { applyTransaction, restoreTransaction, previewGuard } from "./transaction-lib.mjs";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { addContinuousStructure } from "./project-generator-lib.mjs";
 
 function parseArgs(argv) {
-  const result = { apply: false, continueBuild: false };
-  for (let index = 0; index < argv.length; index += 1) {
-    const arg = argv[index];
-    if (arg === "--apply") result.apply = true;
-    else if (arg === "--continue-build") result.continueBuild = true;
-    else if (arg.startsWith("--")) {
-      result[arg.slice(2)] = argv[index + 1];
-      index += 1;
-    }
-  }
-  return result;
+  const result = parseOptions(argv, {
+    values: ["project", "restore", "outcome", "confirmed-by", "evidence"],
+    flags: ["apply", "continue-build"],
+  });
+  result.continueBuild = !!result["continue-build"];
+  return { apply: false, ...result };
 }
 
 async function readJson(file) {
@@ -23,17 +23,34 @@ async function readJson(file) {
 const args = parseArgs(process.argv.slice(2));
 if (!args.project) throw new Error("缺少业务项目路径 --project");
 const projectRoot = path.resolve(args.project);
-const statusPath = path.join(projectRoot, "project-status.json");
-const manifestPath = path.join(projectRoot, ".prototype-kit/manifest.json");
-const baselinePath = path.join(projectRoot, "docs/business-baseline.md");
-const evidencePath = args.evidence ? path.resolve(projectRoot, args.evidence) : null;
+if (args.restore === "latest") {
+  await restoreTransaction(projectRoot, "mode-switch");
+  process.exit(0);
+}
+const config = await readJson(safePath(projectRoot, "project.config.json"));
+const statusPath = safePath(projectRoot, "project-status.json");
+const manifestPath = safePath(projectRoot, ".prototype-kit/manifest.json");
+const baselinePath = safePath(projectRoot, "docs/business-baseline.md");
+const evidencePath = args.evidence ? safePath(projectRoot, args.evidence) : null;
 const status = await readJson(statusPath);
 const manifest = await readJson(manifestPath);
+const preflight = await previewGuard(
+  projectRoot,
+  "mode-switch",
+  [
+    "project.config.json",
+    "project-status.json",
+    ".prototype-kit/manifest.json",
+    "docs/business-baseline.md",
+    ...(args.evidence ? [args.evidence] : []),
+  ],
+  args.apply,
+);
 const issues = [];
 let baseline = "";
 
 if (status.currentMode !== "rapid-validation") issues.push("当前项目不是快速验证模式");
-if (!['approved', 'conditional'].includes(args.outcome)) {
+if (!["approved", "conditional"].includes(args.outcome)) {
   issues.push("评审结论必须为 approved 或 conditional");
 }
 if (!args.continueBuild) issues.push("缺少继续建设结论 --continue-build");
@@ -43,12 +60,16 @@ try {
   if (!baseline.includes("当前模式：rapid-validation")) {
     issues.push("业务基线没有明确记录当前快速验证模式");
   }
-  const expectedReview = args.outcome === "conditional" ? "需求评审结论：有条件通过" : "需求评审结论：通过";
+  const expectedReview =
+    args.outcome === "conditional" ? "需求评审结论：有条件通过" : "需求评审结论：通过";
   if (!baseline.includes(expectedReview)) issues.push("业务基线中的评审结论与本次切换不一致");
   if (/正式范围：\s*未生效/.test(baseline)) issues.push("业务基线尚未形成继续建设的正式范围");
   const assumptionRows = baseline.split("\n").filter((line) => /^\|\s*ASM-[^|]+\|/.test(line));
   for (const row of assumptionRows) {
-    const cells = row.split("|").map((cell) => cell.trim()).filter(Boolean);
+    const cells = row
+      .split("|")
+      .map((cell) => cell.trim())
+      .filter(Boolean);
     const statusCell = cells.at(-1);
     if (!["已确认", "已否定", "仍待确认"].includes(statusCell)) {
       issues.push(`临时假设尚未转换为评审后状态：${cells[0] || row}`);
@@ -60,8 +81,7 @@ try {
 if (!evidencePath) issues.push("缺少评审确认证据 --evidence");
 else if (evidencePath !== projectRoot && !evidencePath.startsWith(`${projectRoot}${path.sep}`)) {
   issues.push("评审确认证据必须位于目标业务项目内");
-}
-else {
+} else {
   try {
     const evidence = await fs.readFile(evidencePath, "utf8");
     const unresolvedMarkers = [
@@ -75,7 +95,8 @@ else {
     if (unresolvedMarkers.some((marker) => evidence.includes(marker))) {
       issues.push("评审确认单仍包含未生效的关键占位内容");
     }
-    const expectedOutcome = args.outcome === "conditional" ? "评审结论：有条件通过" : "评审结论：通过";
+    const expectedOutcome =
+      args.outcome === "conditional" ? "评审结论：有条件通过" : "评审结论：通过";
     if (!evidence.includes(expectedOutcome)) issues.push("命令中的评审结论与评审确认单不一致");
     if (!evidence.includes("是否明确继续建设：是")) issues.push("评审确认单没有明确继续建设");
     if (!evidence.includes("产品经理确认模式：continuous-iteration")) {
@@ -90,7 +111,7 @@ else {
   }
 }
 
-const reportDirectory = path.join(projectRoot, "dist", "mode-switch");
+const reportDirectory = safePath(projectRoot, "dist/mode-switch");
 await fs.mkdir(reportDirectory, { recursive: true });
 const reportPath = path.join(reportDirectory, "rapid-to-continuous-impact-report.md");
 const lines = [
@@ -122,23 +143,28 @@ if (!args.apply) {
 if (issues.length) throw new Error(`模式切换被阻断：${issues[0]}`);
 
 const timestamp = new Date().toISOString();
-const backupRoot = path.join(projectRoot, ".prototype-kit", "backups", `mode-switch-${timestamp.replaceAll(":", "-")}`);
-await fs.mkdir(backupRoot, { recursive: true });
-for (const relativePath of ["project-status.json", ".prototype-kit/manifest.json", "docs/business-baseline.md"]) {
-  const source = path.join(projectRoot, relativePath);
-  const target = path.join(backupRoot, relativePath);
-  await fs.mkdir(path.dirname(target), { recursive: true });
-  await fs.copyFile(source, target);
+const staging = await fs.mkdtemp(path.join(os.tmpdir(), "kit-switch-"));
+let added;
+const writes = new Map();
+try {
+  added = await addContinuousStructure(staging, { paths: config.paths });
+  for (const entry of added) {
+    writes.set(entry.path, await fs.readFile(safePath(staging, entry.path)));
+    preflight[entry.path] = null;
+  }
+} finally {
+  await fs.rm(staging, { recursive: true, force: true });
 }
-
-const added = await addContinuousStructure(projectRoot);
 const evidenceRelativePath = path.relative(projectRoot, evidencePath).split(path.sep).join("/");
 const updatedBaseline = baseline
   .replace("当前形态：业务验证简报", "当前形态：正式业务基线")
   .replace("当前模式：rapid-validation", "当前模式：continuous-iteration")
   .replace(/生效评审：.*$/m, `生效评审：${evidenceRelativePath}`)
-  .replace(/最后确认：.*$/m, `最后确认：${args["confirmed-by"].trim()} / ${timestamp.slice(0, 10)}`);
-await fs.writeFile(baselinePath, updatedBaseline, "utf8");
+  .replace(
+    /最后确认：.*$/m,
+    `最后确认：${args["confirmed-by"].trim()} / ${timestamp.slice(0, 10)}`,
+  );
+writes.set("docs/business-baseline.md", Buffer.from(updatedBaseline));
 status.currentMode = "continuous-iteration";
 status.modeState = "confirmed";
 status.modeHistory.push({
@@ -153,16 +179,17 @@ status.modeHistory.push({
 });
 status.nextGate = "change-request-authorization";
 status.updatedAt = timestamp;
-await fs.writeFile(statusPath, `${JSON.stringify(status, null, 2)}\n`, "utf8");
+writes.set("project-status.json", Buffer.from(JSON.stringify(status, null, 2) + "\n"));
 
 const byPath = new Map((manifest.files || []).map((entry) => [entry.path, entry]));
 for (const entry of added) byPath.set(entry.path, entry);
 const baselineEntry = byPath.get("docs/business-baseline.md");
 if (baselineEntry) {
   const { createHash } = await import("node:crypto");
-  baselineEntry.sha256 = createHash("sha256").update(await fs.readFile(baselinePath)).digest("hex");
+  baselineEntry.sha256 = createHash("sha256").update(updatedBaseline).digest("hex");
   byPath.set(baselineEntry.path, baselineEntry);
 }
 manifest.files = [...byPath.values()].sort((a, b) => a.path.localeCompare(b.path));
-await fs.writeFile(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+writes.set(".prototype-kit/manifest.json", Buffer.from(JSON.stringify(manifest, null, 2) + "\n"));
+await applyTransaction(projectRoot, "mode-switch", writes, { expected: preflight });
 console.log("模式已切换为 continuous-iteration；未启用任何按需模块。");

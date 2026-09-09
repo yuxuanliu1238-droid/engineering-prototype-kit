@@ -1,15 +1,9 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import {
-  hasText,
-  pathExists,
-  printResult,
-  readJson,
-  ROOT,
-  walk,
-} from "./project-lib.mjs";
+import { hasText, pathExists, printResult, readJson, ROOT, walk } from "./project-lib.mjs";
 
 const errors = [];
+const archive = process.argv.includes("--archive");
 const requiredPaths = [
   "START-HERE.md",
   "README.md",
@@ -47,7 +41,7 @@ const requiredPaths = [
   "scripts/upgrade-project.mjs",
 ];
 
-for (const relativePath of requiredPaths) {
+for (const relativePath of requiredPaths.filter((p) => archive || !p.startsWith("docs/"))) {
   if (!(await pathExists(relativePath))) errors.push(`缺少必需路径：${relativePath}`);
 }
 
@@ -88,8 +82,9 @@ const secretPatterns = [
 ];
 const scanFiles = await walk(".", {
   exclude: (relativePath, entry) =>
-    entry.isDirectory() &&
-    ["node_modules", "dist", ".git", "inbox"].includes(path.basename(relativePath)),
+    (entry.isDirectory() &&
+      ["node_modules", "dist", ".git", "inbox"].includes(path.basename(relativePath))) ||
+    (!archive && (relativePath === "docs" || relativePath.startsWith("docs/"))),
 });
 
 for (const relativePath of scanFiles) {

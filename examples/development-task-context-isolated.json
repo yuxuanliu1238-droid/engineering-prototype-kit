@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "listId": "HANDOFF-DEMO-001",
+  "listVersion": "V1.0",
+  "taskId": "TASK-002",
+  "retrievedAt": "2099-01-03T10:00:00+08:00",
+  "materials": [
+    {
+      "materialId": "MAT-REQ",
+      "resolutionState": "manual-confirmed",
+      "observedLocator": "钉钉文档：匿名订单协同需求／订单审核",
+      "observedRevision": null,
+      "confirmedBy": "示例产品负责人",
+      "confirmedAt": "2099-01-03",
+      "reason": null,
+      "excerpts": [
+        {
+          "section": "订单审核",
+          "content": "待审核订单允许打开审核弹窗。提交审核时校验可分配库存；库存不足时不得审核通过，并向操作人显示原因。"
+        }
+      ],
+      "attachments": []
+    },
+    {
+      "materialId": "MAT-PROTO",
+      "resolutionState": "matched",
+      "observedLocator": "prototype:/app/orders?reviewTask=TASK-002",
+      "observedRevision": "prototype-demo-v1",
+      "confirmedBy": null,
+      "confirmedAt": null,
+      "reason": null,
+      "excerpts": [],
+      "attachments": [
+        "原型入口：运营后台／订单管理／订单列表／审核"
+      ]
+    },
+    {
+      "materialId": "MAT-SCREEN",
+      "resolutionState": "matched",
+      "observedLocator": "示例截图：订单审核弹窗",
+      "observedRevision": "anonymous-screenshot-v1",
+      "confirmedBy": null,
+      "confirmedAt": null,
+      "reason": null,
+      "excerpts": [],
+      "attachments": [
+        "截图：订单审核弹窗，包含库存校验结果和确认操作"
+      ]
+    },
+    {
+      "materialId": "MAT-STOCK",
+      "resolutionState": "unverified",
+      "observedLocator": "共享文档：匿名库存系统接口说明／库存查询与库存占用",
+      "observedRevision": null,
+      "confirmedBy": null,
+      "confirmedAt": null,
+      "reason": "当前材料入口未提供可自动读取的版本号，实施前需要研发人工确认仍为评审版本。",
+      "excerpts": [
+        {
+          "section": "库存查询与库存占用",
+          "content": "审核提交前先查询可分配库存；查询失败、超时或库存不足时不得继续占用。占用成功后才可返回审核成功。"
+        }
+      ],
+      "attachments": []
+    }
+  ]
+}

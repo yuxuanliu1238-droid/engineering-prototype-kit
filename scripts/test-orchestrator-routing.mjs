@@ -13,6 +13,7 @@ const routes = [
   ["$change-and-delivery-governance", "授权范围"],
   ["$prototype-change-retrospective", "复盘最近修改"],
   ["$scenario-evidence-capture", "是否可以评审"],
+  ["$development-handoff", "研发任务清单"],
 ];
 
 for (const [skillName, trigger] of routes) {
@@ -32,4 +33,4 @@ for (const forbidden of ["固定业务状态", "特定角色端", "固定领域�
   assert.equal(combined.includes(forbidden), false, `导航不得包含项目专属内容：${forbidden}`);
 }
 
-console.log("导航路由测试通过：七个专项 Skill、两个新增自然语言入口和确定性脚本边界均已覆盖。");
+console.log("导航路由测试通过：八个专项 Skill、产研交接入口和确定性脚本边界均已覆盖。");

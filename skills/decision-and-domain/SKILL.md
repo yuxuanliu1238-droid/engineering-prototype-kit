@@ -5,9 +5,9 @@ description: Turn explicitly confirmed conclusions into source-traceable decisio
 
 # 决策与业务建模
 
-## 必读
+## 按需事实源
 
-1. `AGENTS.md`。
+1. 复用已核对的 `AGENTS.md`，源文件变化时再读。
 2. `docs/business-baseline.md`。
 3. `docs/decisions/decisions.md`（存在时）。
 4. `docs/domain/business-model.md`（需求触达时才创建）。

@@ -5,9 +5,9 @@ description: Classify contracts, proposals, meeting notes, raw transcripts, scre
 
 # 业务探索
 
-## 必读
+## 按需事实源
 
-1. 根目录 `AGENTS.md`。
+1. 复用已核对的根目录 `AGENTS.md`，源文件变化时再读。
 2. `project.config.json`。
 3. `docs/business-baseline.md`（业务实例）或现有探索材料（Kit 示例）。
 4. 用户明确指定的资料；不得自行扫描其他业务项目。

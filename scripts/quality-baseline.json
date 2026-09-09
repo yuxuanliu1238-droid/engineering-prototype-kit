@@ -1,0 +1,585 @@
+{
+  "source": "本轮改动前的活跃源码快照",
+  "files": {
+    "scripts/business-runtime.mjs": {
+      "bytes": 19084,
+      "lines": 402,
+      "maxLine": 165,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/configure-development-handoff.mjs": {
+      "bytes": 7742,
+      "lines": 197,
+      "maxLine": 114,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/contract-lib.mjs": {
+      "bytes": 4513,
+      "lines": 115,
+      "maxLine": 97,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/create-project.mjs": {
+      "bytes": 1976,
+      "lines": 49,
+      "maxLine": 100,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/development-handoff-lib.mjs": {
+      "bytes": 33091,
+      "lines": 715,
+      "maxLine": 252,
+      "longLines": 1,
+      "unused": []
+    },
+    "scripts/development-task-prompt-lib.mjs": {
+      "bytes": 11013,
+      "lines": 246,
+      "maxLine": 122,
+      "longLines": 0,
+      "unused": [
+        {
+          "name": "isObject",
+          "line": 27
+        }
+      ]
+    },
+    "scripts/generate-development-task-list.mjs": {
+      "bytes": 1771,
+      "lines": 47,
+      "maxLine": 107,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/generate-development-task-prompt.mjs": {
+      "bytes": 1972,
+      "lines": 49,
+      "maxLine": 106,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/generate-requirements.mjs": {
+      "bytes": 705,
+      "lines": 17,
+      "maxLine": 81,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/migrate-v02-to-v03.mjs": {
+      "bytes": 26685,
+      "lines": 631,
+      "maxLine": 157,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/package-release.mjs": {
+      "bytes": 1643,
+      "lines": 43,
+      "maxLine": 90,
+      "longLines": 0,
+      "unused": [
+        {
+          "name": "strToU8",
+          "line": 4
+        }
+      ]
+    },
+    "scripts/page-guide-lib.mjs": {
+      "bytes": 6070,
+      "lines": 131,
+      "maxLine": 234,
+      "longLines": 3,
+      "unused": []
+    },
+    "scripts/project-generator-lib.mjs": {
+      "bytes": 17620,
+      "lines": 387,
+      "maxLine": 155,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/project-lib.mjs": {
+      "bytes": 2192,
+      "lines": 72,
+      "maxLine": 87,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/rapid-validation-lib.mjs": {
+      "bytes": 4657,
+      "lines": 83,
+      "maxLine": 140,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/review-package.mjs": {
+      "bytes": 3151,
+      "lines": 90,
+      "maxLine": 164,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/source-fingerprint.mjs": {
+      "bytes": 3989,
+      "lines": 99,
+      "maxLine": 98,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/switch-project-mode.mjs": {
+      "bytes": 8070,
+      "lines": 169,
+      "maxLine": 120,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/test-development-handoff-skill.mjs": {
+      "bytes": 1681,
+      "lines": 44,
+      "maxLine": 91,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/test-development-handoff.mjs": {
+      "bytes": 7343,
+      "lines": 179,
+      "maxLine": 112,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/test-development-task-prompt.mjs": {
+      "bytes": 4642,
+      "lines": 101,
+      "maxLine": 108,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/test-existing-skill-enhancements.mjs": {
+      "bytes": 2479,
+      "lines": 52,
+      "maxLine": 147,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/test-guardrails.mjs": {
+      "bytes": 8686,
+      "lines": 311,
+      "maxLine": 82,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/test-orchestrator-routing.mjs": {
+      "bytes": 1683,
+      "lines": 37,
+      "maxLine": 133,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/test-project-tools.mjs": {
+      "bytes": 29367,
+      "lines": 571,
+      "maxLine": 289,
+      "longLines": 1,
+      "unused": []
+    },
+    "scripts/test-prototype-change-retrospective.mjs": {
+      "bytes": 1535,
+      "lines": 48,
+      "maxLine": 84,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/test-review-evidence.mjs": {
+      "bytes": 1826,
+      "lines": 37,
+      "maxLine": 126,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/test-scenario-evidence-capture.mjs": {
+      "bytes": 1676,
+      "lines": 36,
+      "maxLine": 114,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/upgrade-project.mjs": {
+      "bytes": 13340,
+      "lines": 326,
+      "maxLine": 122,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/validate-contracts.mjs": {
+      "bytes": 663,
+      "lines": 22,
+      "maxLine": 70,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/validate-development-handoff.mjs": {
+      "bytes": 1454,
+      "lines": 39,
+      "maxLine": 109,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/validate-example.mjs": {
+      "bytes": 2643,
+      "lines": 73,
+      "maxLine": 106,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/validate-links.mjs": {
+      "bytes": 1255,
+      "lines": 37,
+      "maxLine": 92,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/validate-project.mjs": {
+      "bytes": 4030,
+      "lines": 104,
+      "maxLine": 88,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/validate-release.mjs": {
+      "bytes": 3429,
+      "lines": 85,
+      "maxLine": 88,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/validate-skills.mjs": {
+      "bytes": 5274,
+      "lines": 134,
+      "maxLine": 103,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/validate-templates.mjs": {
+      "bytes": 7318,
+      "lines": 197,
+      "maxLine": 134,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/validate-workflow.mjs": {
+      "bytes": 764,
+      "lines": 20,
+      "maxLine": 81,
+      "longLines": 0,
+      "unused": []
+    },
+    "scripts/workflow-lib.mjs": {
+      "bytes": 11951,
+      "lines": 351,
+      "maxLine": 206,
+      "longLines": 1,
+      "unused": []
+    },
+    "scripts/workflow-v3-lib.mjs": {
+      "bytes": 29313,
+      "lines": 841,
+      "maxLine": 246,
+      "longLines": 1,
+      "unused": []
+    },
+    "prototype/src/App.jsx": {
+      "bytes": 8699,
+      "lines": 251,
+      "maxLine": 85,
+      "longLines": 0,
+      "unused": []
+    },
+    "prototype/src/contracts/builders.js": {
+      "bytes": 1989,
+      "lines": 115,
+      "maxLine": 88,
+      "longLines": 0,
+      "unused": []
+    },
+    "prototype/src/contracts/data/starter.js": {
+      "bytes": 6079,
+      "lines": 173,
+      "maxLine": 70,
+      "longLines": 0,
+      "unused": []
+    },
+    "prototype/src/contracts/index.js": {
+      "bytes": 235,
+      "lines": 8,
+      "maxLine": 79,
+      "longLines": 0,
+      "unused": []
+    },
+    "prototype/src/main.jsx": {
+      "bytes": 238,
+      "lines": 11,
+      "maxLine": 51,
+      "longLines": 0,
+      "unused": []
+    },
+    "templates/business-project/runtime/prototype/src/App.jsx": {
+      "bytes": 12828,
+      "lines": 84,
+      "maxLine": 1640,
+      "longLines": 12,
+      "unused": []
+    },
+    "templates/business-project/runtime/prototype/src/main.jsx": {
+      "bytes": 238,
+      "lines": 11,
+      "maxLine": 51,
+      "longLines": 0,
+      "unused": []
+    },
+    "skills/prototype-change-retrospective/scripts/collect-scope.mjs": {
+      "bytes": 4832,
+      "lines": 116,
+      "maxLine": 145,
+      "longLines": 0,
+      "unused": []
+    },
+    "skills/scenario-evidence-capture/scripts/validate-evidence-plan.mjs": {
+      "bytes": 6243,
+      "lines": 126,
+      "maxLine": 125,
+      "longLines": 0,
+      "unused": []
+    }
+  },
+  "totals": {
+    "files": 49,
+    "bytes": 339677,
+    "longLines": 19,
+    "unused": 2,
+    "duplicateWindows": 54
+  },
+  "duplicateGroups": [
+    [
+      "scripts/business-runtime.mjs",
+      "scripts/migrate-v02-to-v03.mjs"
+    ],
+    [
+      "scripts/business-runtime.mjs",
+      "scripts/migrate-v02-to-v03.mjs"
+    ],
+    [
+      "scripts/business-runtime.mjs",
+      "scripts/migrate-v02-to-v03.mjs"
+    ],
+    [
+      "scripts/business-runtime.mjs",
+      "scripts/migrate-v02-to-v03.mjs"
+    ],
+    [
+      "scripts/business-runtime.mjs",
+      "scripts/migrate-v02-to-v03.mjs"
+    ],
+    [
+      "scripts/configure-development-handoff.mjs",
+      "scripts/migrate-v02-to-v03.mjs",
+      "scripts/upgrade-project.mjs"
+    ],
+    [
+      "scripts/configure-development-handoff.mjs",
+      "scripts/migrate-v02-to-v03.mjs",
+      "scripts/upgrade-project.mjs"
+    ],
+    [
+      "scripts/generate-development-task-list.mjs",
+      "scripts/validate-development-handoff.mjs"
+    ],
+    [
+      "scripts/migrate-v02-to-v03.mjs",
+      "scripts/upgrade-project.mjs"
+    ],
+    [
+      "scripts/migrate-v02-to-v03.mjs",
+      "scripts/upgrade-project.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ],
+    [
+      "scripts/workflow-lib.mjs",
+      "scripts/workflow-v3-lib.mjs"
+    ]
+  ]
+}

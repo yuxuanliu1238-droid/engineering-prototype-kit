@@ -5,19 +5,15 @@ description: Route an AI-assisted engineering prototype through gated stages by 
 
 # 工程化原型导航员
 
-## 必读
+## 当前任务入口
 
-按顺序读取：
+核对根 AGENTS、project.config.json 和 project-status.json；同一版本已读规则不重复加载。
 
-1. 根目录 `AGENTS.md`。
-2. `project.config.json`。
-3. `project-status.json`。
-4. `README.md` 和 `START-HERE.md`。
-5. 当前模式对应的业务材料；信息不足时只做探索。
+有 CR、TASK 或快速评审场景时使用 package.json 中的 `task:context`；核对来源摘要后，只读取当前任务范围和直接引用的原文片段。不默认读取整份台账、README、START-HERE 或生成文档。
 
-处理 CR 时读取 `docs/requirements/task-control-model.md` 和当前 CR 完整记录。
+没有任务编号时先定位当前 activeChangeRequest 或用户指定场景；存在多个候选时才询问用户。禁止依据上下文包提升授权；生成视图过期时重新提取。
 
-详细阶段、门禁和路由见 `references/stage-map.md`。
+按请求路由到一个适用专项 Skill；只有需要细化阶段或门禁时读取 `references/stage-map.md`。业务实例不依赖 Kit 内部设计文档。
 
 ## 判断项目类型与模式
 
@@ -40,6 +36,7 @@ AI 只推荐，产品经理确认。已有内容时先审计，不覆盖、不�
 - CR 登记、影响分析、验证和交付：使用 `$change-and-delivery-governance`。
 - “复盘最近修改”、复盘指定 CR 或时间范围：使用 `$prototype-change-retrospective`；只读取用户指定范围和直接关联差异。
 - “检查这个页面是否可以评审”、选择必要验证场景或判断证据是否充分：使用 `$scenario-evidence-capture`；实际采集和索引仍交给确定性脚本。
+- “生成研发任务清单”、整理研发评审差异、检查材料入口或“为 TASK-xxx 生成提示词”：使用 `$development-handoff`；生成提示词只读取当前任务材料，不构成实施授权。
 
 “给我评审”先由 `$change-and-delivery-governance` 核对授权范围和当前检查点；需要选择场景时再转 `$scenario-evidence-capture`，需要一致性结论时再转 `$requirement-quality-review`。
 
@@ -49,6 +46,7 @@ AI 只推荐，产品经理确认。已有内容时先审计，不覆盖、不�
 - 场景截图、证据索引、PRD 摘要、契约校验和 ZIP 打包由确定性脚本执行；本 Skill 只把请求路由到相应治理阶段。
 - 评审前的风险场景选择和证据充分性判断使用 `$scenario-evidence-capture`；实际截图、索引和构建仍由确定性脚本处理，并由 `$change-and-delivery-governance` 控制授权与登记。
 - 修改复盘使用 `$prototype-change-retrospective` 形成只读分类结论，再由 `$change-and-delivery-governance` 控制是否登记或启动修正。
+- 研发任务清单和单任务提示词使用 `$development-handoff`；收到明确任务实施授权后仍返回 `$change-and-delivery-governance` 核对七项就绪检查。
 - 结构化边界以 `skills/skill-boundaries.json` 为准，校验脚本负责防止职责漂移和重复入口。
 
 ## 执行规则

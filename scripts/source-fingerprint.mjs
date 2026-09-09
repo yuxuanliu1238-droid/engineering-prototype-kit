@@ -1,3 +1,4 @@
+import { safePath } from "./safe-path.mjs";
 import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
 import path from "node:path";
@@ -8,7 +9,7 @@ function normalizePath(root, filename) {
   if (typeof filename !== "string" || !filename.trim() || path.isAbsolute(filename)) {
     throw new Error(`覆盖文件必须是项目内相对路径：${filename}`);
   }
-  const absolutePath = path.resolve(root, filename);
+  const absolutePath = safePath(root, filename);
   const relativePath = path.relative(root, absolutePath).split(path.sep).join("/");
   if (relativePath === ".." || relativePath.startsWith("../")) {
     throw new Error(`覆盖文件超出项目目录：${filename}`);
@@ -18,6 +19,7 @@ function normalizePath(root, filename) {
 
 export async function fingerprintSources(files, options = {}) {
   const root = options.root || ROOT;
+  if (!Array.isArray(files) || !files.length) throw new Error("覆盖文件不得为空");
   const normalized = [...new Set(files)].map((filename) => normalizePath(root, filename));
   normalized.sort((left, right) => left.relativePath.localeCompare(right.relativePath));
   const coveredFiles = [];
@@ -34,9 +36,7 @@ export async function fingerprintSources(files, options = {}) {
       coveredFiles.push({ path: file.relativePath, missing: true });
     }
   }
-  const sourceFingerprint = createHash("sha256")
-    .update(JSON.stringify(coveredFiles))
-    .digest("hex");
+  const sourceFingerprint = createHash("sha256").update(JSON.stringify(coveredFiles)).digest("hex");
   return { algorithm: "sha256", sourceFingerprint, coveredFiles };
 }
 
@@ -54,10 +54,17 @@ export async function createCheckReport({ id, command, files, result, executedAt
 }
 
 export async function evaluateFreshness(report, options = {}) {
-  if (!report?.sourceFingerprint || !Array.isArray(report.coveredFiles)) {
+  if (
+    !report?.sourceFingerprint ||
+    !Array.isArray(report.coveredFiles) ||
+    report.coveredFiles.length === 0
+  ) {
     return { status: "unknown", reason: "报告缺少源码指纹或覆盖文件" };
   }
-  const current = await fingerprintSources(report.coveredFiles.map((file) => file.path), options);
+  const current = await fingerprintSources(
+    report.coveredFiles.map((file) => file.path),
+    options,
+  );
   if (current.coveredFiles.some((file) => file.missing)) {
     return { status: "missing", reason: "至少一个覆盖文件已不存在", current };
   }
@@ -72,7 +79,7 @@ function parseArgs(args) {
   for (let index = 0; index < args.length; index += 1) {
     const key = args[index];
     const value = args[index + 1];
-    if (key === "--file") values.files.push(value), index += 1;
+    if (key === "--file") (values.files.push(value), (index += 1));
     else if (["--id", "--command", "--result", "--executed-at", "--output"].includes(key)) {
       values[key.slice(2).replace("executed-at", "executedAt")] = value;
       index += 1;
@@ -91,7 +98,7 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     result: args.result,
     executedAt: args.executedAt,
   });
-  const outputPath = path.resolve(ROOT, args.output);
+  const outputPath = safePath(ROOT, args.output);
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await fs.writeFile(outputPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");
   console.log(`检查报告已生成：${path.relative(ROOT, outputPath)}`);

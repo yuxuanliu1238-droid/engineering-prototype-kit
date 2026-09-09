@@ -28,8 +28,8 @@ const REQUIRED_INTERNAL_PATHS = [
 ];
 
 if (manifest.schemaVersion !== 1) errors.push("模板清单 schemaVersion 必须为 1");
-if (manifest.templateVersion !== "0.3.0") {
-  errors.push("模板清单 templateVersion 必须为 0.3.0");
+if (manifest.templateVersion !== "0.4.0") {
+  errors.push("模板清单 templateVersion 必须为 0.4.0");
 }
 if (JSON.stringify(manifest.modes) !== JSON.stringify(EXPECTED_MODES)) {
   errors.push("模板清单必须按顺序声明两种 V0.3 模式");
@@ -104,7 +104,7 @@ for (const requiredPath of REQUIRED_INTERNAL_PATHS) {
 const generatedTargets = new Set(
   (manifest.generatedViews || []).map((view) => view.target),
 );
-for (const requiredTarget of ["docs/page-guides", "docs/requirements/requirements.md"]) {
+for (const requiredTarget of ["docs/page-guides", "docs/requirements/requirements.md", "docs/development/development-task-list.md"]) {
   if (!generatedTargets.has(requiredTarget)) {
     errors.push(`缺少生成视图声明：${requiredTarget}`);
   }
@@ -151,6 +151,10 @@ const requiredText = new Map([
   [
     "internal/generated-views/requirements.md",
     ["## 1. 当前总览", "## 2. 单条需求详情", "当前责任人", "下一步", "详细任务控制"],
+  ],
+  [
+    "internal/generated-views/development-task-list.md",
+    ["不承担负责人、工期、进度和完成比例管理", "## 3. 应用功能任务", "## 4. 外部系统接口任务", "## 5. 非页面研发任务", "## 6. 完整性检查"],
   ],
 ]);
 

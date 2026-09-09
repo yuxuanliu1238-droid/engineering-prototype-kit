@@ -5,7 +5,7 @@ description: Create source-traceable page contracts and readable specifications 
 
 # 页面契约与说明
 
-## 必读顺序
+## 按需事实源顺序
 
 1. `AGENTS.md` 和 `project.config.json`。
 2. 当前有效正向、负向决策。

@@ -1,0 +1,483 @@
+{
+  "schemaVersion": 1,
+  "listId": "HANDOFF-DEMO-001",
+  "title": "匿名订单协同项目研发任务清单",
+  "version": "V1.0",
+  "status": "formal",
+  "supersededBy": null,
+  "handoffScope": {
+    "summary": "订单同步、订单审核与库存分配、订单发货",
+    "requirements": [
+      {
+        "id": "REQ-001",
+        "title": "订单同步",
+        "disposition": "development-required",
+        "reason": null,
+        "materialRefIds": ["MAT-REQ", "MAT-UPSTREAM"]
+      },
+      {
+        "id": "REQ-002",
+        "title": "订单审核与库存分配",
+        "disposition": "development-required",
+        "reason": null,
+        "materialRefIds": ["MAT-REQ", "MAT-PROTO", "MAT-STOCK"]
+      },
+      {
+        "id": "REQ-003",
+        "title": "订单发货",
+        "disposition": "development-required",
+        "reason": null,
+        "materialRefIds": ["MAT-REQ", "MAT-PROTO", "MAT-SHIP"]
+      },
+      {
+        "id": "REQ-004",
+        "title": "信用额度配置",
+        "disposition": "no-development",
+        "reason": "需求评审明确不在本轮开发范围",
+        "materialRefIds": ["MAT-REQ"]
+      }
+    ],
+    "applicationItems": [
+      {
+        "id": "APP-SCOPE-001",
+        "application": "运营后台",
+        "menuPath": ["订单管理"],
+        "page": "订单列表",
+        "operation": "查询与查看",
+        "disposition": "development-required",
+        "reason": null
+      },
+      {
+        "id": "APP-SCOPE-002",
+        "application": "运营后台",
+        "menuPath": ["订单管理"],
+        "page": "审核弹窗",
+        "operation": "审核",
+        "disposition": "development-required",
+        "reason": null
+      },
+      {
+        "id": "APP-SCOPE-003",
+        "application": "运营后台",
+        "menuPath": ["订单管理"],
+        "page": "订单列表",
+        "operation": "发货",
+        "disposition": "development-required",
+        "reason": null
+      },
+      {
+        "id": "APP-SCOPE-004",
+        "application": "运营后台",
+        "menuPath": ["规则配置"],
+        "page": "信用额度配置",
+        "operation": "维护规则",
+        "disposition": "no-change",
+        "reason": "需求评审明确本轮不建设"
+      }
+    ],
+    "integrationItems": [
+      {
+        "id": "INT-SCOPE-001",
+        "systemParty": "上游订单系统",
+        "interfaceName": "订单同步接口",
+        "disposition": "development-required",
+        "reason": null
+      },
+      {
+        "id": "INT-SCOPE-002",
+        "systemParty": "库存系统",
+        "interfaceName": "库存查询接口",
+        "disposition": "development-required",
+        "reason": null
+      },
+      {
+        "id": "INT-SCOPE-003",
+        "systemParty": "库存系统",
+        "interfaceName": "库存占用接口",
+        "disposition": "development-required",
+        "reason": null
+      },
+      {
+        "id": "INT-SCOPE-004",
+        "systemParty": "发货系统",
+        "interfaceName": "发货指令接口",
+        "disposition": "development-required",
+        "reason": null
+      },
+      {
+        "id": "INT-SCOPE-005",
+        "systemParty": "信用系统",
+        "interfaceName": "额度校验接口",
+        "disposition": "no-change",
+        "reason": "信用额度不在本轮开发范围"
+      }
+    ]
+  },
+  "materials": [
+    {
+      "id": "MAT-REQ",
+      "type": "dingtalk-document",
+      "role": "requirement",
+      "title": "匿名订单协同需求",
+      "locator": "钉钉文档：匿名订单协同需求",
+      "section": "订单同步、订单审核、订单发货",
+      "baselineState": "manual-confirmed",
+      "revisionLabel": null,
+      "reviewedAt": "2099-01-01",
+      "confirmedBy": "示例产品负责人",
+      "confirmedAt": "2099-01-02"
+    },
+    {
+      "id": "MAT-PROTO",
+      "type": "prototype",
+      "role": "prototype",
+      "title": "匿名订单业务原型",
+      "locator": "prototype:/app/orders",
+      "section": "订单列表与审核弹窗",
+      "baselineState": "verified",
+      "revisionLabel": "prototype-demo-v1",
+      "reviewedAt": "2099-01-01",
+      "confirmedBy": null,
+      "confirmedAt": null
+    },
+    {
+      "id": "MAT-REVIEW",
+      "type": "dingtalk-document",
+      "role": "review",
+      "title": "匿名研发评审纪要",
+      "locator": "钉钉文档：匿名研发评审纪要",
+      "section": "任务拆分、接口影响、非页面任务",
+      "baselineState": "manual-confirmed",
+      "revisionLabel": null,
+      "reviewedAt": "2099-01-02",
+      "confirmedBy": "示例研发负责人",
+      "confirmedAt": "2099-01-02"
+    },
+    {
+      "id": "MAT-UPSTREAM",
+      "type": "interface-document",
+      "role": "interface",
+      "title": "匿名上游订单同步说明",
+      "locator": "共享文档：匿名上游订单同步说明",
+      "section": "订单同步接口",
+      "baselineState": "manual-confirmed",
+      "revisionLabel": null,
+      "reviewedAt": "2099-01-02",
+      "confirmedBy": "示例研发负责人",
+      "confirmedAt": "2099-01-02"
+    },
+    {
+      "id": "MAT-STOCK",
+      "type": "interface-document",
+      "role": "interface",
+      "title": "匿名库存系统接口说明",
+      "locator": "共享文档：匿名库存系统接口说明",
+      "section": "库存查询与库存占用",
+      "baselineState": "manual-confirmed",
+      "revisionLabel": null,
+      "reviewedAt": "2099-01-02",
+      "confirmedBy": "示例研发负责人",
+      "confirmedAt": "2099-01-02"
+    },
+    {
+      "id": "MAT-SHIP",
+      "type": "interface-document",
+      "role": "interface",
+      "title": "匿名发货系统接口说明",
+      "locator": "共享文档：匿名发货系统接口说明",
+      "section": "发货指令接口",
+      "baselineState": "manual-confirmed",
+      "revisionLabel": null,
+      "reviewedAt": "2099-01-02",
+      "confirmedBy": "示例研发负责人",
+      "confirmedAt": "2099-01-02"
+    },
+    {
+      "id": "MAT-SCREEN",
+      "type": "screenshot",
+      "role": "screenshot",
+      "title": "匿名订单审核弹窗截图",
+      "locator": "示例截图：订单审核弹窗",
+      "section": null,
+      "baselineState": "verified",
+      "revisionLabel": "anonymous-screenshot-v1",
+      "reviewedAt": "2099-01-01",
+      "confirmedBy": null,
+      "confirmedAt": null
+    }
+  ],
+  "confirmations": {
+    "product": {
+      "decision": "confirmed",
+      "confirmedBy": "示例产品负责人",
+      "confirmedAt": "2099-01-02",
+      "evidenceRefIds": ["MAT-REQ", "MAT-REVIEW"]
+    },
+    "engineering": {
+      "decision": "confirmed",
+      "confirmedBy": "示例研发负责人",
+      "confirmedAt": "2099-01-02",
+      "evidenceRefIds": ["MAT-REVIEW"]
+    }
+  },
+  "currentRevision": {
+    "changeType": "initial",
+    "summary": "研发评审后形成首次正式开发范围清单",
+    "businessScopeChanged": false,
+    "relatedCrIds": []
+  },
+  "versionHistory": [
+    {
+      "version": "V1.0",
+      "changeType": "initial",
+      "summary": "研发评审后形成首次正式开发范围清单",
+      "recordedAt": "2099-01-02"
+    }
+  ],
+  "explicitExclusions": [
+    "信用额度配置",
+    "库存规则配置",
+    "批量审核"
+  ],
+  "businessOpenQuestions": [],
+  "implementationPrerequisites": [
+    {
+      "item": "库存系统联调环境",
+      "owner": "库存系统方",
+      "impact": "未满足前不能完成真实接口联调",
+      "readyWhen": "提供匿名联调地址和授权方式"
+    },
+    {
+      "item": "上游匿名测试订单",
+      "owner": "上游订单系统方",
+      "impact": "未满足前只能使用本地模拟数据",
+      "readyWhen": "提供不含敏感信息的测试报文"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "TASK-001",
+      "type": "application-feature",
+      "title": "订单列表查询与查看",
+      "developmentScope": "展示从上游同步的订单，支持按订单号和状态查询",
+      "engineeringDomains": ["frontend", "backend"],
+      "requirementIds": ["REQ-001"],
+      "acceptanceCriteria": ["新订单显示为待审核", "查询和重置结果可见"],
+      "prerequisites": ["已有匿名测试订单"],
+      "materialRefs": [
+        { "materialId": "MAT-REQ", "section": "订单同步" },
+        { "materialId": "MAT-PROTO", "section": "订单列表" }
+      ],
+      "reviewBasis": ["研发评审确认列表查询保持一个业务任务"],
+      "scopeItemIds": ["APP-SCOPE-001"],
+      "technicalBasis": null,
+      "application": {
+        "application": "运营后台",
+        "menuPath": ["订单管理"],
+        "page": "订单列表",
+        "operation": "查询与查看"
+      }
+    },
+    {
+      "id": "TASK-002",
+      "type": "application-feature",
+      "title": "订单审核弹窗",
+      "developmentScope": "校验库存、展示可分配结果并提交审核",
+      "engineeringDomains": ["frontend", "backend"],
+      "requirementIds": ["REQ-002"],
+      "acceptanceCriteria": ["只有待审核订单可审核", "库存不足时不能审核通过", "成功和失败结果均可见"],
+      "prerequisites": ["库存查询和占用接口可联调"],
+      "materialRefs": [
+        { "materialId": "MAT-REQ", "section": "订单审核" },
+        { "materialId": "MAT-PROTO", "section": "审核弹窗" },
+        { "materialId": "MAT-SCREEN", "section": null },
+        { "materialId": "MAT-STOCK", "section": "库存查询与库存占用" }
+      ],
+      "reviewBasis": ["研发评审确认前后端共同完成同一业务验收结果"],
+      "scopeItemIds": ["APP-SCOPE-002"],
+      "technicalBasis": null,
+      "application": {
+        "application": "运营后台",
+        "menuPath": ["订单管理"],
+        "page": "审核弹窗",
+        "operation": "审核"
+      }
+    },
+    {
+      "id": "TASK-003",
+      "type": "application-feature",
+      "title": "订单发货操作",
+      "developmentScope": "已审核订单显示发货操作，提交成功后更新订单状态",
+      "engineeringDomains": ["frontend", "backend"],
+      "requirementIds": ["REQ-003"],
+      "acceptanceCriteria": ["只有允许发货的状态显示操作", "成功与失败均有反馈"],
+      "prerequisites": ["发货接口可联调"],
+      "materialRefs": [
+        { "materialId": "MAT-REQ", "section": "订单发货" },
+        { "materialId": "MAT-PROTO", "section": "订单列表操作列" }
+      ],
+      "reviewBasis": ["研发评审确认发货操作沿用订单列表入口"],
+      "scopeItemIds": ["APP-SCOPE-003"],
+      "technicalBasis": null,
+      "application": {
+        "application": "运营后台",
+        "menuPath": ["订单管理"],
+        "page": "订单列表",
+        "operation": "发货"
+      }
+    },
+    {
+      "id": "TASK-004",
+      "type": "external-integration",
+      "title": "接收上游订单",
+      "developmentScope": "接收已确认范围内的订单信息并形成待审核订单",
+      "engineeringDomains": ["backend"],
+      "requirementIds": ["REQ-001"],
+      "acceptanceCriteria": ["重复推送不产生重复订单", "失败记录可追溯"],
+      "prerequisites": ["匿名测试报文待提供"],
+      "materialRefs": [
+        { "materialId": "MAT-UPSTREAM", "section": "订单同步接口" }
+      ],
+      "reviewBasis": ["研发评审确认由上游推送、我方接收"],
+      "scopeItemIds": ["INT-SCOPE-001"],
+      "technicalBasis": null,
+      "integration": {
+        "systemParty": "上游订单系统",
+        "interfaceName": "订单同步接口",
+        "direction": "we-provide-counterparty-calls",
+        "triggerScenario": "上游创建或更新订单"
+      }
+    },
+    {
+      "id": "TASK-005",
+      "type": "external-integration",
+      "title": "查询可分配库存",
+      "developmentScope": "查询订单商品的可分配库存",
+      "engineeringDomains": ["backend"],
+      "requirementIds": ["REQ-002"],
+      "acceptanceCriteria": ["超时或失败时不能继续审核", "允许重新校验"],
+      "prerequisites": ["库存系统提供联调地址"],
+      "materialRefs": [
+        { "materialId": "MAT-STOCK", "section": "库存查询" }
+      ],
+      "reviewBasis": ["研发评审确认审核时同步查询库存"],
+      "scopeItemIds": ["INT-SCOPE-002"],
+      "technicalBasis": null,
+      "integration": {
+        "systemParty": "库存系统",
+        "interfaceName": "库存查询接口",
+        "direction": "counterparty-provides-we-call",
+        "triggerScenario": "打开审核弹窗并执行校验"
+      }
+    },
+    {
+      "id": "TASK-006",
+      "type": "external-integration",
+      "title": "占用审核库存",
+      "developmentScope": "占用本次审核确认的库存",
+      "engineeringDomains": ["backend"],
+      "requirementIds": ["REQ-002"],
+      "acceptanceCriteria": ["占用失败时订单不得变成审核通过"],
+      "prerequisites": ["库存系统提供联调地址"],
+      "materialRefs": [
+        { "materialId": "MAT-STOCK", "section": "库存占用" }
+      ],
+      "reviewBasis": ["研发评审确认审核通过前完成库存占用"],
+      "scopeItemIds": ["INT-SCOPE-003"],
+      "technicalBasis": null,
+      "integration": {
+        "systemParty": "库存系统",
+        "interfaceName": "库存占用接口",
+        "direction": "counterparty-provides-we-call",
+        "triggerScenario": "审核通过时"
+      }
+    },
+    {
+      "id": "TASK-007",
+      "type": "external-integration",
+      "title": "发送发货指令",
+      "developmentScope": "发送已审核订单的发货指令",
+      "engineeringDomains": ["backend"],
+      "requirementIds": ["REQ-003"],
+      "acceptanceCriteria": ["发送失败时保留当前订单状态", "失败结果允许重试"],
+      "prerequisites": ["发货系统确认联调窗口"],
+      "materialRefs": [
+        { "materialId": "MAT-SHIP", "section": "发货指令接口" }
+      ],
+      "reviewBasis": ["研发评审确认我方调用发货系统"],
+      "scopeItemIds": ["INT-SCOPE-004"],
+      "technicalBasis": null,
+      "integration": {
+        "systemParty": "发货系统",
+        "interfaceName": "发货指令接口",
+        "direction": "counterparty-provides-we-call",
+        "triggerScenario": "运营人员确认发货"
+      }
+    },
+    {
+      "id": "TASK-008",
+      "type": "non-page",
+      "title": "订单接收幂等与审计",
+      "developmentScope": "按上游业务唯一标识避免重复创建，并保留接收结果",
+      "engineeringDomains": ["backend"],
+      "requirementIds": ["REQ-001"],
+      "acceptanceCriteria": ["相同订单重复推送后只有一条有效业务记录"],
+      "prerequisites": ["上游唯一标识已确认"],
+      "materialRefs": [
+        { "materialId": "MAT-REVIEW", "section": "订单接收" }
+      ],
+      "reviewBasis": ["研发评审新增的技术必要项"],
+      "scopeItemIds": [],
+      "technicalBasis": null,
+      "nonPage": {
+        "category": "幂等与审计",
+        "triggerScenario": "接收上游重复订单"
+      }
+    },
+    {
+      "id": "TASK-009",
+      "type": "non-page",
+      "title": "库存失败重试",
+      "developmentScope": "对可重试错误提供受控重试并记录结果",
+      "engineeringDomains": ["backend"],
+      "requirementIds": ["REQ-002"],
+      "acceptanceCriteria": ["重试不会重复占用库存", "最终失败可追溯"],
+      "prerequisites": ["可重试错误范围已确认"],
+      "materialRefs": [
+        { "materialId": "MAT-REVIEW", "section": "库存异常" }
+      ],
+      "reviewBasis": ["研发评审新增的异常保障任务"],
+      "scopeItemIds": [],
+      "technicalBasis": null,
+      "nonPage": {
+        "category": "失败重试",
+        "triggerScenario": "库存查询发生临时错误"
+      }
+    },
+    {
+      "id": "TASK-010",
+      "type": "non-page",
+      "title": "测试参数初始化",
+      "developmentScope": "初始化测试环境需要的匿名接口参数，不包含真实生产配置",
+      "engineeringDomains": ["backend", "configuration"],
+      "requirementIds": [],
+      "acceptanceCriteria": ["测试环境能够使用匿名配置启动", "仓库中没有真实凭证"],
+      "prerequisites": ["测试参数由研发提供"],
+      "materialRefs": [
+        { "materialId": "MAT-REVIEW", "section": "环境准备" }
+      ],
+      "reviewBasis": ["研发评审确认的技术必要项"],
+      "scopeItemIds": [],
+      "technicalBasis": {
+        "summary": "研发确认测试环境必须具备初始化参数",
+        "materialRefIds": ["MAT-REVIEW"],
+        "confirmedBy": "示例研发负责人",
+        "confirmedAt": "2099-01-02"
+      },
+      "nonPage": {
+        "category": "参数初始化",
+        "triggerScenario": "首次部署测试环境"
+      }
+    }
+  ]
+}

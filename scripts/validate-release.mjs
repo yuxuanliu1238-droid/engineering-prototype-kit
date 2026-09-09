@@ -1,3 +1,4 @@
+import { validateArchiveEntries } from "./archive-policy.mjs";
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
@@ -21,6 +22,7 @@ if (actualChecksum !== expectedChecksum) {
 
 const entries = Object.keys(unzipSync(archive));
 const prefix = `${releaseBase}/`;
+validateArchiveEntries(entries, releaseBase, "kit");
 const requiredEntries = [
   "START-HERE.md",
   "README.md",
@@ -28,14 +30,6 @@ const requiredEntries = [
   "package.json",
   "pnpm-lock.yaml",
   "project.config.json",
-  "docs/design/v0.3-product-model.md",
-  "docs/design/v0.3-material-system.md",
-  "docs/design/v0.3-runtime-and-migration.md",
-  "docs/review/v0.3-verification.md",
-  "docs/requirements/task-control-model.md",
-  "docs/technical-review/package-manager-compatibility.md",
-  "docs/review/v0.2-verification.md",
-  "docs/review/evidence-and-review-packages.md",
   "templates/business-project/template-manifest.json",
   "scripts/create-project.mjs",
   "scripts/switch-project-mode.mjs",

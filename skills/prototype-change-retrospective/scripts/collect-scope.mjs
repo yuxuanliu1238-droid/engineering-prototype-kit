@@ -25,8 +25,8 @@ export function collectRequirementReferences(requirement) {
     addPath(references, artifact.location);
     for (const sourceRef of artifact.sourceRefs ?? []) addPath(references, sourceRef.location);
   }
-  for (const item of requirement.evidence ?? []) addPath(references, item.reference);
-  for (const check of requirement.taskControl?.readinessChecklist ?? []) {
+  for (const item of requirement.evidence ?? []) addPath(references, item.location ?? item.reference);
+  for (const check of requirement.readinessChecklist ?? requirement.taskControl?.readinessChecklist ?? []) {
     for (const evidence of check.evidence ?? []) addPath(references, evidence);
   }
   return [...references].sort();
@@ -43,11 +43,12 @@ export function selectRelatedChangedFiles(referencedFiles, changedFiles) {
 }
 
 async function listWorktreeChanges(repoRoot) {
-  const [{ stdout: tracked }, { stdout: untracked }] = await Promise.all([
-    execFileAsync("git", ["-C", repoRoot, "diff", "--name-only", "--"]),
-    execFileAsync("git", ["-C", repoRoot, "ls-files", "--others", "--exclude-standard"]),
-  ]);
-  return `${tracked}\n${untracked}`.split(/\r?\n/).filter(Boolean);
+  const outputs = await Promise.all([
+    ["diff", "--name-only", "--no-renames", "-z", "--"],
+    ["diff", "--cached", "--name-only", "--no-renames", "-z", "--"],
+    ["ls-files", "--others", "--exclude-standard", "-z"],
+  ].map(args => execFileAsync("git", ["-C", repoRoot, ...args])));
+  return [...new Set(outputs.flatMap(({stdout}) => stdout.split('\0').filter(Boolean)))];
 }
 
 async function listTimeChanges(repoRoot, from, to) {
@@ -61,14 +62,14 @@ export async function collectScope({ registryPath, requirementId, repoRoot, from
   if (requirementId) {
     if (!registryPath) throw new Error("CR 模式必须提供 --registry");
     const registry = JSON.parse(await fs.readFile(registryPath, "utf8"));
-    const requirement = registry.requirements?.find((item) => item.id === requirementId);
+    const requirement = (registry.items ?? registry.requirements)?.find((item) => item.id === requirementId);
     if (!requirement) throw new Error(`未找到需求：${requirementId}`);
     const referencedFiles = collectRequirementReferences(requirement);
     const changedFiles = repoRoot ? await listWorktreeChanges(repoRoot) : [];
     const relatedChangedFiles = selectRelatedChangedFiles(referencedFiles, changedFiles);
     return {
       selector: { kind: "requirement", requirementId },
-      title: requirement.title,
+      title: requirement.summary ?? requirement.title,
       currentStageId: requirement.currentStageId,
       referencedFiles,
       relatedChangedFiles,

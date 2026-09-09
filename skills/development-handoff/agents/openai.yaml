@@ -1,0 +1,4 @@
+interface:
+  display_name: "产研交接"
+  short_description: "生成经评审的研发任务清单、材料核对结果与单任务上下文提示词"
+  default_prompt: "使用 $development-handoff 整理研发任务清单或为指定任务生成只读上下文提示词，不自动实施。"

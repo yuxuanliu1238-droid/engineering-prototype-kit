@@ -16,7 +16,7 @@ const matrixExpectations = [
   },
   {
     file: "skills/change-and-delivery-governance/references/change-delivery-workflow.md",
-    tokens: ["record-only", "read-only-analysis", "prototype-only", "full-sync", "read-only-review", "formal-delivery"],
+    tokens: ["record-only", "read-only-analysis", "prototype-only", "full-sync", "read-only-review", "handoff-prompt-only", "formal-delivery"],
   },
   {
     file: "skills/requirement-quality-review/references/audit-format.md",
@@ -39,6 +39,7 @@ for (const expectation of matrixExpectations) {
 const governance = await fs.readFile(new URL("../skills/change-and-delivery-governance/SKILL.md", import.meta.url), "utf8");
 assert.equal(governance.includes("$scenario-evidence-capture"), true);
 assert.equal(governance.includes("$prototype-change-retrospective"), true);
+assert.equal(governance.includes("$development-handoff"), true);
 
 const combined = (await Promise.all(matrixExpectations.map(({ file }) => (
   fs.readFile(new URL(`../${file}`, import.meta.url), "utf8")

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "instanceKind": "kit",
-  "kitVersion": "0.3.0",
+  "kitVersion": "0.4.0",
   "versioning": {
     "versionAuthority": "package.json",
     "directoryNameIsVersionAuthority": false,

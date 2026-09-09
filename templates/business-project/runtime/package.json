@@ -11,9 +11,13 @@
     "check": "node .prototype-kit/business-cli.mjs check",
     "workflow:generate": "node .prototype-kit/business-cli.mjs generate",
     "page-guides:generate": "node .prototype-kit/business-cli.mjs generate-page-guides",
+    "handoff:generate": "node .prototype-kit/business-cli.mjs generate-development-handoff",
+    "handoff:prompt": "node .prototype-kit/business-cli.mjs generate-development-task-prompt",
     "dev": "pnpm --dir prototype dev",
     "build": "pnpm check && pnpm --dir prototype build",
-    "package:review": "pnpm build && node .prototype-kit/business-cli.mjs package-review"
+    "package:review": "pnpm build && node .prototype-kit/business-cli.mjs package-review",
+    "task:context": "node .prototype-kit/business-cli.mjs task-context",
+    "check:scope": "node .prototype-kit/business-cli.mjs check-scope"
   },
   "dependencies": {
     "fflate": "0.8.2"
