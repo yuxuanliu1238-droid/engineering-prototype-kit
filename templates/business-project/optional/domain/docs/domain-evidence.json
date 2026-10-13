@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "ruleModel": {
+    "fields": [],
+    "rules": [],
+    "selection": {
+      "strategy": "single-match-only",
+      "unresolvedTie": "conflict"
+    }
+  },
+  "stateModel": {
+    "states": [],
+    "actions": [],
+    "exceptions": []
+  },
+  "integrationModel": {
+    "fields": [],
+    "derivations": []
+  }
+}

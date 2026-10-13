@@ -57,7 +57,7 @@ export function validateValidationProfile(profile, { allowInsufficient = false }
 export function validateReviewScenarios(data) {
   const errors = [];
   if (!data || typeof data !== "object" || Array.isArray(data)) return ["评审场景配置必须是对象"];
-  if (data.schemaVersion !== 1) errors.push("评审场景 schemaVersion 必须为 1");
+  if (![1, 2].includes(data.schemaVersion)) errors.push("评审场景 schemaVersion 只支持 1 或 2");
   if (!Array.isArray(data.scenarios) || !data.scenarios.length) return [...errors, "启用评审中心时至少需要一个场景"];
   const ids = new Set();
   for (const [index, scenario] of data.scenarios.entries()) {
