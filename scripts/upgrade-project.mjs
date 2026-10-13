@@ -89,6 +89,9 @@ async function desiredContent(relativePath, config, status) {
         pageGuides: config.paths?.pageGuides || "docs/page-guides/pages.md",
         demoBlueprint: config.paths?.demoBlueprint || "docs/demo-blueprint.md",
         reviewScenarios: config.paths?.reviewScenarios || "prototype/src/review-scenarios.json",
+        domainEvidence: config.paths?.domainEvidence || "docs/domain/domain-evidence.json",
+        deliveryGovernance:
+          config.paths?.deliveryGovernance || "docs/review/delivery-governance.json",
         developmentHandoff:
           config.paths?.developmentHandoff || "docs/development/development-handoff.json",
         developmentTaskList:

@@ -126,6 +126,7 @@ pnpm build:kit-release
 常用命令：
 
 - `pnpm project:create -- ...`：创建独立业务项目；评审目标和输入判断应由 Codex 整理、产品经理确认；
+- `pnpm project:activate -- --project <目录> --capability domain-evidence|delivery-governance`：预览按需治理材料；确认后增加 `--apply`，不会覆盖已有材料；
 - `pnpm project:switch-mode -- --project <目录> ...`：默认只预览，增加 `--apply` 才切换模式；
 - `pnpm project:migrate -- --project <目录> --mode continuous-iteration --confirmed-by <确认人>`：默认只生成 V0.2 → V0.3 影响报告；
 - `pnpm project:upgrade -- --project <目录>`：默认只生成 Kit 升级预览；
