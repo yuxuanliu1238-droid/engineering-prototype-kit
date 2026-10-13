@@ -9,6 +9,9 @@
   },
   "scripts": {
     "check": "node .prototype-kit/business-cli.mjs check",
+    "domain-evidence:validate": "node .prototype-kit/business-cli.mjs validate-domain-evidence",
+    "delivery-governance:validate": "node .prototype-kit/business-cli.mjs validate-delivery-governance",
+    "site:check": "pnpm delivery-governance:validate && pnpm build && node .prototype-kit/business-cli.mjs site-release-check",
     "workflow:generate": "node .prototype-kit/business-cli.mjs generate",
     "page-guides:generate": "node .prototype-kit/business-cli.mjs generate-page-guides",
     "handoff:generate": "node .prototype-kit/business-cli.mjs generate-development-handoff",

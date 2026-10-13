@@ -391,6 +391,8 @@ async function materializeBusinessProject(options) {
       pageGuides: "docs/page-guides/pages.md",
       demoBlueprint: "docs/demo-blueprint.md",
       reviewScenarios: "prototype/src/review-scenarios.json",
+      domainEvidence: "docs/domain/domain-evidence.json",
+      deliveryGovernance: "docs/review/delivery-governance.json",
       developmentHandoff: "docs/development/development-handoff.json",
       developmentTaskList: "docs/development/development-task-list.md",
       developmentTaskContexts: "docs/development/task-contexts",

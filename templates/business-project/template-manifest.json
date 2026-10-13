@@ -51,6 +51,13 @@
       "ownership": "business"
     },
     {
+      "source": "optional/domain/docs/domain-evidence.json",
+      "target": "docs/domain/domain-evidence.json",
+      "inclusion": "on-demand",
+      "activationId": "domain-evidence",
+      "ownership": "business"
+    },
+    {
       "source": "optional/b2b/permissions-and-data-scope.md",
       "target": "docs/scenarios/permissions-and-data-scope.md",
       "inclusion": "on-demand",
@@ -83,6 +90,13 @@
       "target": "docs/scenarios/exception-and-sla.md",
       "inclusion": "on-demand",
       "activationId": "b2b-exception-sla",
+      "ownership": "business"
+    },
+    {
+      "source": "optional/b2b/delivery-governance.json",
+      "target": "docs/review/delivery-governance.json",
+      "inclusion": "on-demand",
+      "activationId": "delivery-governance",
       "ownership": "business"
     },
     {
@@ -171,6 +185,18 @@
     {
       "source": "scripts/check-runner.mjs",
       "target": ".prototype-kit/check-runner.mjs"
+    },
+    {
+      "source": "scripts/domain-evidence-lib.mjs",
+      "target": ".prototype-kit/domain-evidence-lib.mjs"
+    },
+    {
+      "source": "scripts/delivery-governance-lib.mjs",
+      "target": ".prototype-kit/delivery-governance-lib.mjs"
+    },
+    {
+      "source": "scripts/site-release-lib.mjs",
+      "target": ".prototype-kit/site-release-lib.mjs"
     },
     {
       "source": "scripts/task-context.mjs",

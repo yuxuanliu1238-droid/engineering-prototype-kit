@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "capabilityCatalog": [],
+  "changeImpacts": [],
+  "b2bExperience": {
+    "navigationPattern": "unknown",
+    "hostConventionEvidence": "",
+    "checks": [
+      {
+        "id": "ux-navigation",
+        "area": "navigation",
+        "requirement": "页面层级遵循宿主系统已有导航方式，列表、详情、抽屉和弹窗边界清楚",
+        "status": "pending",
+        "evidenceRefs": []
+      },
+      {
+        "id": "ux-information-hierarchy",
+        "area": "information-hierarchy",
+        "requirement": "相同信息不在列表、详情和卡片中无目的重复，核心结果优先展示",
+        "status": "pending",
+        "evidenceRefs": []
+      },
+      {
+        "id": "ux-responsive",
+        "area": "responsive",
+        "requirement": "表格、卡片和操作在目标宽度及缩放比例下不溢出且仍可操作",
+        "status": "pending",
+        "evidenceRefs": []
+      },
+      {
+        "id": "ux-overlay-interaction",
+        "area": "overlay-interaction",
+        "requirement": "下拉、树形选择和临时弹层支持明确关闭、取消恢复和点击外部收起",
+        "status": "pending",
+        "evidenceRefs": []
+      }
+    ]
+  }
+}

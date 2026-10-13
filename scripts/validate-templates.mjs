@@ -134,7 +134,15 @@ const requiredText = new Map([
   ],
   [
     "shared/docs/demo-blueprint.md",
-    ["输入充分度", "菜单与页面", "核心流程串联", "必要配置与代表性异常", "评审中心入口", "不逐字段确认"],
+    ["输入充分度", "菜单与页面", "核心流程串联", "必要配置与代表性异常", "场景闭环矩阵", "评审中心入口", "不逐字段确认", "能力用途", "仅评审"],
+  ],
+  [
+    "optional/domain/docs/business-model.md",
+    ["状态机", "异常与恢复", "动作准入与页面投影", "同一个源状态"],
+  ],
+  [
+    "optional/b2b/external-integration.md",
+    ["字段与推导链", "业务输入 / 外部返回 / 系统推算 / 仅展示", "调用与更新方式"],
   ],
   [
     "continuous/docs/decisions/decisions.md",
@@ -146,7 +154,7 @@ const requiredText = new Map([
   ],
   [
     "continuous/docs/page-guides/README.md",
-    ["页面契约与当前原型的可读生成视图", "不直接同步多份页面文档"],
+    ["页面契约与当前原型的可读生成视图", "不直接同步多份页面文档", "仅评审动作", "B 端页面至少检查", "影响清单"],
   ],
   [
     "internal/generated-views/requirements.md",
@@ -169,9 +177,35 @@ for (const [relativePath, snippets] of requiredText) {
 
 try {
   const scenariosTemplate = await fs.readFile(path.join(templateRoot, "runtime/prototype/src/review-scenarios.json"), "utf8");
-  JSON.parse(scenariosTemplate.replace("{{REVIEW_CENTER_ENABLED_BOOL}}", "true"));
+  const scenarios = JSON.parse(scenariosTemplate.replace("{{REVIEW_CENTER_ENABLED_BOOL}}", "true"));
+  if (scenarios.schemaVersion !== 2) errors.push("评审场景运行时模板必须使用 schemaVersion 2");
+  if (!scenarios.scenarios?.every((scenario) => scenario.dataRefs?.length && scenario.expected?.assertions?.visible?.length)) {
+    errors.push("评审场景运行时模板缺少闭环数据引用或页面断言");
+  }
 } catch (error) {
   errors.push(`评审场景运行时模板不是可渲染 JSON：${error.message}`);
+}
+
+try {
+  const governance = await readJson(
+    "templates/business-project/optional/b2b/delivery-governance.json",
+  );
+  if (governance.schemaVersion !== 1) errors.push("交付治理模板 schemaVersion 必须为 1");
+  if (!Array.isArray(governance.capabilityCatalog) || !Array.isArray(governance.changeImpacts)) {
+    errors.push("交付治理模板必须声明 capabilityCatalog 和 changeImpacts 数组");
+  }
+  const requiredAreas = [
+    "navigation",
+    "information-hierarchy",
+    "responsive",
+    "overlay-interaction",
+  ];
+  const actualAreas = new Set(governance.b2bExperience?.checks?.map((item) => item.area));
+  for (const area of requiredAreas) {
+    if (!actualAreas.has(area)) errors.push(`交付治理模板缺少 B 端体验领域：${area}`);
+  }
+} catch (error) {
+  errors.push(`交付治理模板不是有效 JSON：${error.message}`);
 }
 
 const secretPatterns = [
