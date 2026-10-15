@@ -1,0 +1,4083 @@
+{
+  "readAt": "2026-09-10T03:29:20.404Z",
+  "sha256": "dbc50e3b66eec8592ab6e062cd96812bea8c49b997461c545eca4dc9e950490d",
+  "source": "docs/requirements/registry.json",
+  "projectId": "cx-recycle",
+  "items": [
+    {
+      "id": "CR-001",
+      "title": "小哥推广绑定规则（扫码成功下单后绑定，有效期 12 个月，再次扫其他小哥码下单可覆盖）",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步",
+      "executionState": "completed",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "已确认：扫码并成功提交订单后建立绑定；仅扫码但未成功下单不绑定。",
+        "已确认：普通绑定订单取消后，该订单建立的绑定无效。",
+        "已确认：12 个月从下单闭环（红包权益已领取或实物权益已成功提交回收商）时起算；再次扫码其他小哥码并成功下单可覆盖。",
+        "已确认：覆盖来源订单取消后用户变为无绑定，不恢复被覆盖的旧绑定。",
+        "后续变更：实物权益起算点已由CR-005改为物流公司和权益运单号成功回传；本条原文仅保留CR-001评审历史。"
+      ],
+      "scope": "历史需求已完成并关闭",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "mobile.order",
+        "mobile.order-success",
+        "courier.home",
+        "courier.orders",
+        "courier.order-detail",
+        "admin.couriers",
+        "admin.orders"
+      ],
+      "documents": [
+        "docs/decisions/POSITIVE_DECISIONS.md",
+        "docs/decisions/NEGATIVE_DECISIONS.md",
+        "docs/mobile-page-guides/01-移动端下单流程-页面功能说明.md",
+        "docs/courier-page-guides/01-小哥H5推广流程-页面功能说明.md",
+        "docs/admin-page-guides/05-推广积分-页面功能说明.md",
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "file",
+          "reference": "prototype/src/promotion-rules.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/courier.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：移动端推广下单与成功提示、小哥端待起算/有效/取消失效、后台绑定结果均正常。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-07-16 完成界面评审：推广来源、成功绑定、待起算、绑定有效和订单取消失效路径均确认通过。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "需求已登记"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户已明确要求继续处理 CR-001"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已定位扫码下单、推广归属、小哥推广订单详情和后台推广数据的影响范围"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户确认：覆盖来源订单取消后变为无绑定，不恢复被覆盖的旧绑定"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已新增 PD-009 和 ND-013，记录绑定、覆盖、12 个月起算及取消不恢复规则"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已同步移动端、小哥端和运营后台推广归因与绑定契约"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已实现推广码摘要、成功绑定提示、小哥绑定状态及后台绑定结果展示"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已同步移动端、小哥端、推广积分和后台订单页面说明"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "pnpm check、推广规则测试和三端浏览器回归通过"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户逐项确认推广来源、成功下单后绑定、订单闭环后起算 12 个月、绑定有效及来源订单取消后失效且不恢复旧绑定"
+        },
+        {
+          "id": "synced",
+          "label": "已同步",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步"
+        }
+      ],
+      "confirmedAt": "2026-07-16"
+    },
+    {
+      "id": "CR-002",
+      "title": "回收商超时未回传寄回物流单号提醒",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步",
+      "executionState": "completed",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "已确认：超过配置时限仍未回传时通过系统接口通知回收商，并在后台订单标记待处理。",
+        "已确认：首期不做短信、企业微信或邮件；具体超时时长、接口地址和错误码待设计。",
+        "后续变更：提醒节点已由CR-005明确为24小时首次提醒、48小时第二次提醒并创建独立异常；本条原文仅保留CR-002评审历史。"
+      ],
+      "scope": "历史需求已完成并关闭",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "mobile.gift-return",
+        "admin.orders",
+        "admin.logs"
+      ],
+      "documents": [
+        "docs/decisions/POSITIVE_DECISIONS.md",
+        "docs/decisions/NEGATIVE_DECISIONS.md",
+        "docs/mobile-page-guides/01-移动端下单流程-页面功能说明.md",
+        "docs/admin-page-guides/07-系统日志-页面功能说明.md",
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/mobile-fulfillment.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/fixtures.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：用户端显示已接口提醒，后台订单显示待处理，系统日志包含脱敏提醒调用。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-07-16 完成界面评审：用户端待回传、后台订单待处理和系统日志路径均确认通过。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "需求已登记"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户已明确要求继续处理 CR-002"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已定位实物权益等待回传、后台订单异常与接口日志的影响范围"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户确认：系统接口通知回收商并在后台标记待处理，首期不做短信、企微或邮件"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已新增 PD-010 和 ND-014，记录接口提醒、后台待处理及渠道边界"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已同步实物权益运单页、后台订单和系统日志契约"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已实现用户端已提醒提示、后台待处理详情和脱敏提醒日志"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已同步移动端、后台订单和系统日志页面说明"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "pnpm check 与用户端/后台浏览器回归通过"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户确认待回传页面的接口提醒、后台权益运单待处理标记及脱敏系统日志，且未扩展短信、企业微信或邮件"
+        },
+        {
+          "id": "synced",
+          "label": "已同步",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步"
+        }
+      ],
+      "confirmedAt": "2026-07-16"
+    },
+    {
+      "id": "CR-003",
+      "title": "C 端下单用户统计",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步",
+      "executionState": "completed",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "已确认：按用户 ID 去重统计成功提交过 C 端订单的用户；取消订单仍计入，提交失败不计入。",
+        "已确认：运营看板统计当日，小哥推广数据按所选月份和小哥统计；不建独立用户管理页。"
+      ],
+      "scope": "历史需求已完成并关闭",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "admin.dashboard",
+        "admin.couriers"
+      ],
+      "documents": [
+        "docs/decisions/POSITIVE_DECISIONS.md",
+        "docs/decisions/NEGATIVE_DECISIONS.md",
+        "docs/admin-page-guides/01-运营看板-页面功能说明.md",
+        "docs/admin-page-guides/05-推广积分-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "file",
+          "reference": "prototype/src/promotion-rules.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/Dashboard.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/CouriersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：运营看板显示今日去重下单用户，小哥推广数据显示月度下单用户与有效绑定。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-07-16 完成界面评审：运营看板和推广积分统计页面均确认通过。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "需求已登记"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户已明确要求继续处理 CR-003"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已定位运营看板和后台推广数据页面的统计展示范围"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户确认：按用户 ID 去重，看板按日、推广数据按月和小哥统计；取消计入、提交失败不计入"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已新增 PD-011 和 ND-015，记录统计口径及不建独立用户页边界"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已同步运营看板和小哥推广数据统计契约"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已实现看板今日下单用户和推广页月度去重用户/有效绑定展示"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "已同步运营看板和推广积分页面说明"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "pnpm check、去重统计测试和后台浏览器回归通过"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户确认运营看板当日去重下单用户数，以及推广页按月份、小哥展示去重用户和推广数据，不建设独立 C 端用户管理页"
+        },
+        {
+          "id": "synced",
+          "label": "已同步",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步"
+        }
+      ],
+      "confirmedAt": "2026-07-16"
+    },
+    {
+      "id": "CR-004",
+      "title": "实物权益，不需要用户主动点击【领取权益】，红包权益才需要点击领取权益按钮，点击后录入支付宝姓名和账号，实物权益需要更新",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步",
+      "executionState": "completed",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "红包权益：主运单已签收后展示领取按钮，用户填写支付宝姓名和账号并提交回收商校验。",
+        "实物权益：不展示领取按钮，由系统自动推进权益状态；回收商须回传物流公司和权益运单号。",
+        "后续变更：CR-005已取消平台自动提交实物权益申请，改为回收商自行发放并主动回传；本条原文仅保留CR-004评审历史。"
+      ],
+      "scope": "历史需求已完成并关闭",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "mobile.orders",
+        "mobile.order-detail",
+        "mobile.benefit",
+        "mobile.gift-return",
+        "admin.orders"
+      ],
+      "documents": [
+        "docs/decisions/POSITIVE_DECISIONS.md",
+        "docs/mobile-page-guides/01-移动端下单流程-页面功能说明.md",
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/mobile-fulfillment.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/admin-core.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/domain.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/pages/DetailPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/pages/ExceptionPages.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：红包填写提交、实物等待回传、实物运单已回传三条路径。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-07-16 完成界面评审：红包可领取详情、支付宝资料提交、实物自动申请和权益运单回传页面均确认通过。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "需求已登记"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "用户已明确要求开始处理 CR-004"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "已定位红包人工领取、实物权益自动处理及后台权益状态解释的受影响页面、动作、状态和页面说明"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "用户确认：红包由用户在主运单已签收后填写支付宝姓名和账号提交；实物由系统自动处理并等待回收商回传权益运单号"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "已更新 PD-001，记录红包人工领取、实物自动提交和运单回传边界"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "已同步用户端订单、详情、权益、实物运单页及后台订单契约"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "已实现红包人工领取与实物自动提交、等待回传和已回传状态"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "已同步移动端下单流程和后台回收订单页面说明"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-07-14",
+          "note": "pnpm check 与三条关键浏览器路径均通过"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户确认红包领取入口、支付宝资料填写及已提交回收商边界；实物权益自动申请、无需额外资料并仅辅助展示权益运单"
+        },
+        {
+          "id": "synced",
+          "label": "已同步",
+          "status": "completed",
+          "updatedAt": "2026-07-16",
+          "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步"
+        }
+      ],
+      "confirmedAt": "2026-07-16"
+    },
+    {
+      "id": "CR-005",
+      "title": "实物权益由回收商主动发放并回传权益运单，24/48小时未回传时分级提醒和异常跟进",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，CR-005决策、状态机、契约、原型、页面说明、检查证据和rc2候选快照已同步",
+      "executionState": "completed",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "已确认：主运单签收后由回收商自行发放实物权益，平台不调用实物权益申请接口。",
+        "已确认：回收商主动回传物流公司和权益运单号；两个字段非空且请求接收成功即视为实物权益流程闭环，不校验格式、真实性或最终送达。",
+        "已确认：24小时未回传时接口提醒一次；48小时仍未回传时再次提醒并创建独立待处理异常；提醒和异常不修改订单、主运单或权益状态。",
+        "已确认：回传完成后自动解决对应超时异常；推广绑定12个月从实物权益运单成功回传时起算。",
+        "评审调整：不新增实物专属状态；主运单签收且满足门槛后自动进入已提交回收商，两个回传字段成功接收后进入已关闭。"
+      ],
+      "scope": "历史需求已完成并关闭",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "mobile.orders",
+        "mobile.order-detail",
+        "mobile.gift-return",
+        "admin.orders",
+        "admin.logs",
+        "admin.couriers"
+      ],
+      "documents": [
+        "docs/decisions/POSITIVE_DECISIONS.md",
+        "docs/state-machine-design/回收项目状态机设计说明.md",
+        "docs/mobile-page-guides/01-移动端下单流程-页面功能说明.md",
+        "docs/admin-page-guides/07-系统日志-页面功能说明.md",
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md",
+        "docs/admin-page-guides/05-推广积分-页面功能说明.md",
+        "docs/courier-page-guides/01-小哥H5推广流程-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于2026-07-17确认实物权益主动回传、24/48小时提醒、48小时独立异常及回传闭环口径。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "docs/governance/history/MVP-Scope-v1.0.md",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "docs/governance/history/MVP-Scope-v1.1-rc2.md",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/domain.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/mobile-fulfillment.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/admin-core.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm build",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：移动端等待回传、24小时已提醒、48小时超时待处理、已回传四种状态；后台订单、两次提醒日志、推广起算说明均正常，未发现阻断性控制台错误。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于2026-07-17逐项完成CR-005评审：四种回传阶段、仓库签收后已提交回收商、成功回传后已关闭均确认通过。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "冻结后业务规则调整已登记"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "用户明确确认按冻结后变更处理"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "已定位权益状态机、实物权益运单页、后台订单与日志、推广有效期起算和MVP候选范围"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "用户确认：平台不提交实物权益申请；实物签收后自动进入已提交回收商；24/48小时分别提醒；两个字段成功回传后进入已关闭并解决异常；不新增状态"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "同步修订PD-001、PD-009和PD-010，不覆盖已冻结v1.0"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "已同步移动端订单、详情、实物权益运单、后台订单与日志及推广起算口径契约"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "已实现等待回传、24小时提醒、48小时独立异常和成功回传四种阶段；实物签收后权益为已提交回收商，成功回传后为已关闭"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "已同步移动端、后台订单、系统日志、推广积分和小哥端页面说明"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "pnpm check、pnpm build、工作流/契约校验及多端浏览器检查通过"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "用户逐项确认等待回传、24小时提醒、48小时异常、成功回传，以及rc2中实物签收后已提交回收商、回传后已关闭的后台状态"
+        },
+        {
+          "id": "synced",
+          "label": "已同步",
+          "status": "completed",
+          "updatedAt": "2026-07-17",
+          "note": "用户评审通过，CR-005决策、状态机、契约、原型、页面说明、检查证据和rc2候选快照已同步"
+        }
+      ],
+      "confirmedAt": "2026-07-17"
+    },
+    {
+      "id": "CR-006",
+      "title": "按城市配置权益回收价格",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "必需节点完成、合并全量检查通过并取得用户最终确认",
+      "executionState": "completed",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "一项现金权益归属一个回收商，覆盖一组标准城市并共用一个回收单价；需要第二组城市价格时新建权益。用户选择或更换地址后，下单页展示命中权益的统一价格。",
+        "已于2026-08-06启动影响分析和规则确认；启动阶段先不修改决策、页面契约、状态机或可交互原型，用户随后授权继续后续流程。",
+        "已确认：地域固定按标准市级代码，不混用省/市/区县粒度。",
+        "已确认：红包城市单价参与金额计算，实物权益仅展示产品价值；最终核定重量使用运单揽收时称重重量。",
+        "已确认：未配城市价时隐藏单个权益、不用默认价；无权益可选时阻止提交。",
+        "已确认：跨城修改后重算新价，保留仍可用的权益意向并要求再次确认。",
+        "已确认：城市回收单价不设置业务生效时间；上线权益保存修改后立即对新订单生效；同一回收商的其他上线现金权益不得覆盖相同城市。",
+        "已确认：金额四舍五入到分，历史订单读取权益、城市、单价和系统配置修订快照，确认修改后替换快照。",
+        "已完成决策、状态机约束、页面契约、可交互原型、页面说明和合并全量一致性检查，并于 2026-08-11 获得用户最终确认。"
+      ],
+      "scope": "历史需求已完成并关闭",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "mobile.order",
+        "mobile.address-list",
+        "mobile.address-new",
+        "mobile.order-detail",
+        "mobile.benefit",
+        "admin.benefits",
+        "admin.orders"
+      ],
+      "documents": [
+        "docs/review/CR-006-城市回收价业务确认方案.md",
+        "docs/decisions/POSITIVE_DECISIONS.md",
+        "docs/decisions/NEGATIVE_DECISIONS.md",
+        "docs/mobile-page-guides/01-移动端下单流程-页面功能说明.md",
+        "docs/admin-page-guides/02-权益管理-页面功能说明.md",
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md",
+        "docs/state-machine-design/回收项目状态机设计说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "file",
+          "reference": "docs/review/CR-006-城市回收价业务确认方案.md",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/mobile-order.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/mobile-fulfillment.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/admin-management.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/admin-core.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/pages/OrderPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/domain.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/city-pricing.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/BenefitsPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/scripts/test-city-pricing.mjs",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm contracts:validate、城市价格测试、原型动作一致性和冒烟检查",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm exec vite build --outDir /private/tmp/cr006-vite-build",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm workflow:test-ui && pnpm build:workflow",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm exec vite build --outDir /private/tmp/cx-cr006-cr007-final-build --emptyOutDir",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "基于当前下单页、权益配置、订单权益更换与BenefitStatus基线完成影响分析；确认不新增源状态。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于2026-08-06逐项确认五项推荐规则，并确认最终核定重量使用运单揽收时称重重量。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户随后确认一项权益只维护一组城市和一个统一价格、同回收商上线现金权益城市不得重叠、上线保存立即影响新订单，并于 2026-08-11 同意与 CR-007 一起完成收口。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-06",
+          "note": "用户明确要求将需求正式登记到需求池"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-06",
+          "note": "用户已明确要求启动处理 CR-006，并限定本轮不修改决策、契约或原型"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-06",
+          "note": "已定位移动端下单、地址选择、权益更换、订单详情，以及后台权益配置和订单审计的影响范围；确认不需新增源状态"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-06",
+          "note": "用户逐项确认五项推荐方案，并明确最终核定重量使用运单揽收时称重重量"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "completed",
+          "updatedAt": "2026-08-10",
+          "note": "已更新 PD-012 与 ND-016，记录一项现金权益对应一个回收商、一组城市和一个统一单价，无业务生效时间，同回收商上线现金权益城市范围不得重叠，历史订单读取快照"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-10",
+          "note": "已同步移动端下单、地址、订单详情、权益修改，以及后台权益城市组统一价格、立即生效、冲突校验和订单审计契约"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-10",
+          "note": "已实现全国省市级联批选、权益级城市组统一价格、上线保存立即影响新订单、同回收商上线城市冲突校验、未配置隐藏、跨城重新确认和按揽收称重计算金额"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-06",
+          "note": "已同步移动端下单流程、后台权益管理和回收订单页面说明"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "CR-006/007 合并收口时已完成跨端契约、页面说明、原型逻辑、工作流、冒烟和多入口构建全量一致性检查"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "用户已确认 CR-006 界面与业务逻辑，并同意与 CR-007 一起完成台账和全量一致性收口"
+        },
+        {
+          "id": "synced",
+          "label": "已同步",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "必需节点完成、合并全量检查通过并取得用户最终确认"
+        }
+      ],
+      "confirmedAt": "2026-08-11"
+    },
+    {
+      "id": "CR-007",
+      "title": "按城市和重量区间配置小哥推广激励",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "必需节点完成、合并全量检查通过并取得用户最终确认；外部配置与接口细节按已确认边界留待后续设计",
+      "executionState": "completed",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "小哥推广激励支持按地域和有效回收重量区间配置不同计算规则；推广订单满足奖励条件后，按命中的地域和重量规则计算奖励。",
+        "已于2026-08-06启动影响分析和规则确认；规则确认后按用户要求继续同步决策、页面契约、状态机、页面说明和可交互原型。",
+        "已确认：激励使用人民币并去掉原积分计算逻辑；整单命中单一档位，每档固定金额。",
+        "已确认：只按取件地址所属市判断，不校验实际取件小哥或推广小哥城市，不把小哥城市校验写入页面逻辑。",
+        "已确认：区间左闭右开且末档无上限；核定重量使用来源原值匹配、不得取整；每档固定金额精确到分。",
+        "已确认：全部标准城市必须由唯一当前规则覆盖；服务开通由下单时回收商接口判断，不在激励规则页维护或校验。",
+        "后续由 CR-019 调整：权威核定重量和回收有效结果确认后不允许更正；成功激励计算结果不可修改，规则发布只影响新订单，历史订单不重算。",
+        "已确认激励规则不设置业务生效时间，保存并发布后立即成为所选城市当前版本；成功下单或最后一次地址确认时冻结规则版本；本系统不结算，由丰创从表取数。",
+        "已确认留待后续设计：丰创取数与结算回传机制，以及全部城市首版规则分组和正式档位金额配置表；原型演示数据不作为正式配置。",
+        "已完成决策、契约、状态机、页面说明、可交互原型和合并全量一致性检查，并于 2026-08-11 获得用户最终确认。"
+      ],
+      "scope": "历史需求已完成并关闭",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "courier.home",
+        "courier.orders",
+        "courier.order-detail",
+        "courier.rewards",
+        "admin.couriers",
+        "admin.promotion-rules",
+        "admin.orders"
+      ],
+      "documents": [
+        "docs/review/CR-007-小哥推广激励业务确认清单.md",
+        "docs/decisions/POSITIVE_DECISIONS.md",
+        "docs/decisions/NEGATIVE_DECISIONS.md",
+        "docs/courier-page-guides/01-小哥H5推广流程-页面功能说明.md",
+        "docs/admin-page-guides/05-推广积分-页面功能说明.md",
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md",
+        "docs/state-machine-design/回收项目状态机设计说明.md",
+        "docs/state-machine-design/聚合回收-DDD设计.md"
+      ],
+      "evidence": [
+        {
+          "type": "file",
+          "reference": "docs/review/CR-007-小哥推广激励业务确认清单.md",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "docs/decisions/POSITIVE_DECISIONS.md",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "docs/decisions/NEGATIVE_DECISIONS.md",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/courier.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/admin-management.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/admin-core.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "docs/state-machine-design/回收项目状态机设计说明.md",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "docs/state-machine-design/聚合回收-DDD设计.md",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/promotion-rules.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/PromotionRulesPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/courier/model.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm exec vite build --outDir /private/tmp/cr007-vite-build",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm workflow:test-ui && pnpm build:workflow",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm exec vite build --outDir /private/tmp/cx-cr006-cr007-final-build --emptyOutDir",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：激励规则列表和编辑校验、小哥推广首页/奖励/详情、后台推广汇总与订单激励审计详情均正常；未发现阻断性控制台错误。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "业务已确认人民币固定档位金额、订单城市归属、不校验小哥城市、重量不取整、金额到分、部分城市完整配置、只追加历史，以及由丰创从本系统表取数结算；已完成决策、契约、原型和页面说明同步。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-11 确认 CR-007 已完成并同意与 CR-006 一起收口；最终界面口径为全部标准城市均须配置唯一当前规则、服务开通由下单时回收商接口判断、规则发布立即生效且无业务生效时间；丰创接口细节和首版正式配置表保留为后续设计边界。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-06",
+          "note": "用户明确要求将需求正式登记到需求池"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-06",
+          "note": "用户已明确要求启动处理 CR-007，并限定本轮不修改决策、契约或原型"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-06",
+          "note": "已定位后台推广数据与订单、小哥推广首页/明细/详情/奖励记录，以及订单、主运单和独立奖励状态的影响范围"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-06",
+          "note": "业务已确认人民币、订单城市、整单单档、左闭右开末档无上限、重量不取整、金额到分、部分城市完整配置、不校验小哥城市、版本快照、不覆盖原记录、系统不补发追回，以及由丰创从本系统表取数结算"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "已更新 PD-013 与 ND-017，冻结人民币城市档位、全城市唯一当前规则、服务开通独立判断、发布立即生效、规则快照、丰创结算边界及禁止恢复项"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "已同步小哥首页/明细/详情/奖励、后台推广汇总、全城市规则组配置和订单详情契约，并移除激励规则业务生效时间"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "已实现人民币激励展示、丰创数据状态、全城市省市批量规则交互、发布立即生效、订单激励只读详情和纯逻辑边界测试；所有城市分组、阈值和金额均标记为演示"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "已同步小哥 H5、后台推广激励、后台订单、领域设计和状态机说明，统一全城市配置与服务开通独立判断口径"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "CR-006/007 合并收口时已完成跨端契约、页面说明、原型逻辑、工作流、冒烟和多入口构建全量一致性检查"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "用户确认 CR-007 已完成，并同意与 CR-006 一起更新台账、生成需求池和执行全量一致性检查"
+        },
+        {
+          "id": "synced",
+          "label": "已同步",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "必需节点完成、合并全量检查通过并取得用户最终确认；外部配置与接口细节按已确认边界留待后续设计"
+        }
+      ],
+      "confirmedAt": "2026-08-11"
+    },
+    {
+      "id": "CR-008",
+      "title": "聚合回收平台不直接对接顺丰物流，由回收商创建物流单并回传主运单及物流状态",
+      "stageId": "waiting-start",
+      "stage": "待启动",
+      "note": "本次仅完成登记，等待用户明确授权启动同步",
+      "executionState": "locked",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "用户确认：聚合回收平台只向回收商推送订单信息，不直接调用顺丰物流接口。",
+        "用户确认：回收商自行调用顺丰物流接口创建物流单，并向平台回传主运单及物流状态；平台如需展示物流路由，以回收商回传为准。",
+        "本次仅登记，不自动修改决策、其他 PRD、页面契约、原型或页面说明。"
+      ],
+      "scope": "仅登记，等待用户明确启动",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "decision",
+        "plan",
+        "contract",
+        "prototype",
+        "page-guide",
+        "test-report",
+        "review-report",
+        "user-confirmation",
+        "commit",
+        "release"
+      ],
+      "pages": [],
+      "documents": [],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-11 提出并确认接口责任边界，本次仅要求登记。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-11",
+          "note": "用户明确要求将顺丰物流接口责任边界登记到需求池"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-11",
+          "note": "本次仅完成登记，等待用户明确授权启动同步"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-009",
+      "title": "运营后台原型区分一级和二级菜单，并同步相关页面路径指引",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开推广运营 > 推广激励规则页面，等待用户最终确认菜单层级与路径展示",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-009 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      },
+      "pendingQuestions": [],
+      "notes": [
+        "当前运营后台原型只展示展开后的二级菜单，未体现一级菜单与二级菜单的层级关系。",
+        "后续需调整运营后台原型的菜单结构，并同步修改受影响页面的路径指引。",
+        "用户已确认沿用运营后台 PRD 的 6 个一级菜单与 9 个二级页面映射，不新增业务规则。"
+      ],
+      "scope": "实施与检查已完成，本轮只允许评审确认",
+      "allowedArtifactTypes": [
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "admin.dashboard",
+        "admin.orders",
+        "admin.benefits",
+        "admin.recyclers",
+        "admin.couriers",
+        "admin.promotion-rules",
+        "admin.operations",
+        "admin.logs",
+        "admin.system"
+      ],
+      "documents": [
+        "docs/prd/04-运营后台需求规格.md",
+        "docs/admin-page-guides/01-运营看板-页面功能说明.md",
+        "docs/admin-page-guides/02-权益管理-页面功能说明.md",
+        "docs/admin-page-guides/03-回收商管理-页面功能说明.md",
+        "docs/admin-page-guides/05-推广积分-页面功能说明.md",
+        "docs/admin-page-guides/06-运营配置-页面功能说明.md",
+        "docs/admin-page-guides/07-系统日志-页面功能说明.md",
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md",
+        "docs/admin-page-guides/09-系统管理-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 检查运营后台 PRD 时提出：后台原型需区分一级和二级菜单，并同步相关页面路径指引；当前仅登记待办。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 查看现有运营后台页面后确认按 PRD 现有 6 组菜单层级实施。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/navigation.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/AdminApp.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：6 个一级菜单、9 个二级入口均显示；回收商管理与推广激励规则跨组切换、三级面包屑和当前页高亮正常，未发现阻断性控制台错误。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户要求记录为待办，后续与其他待办统一处理"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户明确要求处理 CR-009，并在查看当前页面后确认按 PRD 现有 6 组菜单层级实施"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已定位运营后台 9 个页面、公共侧栏导航、面包屑和 8 份当前页面说明；页面业务动作与业务状态不变"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户确认沿用运营后台 PRD 已有的 6 个一级菜单与 9 个二级页面映射"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-12",
+          "note": "本次仅同步既有 PRD 菜单架构，不新增业务决策"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已为 9 个运营后台页面补充一级菜单、二级菜单和三级面包屑路径契约"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已将左侧导航调整为 6 个一级菜单和 9 个二级页面，并同步三级面包屑及一级菜单权限模块"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已同步 8 份当前后台页面说明、说明索引及运营后台 PRD 路径口径"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "pnpm check 通过；浏览器核对 6 个一级菜单、9 个二级入口、跨组切换、三级面包屑和阻断性控制台错误均通过"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-12",
+          "note": "已打开推广运营 > 推广激励规则页面，等待用户最终确认菜单层级与路径展示"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-010",
+      "title": "统一澄清所有 PRD 中页面状态为前端原型实现状态",
+      "stageId": "waiting-start",
+      "stage": "待启动",
+      "note": "本次仅完成登记，等待用户明确授权统一启动处理",
+      "executionState": "locked",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "所有 PRD 中用于表示页面完成度的“状态”或“实现状态”，均需检查是否实际指前端可交互原型的实现情况。",
+        "后续统一将相关字段明确为“原型实现状态”，并补充“已实现、部分实现、计划中”的口径说明，避免被误解为正式后端系统或生产接口完成状态。",
+        "如 PRD 由脚本生成，须同步修改生成源，防止重新生成后恢复旧表述。",
+        "本次仅登记，不自动修改 PRD、生成脚本、页面契约或原型。"
+      ],
+      "scope": "仅登记，等待用户明确启动",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "decision",
+        "plan",
+        "contract",
+        "prototype",
+        "page-guide",
+        "test-report",
+        "review-report",
+        "user-confirmation",
+        "commit",
+        "release"
+      ],
+      "pages": [],
+      "documents": [],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 检查运营后台 PRD 页面范围总表时提出：类似状态字段可能存在于所有 PRD，需要后续统一澄清。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户要求登记为待办，后续统一检查并处理所有 PRD"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-12",
+          "note": "本次仅完成登记，等待用户明确授权统一启动处理"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-011",
+      "title": "点击回收商编码和权益编码打开对应只读详情抽屉",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，两个详情入口、页面契约、页面说明和检查证据均已完成同步",
+      "executionState": "completed",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "回收商管理页点击回收商编码后打开该回收商只读详情抽屉。",
+        "权益配置页点击权益编码后打开该权益只读详情抽屉。",
+        "详情只展示原型现有数据；正式详情接口、接口 URL、错误码和鉴权方式仍待设计。"
+      ],
+      "scope": "历史需求已完成并关闭",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "admin.benefits",
+        "admin.recyclers"
+      ],
+      "documents": [
+        "docs/admin-page-guides/02-权益管理-页面功能说明.md",
+        "docs/admin-page-guides/03-回收商管理-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 要求：点击回收商管理页面的回收商编码和权益配置的权益编码，打开对应详情抽屉查看详细信息。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/BenefitsPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/RecyclersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm contracts:validate && pnpm workflow:validate && node scripts/validate-prototype-links.mjs && pnpm test:smoke",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：点击 BEN001 打开城市现金红包只读详情，点击 REC001 打开飞蚂蚁只读详情；详情与所点编码对应且控制台无阻断错误。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 确认 CR-011 评审通过。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户明确要求调整运营后台原型，点击回收商编码和权益编码后查看详细信息"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户本次指令同时构成登记与实施授权"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已定位权益配置和回收商管理列表、现有 fixtures、抽屉样式、页面契约及两份页面说明"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "按用户要求实现编码点击入口；详情抽屉只读展示现有数据，不新增未确认字段、接口或修改能力"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-12",
+          "note": "本次是局部查看交互，不新增长期业务决策"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已补充两页查看详情动作、详情抽屉界面状态及验收场景"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已将权益编码和回收商编码改为详情入口，并实现两个独立只读详情抽屉"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已同步权益管理和回收商管理页面说明中的布局、字段显示与界面功能"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "契约、工作流、95 个已实现动作和同源冒烟检查通过；浏览器分别点击 BEN001 与 REC001 均打开正确只读详情抽屉，控制台无阻断错误"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户确认回收商编码与权益编码详情抽屉符合预期"
+        },
+        {
+          "id": "synced",
+          "label": "已同步",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户评审通过，两个详情入口、页面契约、页面说明和检查证据均已完成同步"
+        }
+      ],
+      "confirmedAt": "2026-08-12"
+    },
+    {
+      "id": "CR-012",
+      "title": "修正运营后台订单详情顶部状态信息排版",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开订单详情抽屉展示修复后的顶部状态总览，等待用户确认排版",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-012 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      },
+      "pendingQuestions": [],
+      "notes": [
+        "订单详情顶部五个状态与最后更新时间仍保留。",
+        "移除固定高度和更新时间占用状态网格的问题，避免内容与基础信息标题重叠。"
+      ],
+      "scope": "实施与检查已完成，本轮只允许评审确认",
+      "allowedArtifactTypes": [
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "admin.orders"
+      ],
+      "documents": [
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 提供订单详情顶部截图，状态总览第二行与基础信息标题发生视觉挤压。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin.css",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm workflow:validate && pnpm contracts:validate && node scripts/validate-prototype-links.mjs && pnpm test:smoke",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：订单详情顶部五个状态卡片以两行完整显示，状态区无溢出，与基础信息不重叠，控制台无阻断错误。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户提供截图并指出订单详情页顶部信息展示排版不正确"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户本次问题反馈同时构成局部修复授权"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已定位为订单详情抽屉状态总览的固定高度与三列网格导致第二行溢出，并与基础信息标题挤压"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "保留五个状态及更新时间的含义，仅调整为状态总览标题、更新时间和独立状态卡片网格"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-12",
+          "note": "本次为局部排版修复，不新增业务决策"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已核对页面契约；字段、动作、状态 ID 和业务含义均不变，无需修改契约内容"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已将订单详情顶部改为状态总览标题行、独立更新时间和五个状态卡片网格，移除固定高度溢出"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已同步订单页面说明中的详情顶部布局"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "工作流、契约、95 个已实现动作和同源冒烟检查通过；浏览器确认五个状态卡片分两行完整显示、无容器溢出、与基础信息不重叠且控制台无阻断错误"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-12",
+          "note": "已打开订单详情抽屉展示修复后的顶部状态总览，等待用户确认排版"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-013",
+      "title": "推广激励改为订单维度并增加小哥工号及下单签收日期查询",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "页面已停留在推广激励，等待用户确认订单维度及查询条件是否符合预期",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-013 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      },
+      "pendingQuestions": [],
+      "notes": [
+        "推广激励列表以推广订单为最小展示粒度，每行对应一笔订单。",
+        "小哥工号查询用于查看该小哥的推广订单明细和结果总数。",
+        "列表和查询条件包含下单日期、签收日期；未签收订单签收日期显示破折号，且不命中签收日期范围。",
+        "本次不修改推广归因、人民币激励计算、丰创取数和结算边界。"
+      ],
+      "scope": "实施与检查已完成，本轮只允许评审确认",
+      "allowedArtifactTypes": [
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "admin.couriers"
+      ],
+      "documents": [
+        "docs/admin-page-guides/05-推广积分-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 确认：推广激励按订单维度展示，并提供小哥工号、下单日期和签收日期的列表字段及查询条件。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/CouriersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/promotionOrders.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：默认展示 7 笔推广订单；SF100821 查询返回 3 笔；2026-07-04 至 2026-07-06 签收日期查询返回 3 笔并排除未签收订单；日期倒置时保留原结果并提示错误；表格无横向页面溢出。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户提出推广激励按订单维度展示，并增加小哥工号、下单日期和签收日期列表字段及查询条件"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户确认需求理解无误并授权继续实施"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已定位运营后台推广激励页面、查询与汇总逻辑、页面契约、页面说明和相关测试"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "确认一行一笔推广订单；小哥工号用于查看该小哥单量；下单和签收日期均可筛选；未签收显示破折号且不命中签收日期条件"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-12",
+          "note": "本次调整页面展示粒度和查询契约，不改变推广归因、激励计算或结算业务规则"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已将 admin.couriers 契约改为订单粒度，补充小哥工号、下单日期、签收日期字段、查询规则和验收场景"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已实现推广订单明细、三类查询条件、查询后应用、重置、结果汇总、日期校验和空状态"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已同步推广激励页面布局、数据来源、界面功能、权限、异常和绑定规则延续说明"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "pnpm check 通过；浏览器确认订单维度列表、小哥工号筛选、签收日期筛选、未签收排除、日期倒置提示和页面布局均正常"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-12",
+          "note": "页面已停留在推广激励，等待用户确认订单维度及查询条件是否符合预期"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-014",
+      "title": "精简回收订单列表页说明文案和规则提示条",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开精简后的回收订单页面，等待用户确认",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-014 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      },
+      "pendingQuestions": [],
+      "notes": [
+        "删除回收订单标题下方的源状态说明。",
+        "删除订单列表上方的权益价格快照规则提示和推广激励规则提示。",
+        "订单详情中的权益价格快照和推广激励信息仍保留。"
+      ],
+      "scope": "实施与检查已完成，本轮只允许评审确认",
+      "allowedArtifactTypes": [
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "admin.orders"
+      ],
+      "documents": [
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 在回收订单页面对标题说明和两条规则提示分别批注去掉。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm workflow:validate && pnpm contracts:validate && node scripts/validate-prototype-links.mjs && pnpm test:smoke",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：标题说明段落数量为 0、指定规则提示数量为 0，查询区下方直接展示 6 条订单列表。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户通过浏览器评论要求删除回收订单标题说明及列表上方两条规则提示"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "三条删除评论同时构成局部展示调整授权"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已定位回收订单标题组件、两条列表提示和页面说明；订单字段、详情及业务规则不受影响"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "仅删除指定展示文案，不删除详情字段、不修改状态或业务规则"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-12",
+          "note": "本次为局部文案展示精简，不新增业务决策"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "指定文案不属于结构化动作、状态或字段契约，核对后无需修改页面契约"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已删除标题说明和两条规则提示，并使通用 PageHeader 在无说明时不渲染空段落"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已同步回收订单页面布局说明"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "工作流、契约、95 个动作和同源冒烟检查通过；浏览器确认标题无说明段落、两条规则提示均已移除，查询区与订单表格连续展示"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-12",
+          "note": "已打开精简后的回收订单页面，等待用户确认"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-015",
+      "title": "调整回收订单列表列名并新增单据序号",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开调整后的回收订单页面，等待用户确认列表列名和序号",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-015 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      },
+      "pendingQuestions": [],
+      "notes": [
+        "序号位于回收订单号左侧，按当前查询结果从 1 开始连续展示。",
+        "序号仅用于列表阅读，不落业务数据，也不替代回收订单号。",
+        "列表中的主运单号显示名改为运单号，运单完成时间显示名改为签收时间。"
+      ],
+      "scope": "实施与检查已完成，本轮只允许评审确认",
+      "allowedArtifactTypes": [
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "admin.orders"
+      ],
+      "documents": [
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 在回收订单列表批注：新增序号列；主运单号改为运单号；运单完成时间改为签收时间。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm workflow:validate && pnpm contracts:validate && node scripts/validate-prototype-links.mjs && pnpm test:smoke",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：序号位于回收订单号左侧，默认结果为 1 至 6；筛选 RC2026070300179 后只显示序号 1；列名为运单号和签收时间。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户通过浏览器评论要求新增序号列，并调整运单和签收时间列名"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "三条列表调整评论同时构成局部实施授权"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已定位回收订单列表、页面契约和页面字段说明；原始订单值、查询条件和详情不受影响"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "序号按当前查询结果从 1 开始连续生成；主运单号列显示名改为运单号；运单完成时间列显示名改为签收时间"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-12",
+          "note": "本次为列表字段展示调整，不新增业务决策"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已补充当前查询结果序号展示规则，并同步列表字段描述"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已在回收订单号左侧新增序号列，并完成两处表头名称调整"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已同步页面布局及序号、运单号、签收时间字段说明"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "工作流、契约、95 个动作和同源冒烟检查通过；浏览器确认表头顺序正确，默认 6 条记录序号为 1 至 6，筛选单条结果后序号重新从 1 开始"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-12",
+          "note": "已打开调整后的回收订单页面，等待用户确认列表列名和序号"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-016",
+      "title": "将订单详情抽屉改为独立详情页",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开独立订单详情页，等待用户确认信息架构和可读性",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-016 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      },
+      "pendingQuestions": [],
+      "notes": [
+        "点击订单列表的查看详情后，在主内容区展示独立订单详情页，不再打开右侧抽屉。",
+        "详情字段、状态和业务含义保持不变；状态总览和所有信息卡片等宽，信息卡片从上到下纵向排列。",
+        "返回列表时保留进入详情前的查询草稿、已应用条件、结果和阅读位置。"
+      ],
+      "scope": "实施与检查已完成，本轮只允许评审确认",
+      "allowedArtifactTypes": [
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "admin.orders"
+      ],
+      "documents": [
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 确认将字段较多的订单详情抽屉改为独立详情页。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin.css",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm workflow:validate && pnpm contracts:validate && node scripts/validate-prototype-links.mjs && pnpm test:smoke",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：筛选 RC2026070300179 后进入主内容区独立详情页，展示 5 个状态和 8 个信息模块且无 drawer-mask；返回后关键词和单条结果均保留。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户认为订单详情字段较多，独立详情页更易读"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户确认按独立详情页方案实施"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已定位订单列表、详情抽屉、页面状态、动作契约、预览状态和页面说明"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "详情在后台主内容区展示；字段和业务含义不变；返回列表时保留查询条件、结果和阅读位置"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-12",
+          "note": "本次调整信息架构和交互载体，不改变业务规则"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已补充独立详情页区块、返回列表动作、详情状态、上下文保留规则和验收场景"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已将抽屉替换为主内容区详情页；根据用户评审反馈，各信息卡片调整为与状态总览等宽并纵向排列"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已将页面布局、功能、权限和待补截图中的详情抽屉口径改为独立详情页"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "工作流、契约、96 个动作和同源冒烟检查通过；浏览器确认独立详情页、五类状态、八个信息模块、无抽屉遮罩，以及返回后保留查询条件和结果"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-12",
+          "note": "已打开独立订单详情页，等待用户确认信息架构和可读性"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-017",
+      "title": "回收商管理不展示或配置接口设计字段",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开清理接口字段后的回收商详情，等待用户确认",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-017 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      },
+      "pendingQuestions": [],
+      "notes": [
+        "回收商列表不再展示接口占位列。",
+        "回收商新增和编辑不再展示客服 H5、黑名单校验字段，也不校验其必填性。",
+        "回收商详情不再展示接口配置区。",
+        "接口映射与调用参数由研发在工程代码中维护；本次不修改 backend，也不删除业务校验能力。"
+      ],
+      "scope": "实施与检查已完成，本轮只允许评审确认",
+      "allowedArtifactTypes": [
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "admin.recyclers"
+      ],
+      "documents": [
+        "docs/admin-page-guides/03-回收商管理-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-12 要求：接口设计不需要在回收商管理显示，研发会在代码中写死。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/RecyclersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/RecyclerEditor.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm workflow:validate && pnpm contracts:validate && node scripts/validate-prototype-links.mjs && pnpm test:smoke",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：列表表头为 11 列且无接口占位；新增表单仅回收商类型、编码、名称；详情仅基础信息和运行与审计，无客服 H5、黑名单校验或接口配置。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "用户要求删除回收商列表接口占位以及新增编辑中的客服 H5、黑名单校验，接口设计由研发代码维护"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "浏览器批注和本次说明共同构成实施授权"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已定位回收商列表、详情、新增编辑表单、fixtures、页面契约和页面说明；backend 不在本次范围"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "运营后台不展示或编辑客服 H5、黑名单校验等接口参数；相关映射由研发在工程代码中维护，业务校验能力本身不删除"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-12",
+          "note": "本次是页面配置边界收敛，已直接写入页面契约规则，无需新增全局业务决策"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已移除接口配置数据字段和保存入参，更新详情、校验和接口配置边界规则"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已删除列表接口占位列、详情接口配置区、新增编辑中的客服 H5和黑名单校验及相关校验和 fixture 字段"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "已同步页面定位、布局、数据来源、字段、权限、异常和已确认规则"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-12",
+          "note": "工作流、契约、96 个动作和同源冒烟检查通过；浏览器确认列表无接口占位、新增表单仅 3 个基础字段、详情仅显示基础信息和运行审计"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-12",
+          "note": "已打开清理接口字段后的回收商详情，等待用户确认"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-018",
+      "title": "以顺丰速运生活服务旧衣书籍入口替换聚合回收首页",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "等待用户确认顺丰生活服务截图入口及点击旧衣书籍后的跳转效果",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-018 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      },
+      "pendingQuestions": [],
+      "notes": [
+        "顺丰速运 App 和小程序的生活服务页面是宿主环境，聚合回收不再建设独立首页。",
+        "用户点击生活服务第二排的旧衣书籍入口后进入回收预约下单页面，并初始化为旧衣预约，不预选回收商或权益。",
+        "具体嵌入、鉴权、参数传递、返回宿主和失败回落由单独接入文档说明，本次不虚构接入协议。",
+        "下单、订单、权益和客服等其余移动端功能保持不变。"
+      ],
+      "scope": "实施与检查已完成，本轮只允许评审确认",
+      "allowedArtifactTypes": [
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "mobile.home",
+        "mobile.order",
+        "mobile.order-success"
+      ],
+      "documents": [
+        "docs/prd/00-PRD编制基线确认单.md",
+        "docs/prd/01-产品需求规格书-签字总册.md",
+        "docs/prd/02-用户移动端需求规格.md",
+        "docs/mobile-page-guides/01-移动端下单流程-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-13 提供顺丰速运生活服务页面截图，并确认旧衣书籍为聚合回收未来入口。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/assets/sf-life-services-entry.png",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/pages/HomePage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm contracts:validate && pnpm test:smoke && pnpm exec vite build --outDir /private/tmp/cx-cr018-build --emptyOutDir",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm workflow:validate",
+          "result": "failed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：顺丰生活服务截图完整显示；点击旧衣书籍后进入 mobile.order 的 clothes 状态；回收商未预选；控制台无错误。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "全量工作流校验的既有阻断为 CR-007 和 CR-013 仍引用已不存在的 admin.couriers.export，与 CR-018 无关，本次未修改其他需求。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-13",
+          "note": "用户提供顺丰速运生活服务页面截图并说明旧衣书籍为未来移动端入口"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-13",
+          "note": "用户明确要求调整需求文档和可交互原型"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-13",
+          "note": "已定位移动端首页契约、入口路由、PRD 生成规则、页面说明和正式页面统计"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-13",
+          "note": "顺丰速运 App 和小程序生活服务中的旧衣书籍为宿主入口；不再建设聚合回收首页；具体接入形式由单独接入文档说明；其他功能不变"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-13",
+          "note": "本次调整产品入口和页面范围，不新增订单、权益或履约业务规则"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-13",
+          "note": "mobile.home 调整为宿主入口示意契约，保留兼容 Page ID；正式移动端业务页面范围调整为 10 个"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-13",
+          "note": "原型入口替换为用户提供的顺丰生活服务截图，并为旧衣书籍区域增加进入旧衣预约页的点击热区"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-13",
+          "note": "已同步移动端 PRD、签字总册、基线确认单和移动端页面说明的宿主入口及接入边界口径"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-13",
+          "note": "CR-018 契约校验、同源冒烟、生产构建和浏览器入口跳转检查通过；全量工作流校验仍被既有 CR-007/CR-013 的失效动作引用阻断，本次未越界修改"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-13",
+          "note": "等待用户确认顺丰生活服务截图入口及点击旧衣书籍后的跳转效果"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-019",
+      "title": "统一小哥端现金激励口径并处理剩余文案与功能调整",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已落实规格精简、成功下单才覆盖绑定、丰创活动入口身份映射，以及权威事实与成功激励计算结果不可修改，等待用户继续评审",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-019 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      },
+      "pendingQuestions": [
+        "丰创活动入口 H5 的参数名、加密与验签方式、防篡改与防重放、数据采用直查表/同步表/接口查询等由研发阶段设计。",
+        "加密小哥工号无法映射、映射重复、网点变更及离职账号的具体处置由研发方案进一步明确。",
+        "丰创每日具体跑批时刻、时区、节假日规则和补取窗口待研发方案确认。",
+        "丰创正式取数与回传接口、鉴权、签名、分页、错误码、自动重试和人工对账机制待研发设计。",
+        "丰创发放失败是否回传、失败记录的产品状态及重新发放流程待后续确认。"
+      ],
+      "notes": [
+        "推广激励状态统一为待计算、计算异常、待丰创结算、已提供结算数据、已发放和不发放；一枚举只对应一个中文名称。",
+        "待称重和待确认有效并入待计算，具体原因由订单状态、权威重量和回收结果事实解释；权益状态不驱动激励状态。",
+        "平台按推广订单逐笔计算并保存对应小哥、应发日期和应发金额；每笔订单最多形成一个成功激励计算结果，丰创按自然日取数。",
+        "丰创成功取数后进入已提供结算数据；完成发放并回传可核验成功结果后进入已发放，没有成功回传不得推断已发放。",
+        "权威核定重量和回收有效结果确认后不允许更正；规则发布只影响新订单，已有成功激励计算结果不可修改，历史订单不重算。计算异常处理后只允许重试尚未成功的首次计算。",
+        "小哥端不提供联系客服功能，推广订单详情不展示客服入口。",
+        "推广好友和推广订单默认展示近 3 个月数据，不提供固定日期范围筛选框；滚动到底或点击按钮后按页加载更早记录。",
+        "小哥登录丰创后打开本次推广活动二维码；丰创在我方 H5 基础链接中携带加密小哥工号，我方后端据此查询真实工号、姓名和网点。",
+        "丰创负责登录身份及账号与加密工号映射的真实性；我方不重复核验现实身份，仅以成功映射结果进行 H5 查询、推广归因、统计和核算。",
+        "丰创活动入口二维码供小哥进入 H5；H5 内个人推广二维码供用户进入回收下单，两者不得混用。",
+        "只有用户通过新小哥推广入口成功创建订单才覆盖旧绑定；仅扫码、打开页面或提交失败均保留原绑定。"
+      ],
+      "scope": "实施与检查已完成，本轮只允许评审确认",
+      "allowedArtifactTypes": [
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "courier.home",
+        "courier.orders",
+        "courier.order-detail",
+        "courier.rewards",
+        "admin.couriers",
+        "admin.orders"
+      ],
+      "documents": [
+        "docs/decisions/POSITIVE_DECISIONS.md",
+        "docs/decisions/NEGATIVE_DECISIONS.md",
+        "docs/review/CR-019-推广激励状态与丰创按日发放对接确认.md",
+        "docs/prd/01-产品需求规格书-签字总册.md",
+        "docs/prd/03-小哥端需求规格.md",
+        "docs/courier-page-guides/01-小哥H5推广流程-页面功能说明.md",
+        "docs/admin-page-guides/05-推广积分-页面功能说明.md",
+        "docs/admin-page-guides/08-回收订单-页面功能说明.md",
+        "docs/state-machine-design/回收项目状态机设计说明.md",
+        "docs/state-machine-design/聚合回收-DDD设计.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-13 要求：本轮先只修改小哥端原型，剩余未修改的现金激励相关内容计入待办。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-18 确认新增已发放状态，并明确丰创按日从订单推广激励数据中取得订单、小哥、应发时间和应发金额，发放完成后回传已发放。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-18 评审反馈：小哥端移除联系客服功能；推广好友和推广订单默认展示近 3 个月，手动加载更早数据并删除固定日期筛选框。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-18 确认：小哥先登录丰创并扫描本次推广活动二维码；丰创携带加密小哥工号进入我方 H5，丰创对真实身份和映射负责，我方按映射结果查询、归因、统计和核算；详细对接形式留待研发设计。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-18 确认开始修改小哥端规格：精简表格列、抽取公共规则、澄清只有新来源订单成功创建才覆盖旧绑定，并补充丰创对接内容。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-18 确认：权威核定重量和回收有效结果确认后不允许更正，因此不设计历史激励重算、计算差异、补发或追回；规则发布只影响新订单。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "docs/review/CR-019-推广激励状态与丰创按日发放对接确认.md",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/courier.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/courier/RewardsPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm contracts:validate && pnpm workflow:validate && pnpm test:promotion && pnpm test:promotion-orders && pnpm test:smoke",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm exec vite build --outDir /private/tmp/cx-cr019-review2-build --emptyOutDir",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-18 重新生成小哥端规格后执行 pnpm contracts:validate、pnpm workflow:validate、pnpm test:promotion、pnpm test:promotion-orders、pnpm test:smoke 及 Vite 构建",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-18 移除历史重算与差异设计后，验证每笔订单已有成功激励结果时拒绝再次计算，并完成契约、工作流、冒烟和 Vite 构建检查",
+          "result": "passed"
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-13",
+          "note": "用户要求将本轮小哥端原型之外尚未修改的现金激励相关内容计入待办"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-18",
+          "note": "用户明确要求新增推广激励已发放状态，并补充丰创按日取数和成功发放回传需求"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-18",
+          "note": "已定位推广激励决策、状态机、小哥端四页、后台小哥推广数据与订单详情、页面说明、PRD和原型演示数据"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-18",
+          "note": "已确认六个激励状态、成功计算结果不可修改且历史订单不重算、丰创按日取数与发放回传，以及活动二维码进入 H5 的身份责任边界"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "completed",
+          "updatedAt": "2026-08-18",
+          "note": "已更新 PD-013、ND-017 并新增 PD-014、ND-018，冻结激励状态、丰创取数发放证据及活动入口身份映射边界"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-18",
+          "note": "已同步小哥端和运营后台契约，补充已发放、丰创按日结算、活动入口身份映射、成功激励结果不可修改，并删除客服动作、增加近 3 个月及历史分页加载契约"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-18",
+          "note": "小哥端和后台演示已增加已发放记录；小哥端已移除客服入口，推广好友与推广订单默认近 3 个月并支持加载更早记录，返回提示改为适配丰创扫码入口"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-18",
+          "note": "已同步小哥端、后台推广激励、订单、状态机和对接说明，移除历史重算与差异设计，并按评审反馈精简小哥端需求规格表格和重复规则"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-18",
+          "note": "小哥端规格已重新生成；26 个页面契约、27 条需求工作流、推广规则、推广订单查询、26 页同源冒烟和 Vite 生产构建均通过"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-18",
+          "note": "已落实规格精简、成功下单才覆盖绑定、丰创活动入口身份映射，以及权威事实与成功激励计算结果不可修改，等待用户继续评审"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-020",
+      "title": "上线前历史订单跨回收商聚合查询正式同步",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "等待用户评审 02 移动端 PRD 中新增的上线前历史订单独立页面说明",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-020 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      },
+      "pendingQuestions": [
+        "上线前历史订单查询使用手机号、加密手机号还是双方用户映射标识匹配用户，仍待产品、安全、研发和回收商共同确认。"
+      ],
+      "notes": [
+        "生活服务订单列表底部入口可点击，进入 Page ID 为 mobile.legacy-orders 的独立上线前历史订单页面。",
+        "已确认：平台分别查询各回收商并按下单时间聚合展示，每条订单标识所属回收商；单个回收商失败不阻断其他结果。",
+        "已确认：上线前历史订单只读展示，不迁移为新平台订单，不进入新平台状态机，不提供修改、取消或权益领取操作。",
+        "本次已同步独立页面契约、原型路由、移动端页面说明和 02 移动端 PRD；用户匹配凭证、正式接口、后端聚合与安全方案仍待确认和研发设计。",
+        "本次不创建后端实现，不虚构接口 URL、鉴权、错误码或用户身份匹配方式。"
+      ],
+      "scope": "实施与检查已完成，本轮只允许评审确认",
+      "allowedArtifactTypes": [
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "mobile.orders",
+        "mobile.legacy-orders"
+      ],
+      "documents": [
+        "docs/prd/02-用户移动端需求规格.md",
+        "docs/prd/05-需求验收追踪矩阵.md",
+        "docs/mobile-page-guides/01-移动端下单流程-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-13 确认上线前历史订单采用跨回收商聚合展示，并要求先修改原型、剩余未修改项记录需求池。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-14 要求在 02 移动端需求规格中增加上线前历史订单的独立页面说明。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/pages/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/mobile-fulfillment.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/styles.css",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check && pnpm exec vite build --outDir /private/tmp/cx-cr020-mobile-page-build --emptyOutDir",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "浏览器检查通过：mobile.html#page=mobile.legacy-orders 展示 Page ID mobile.legacy-orders、状态 legacy-orders-partial、失败来源重试和只读边界，控制台无错误。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check 与 pnpm build:review 通过；入口、聚合列表、部分失败、重试恢复及只读边界的既有浏览器验证记录正常。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "已移除 CR-007、CR-013 中失效的 admin.couriers.export 引用，并重新生成 docs/需求池.md。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-13",
+          "note": "用户明确上线前历史订单是聚合平台上线前在各回收商产生的订单，并确认从移动端订单列表底部现有入口进入、跨回收商聚合展示"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户明确要求在 02 移动端需求规格中增加独立页面说明，本次指令构成正式同步授权"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已定位移动端订单列表入口、内部历史订单视图、页面契约、预览路由、页面说明映射和生成式移动端 PRD"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已确认跨回收商聚合、按下单时间倒序、部分失败不阻断、单来源重试和只读边界；用户匹配凭证继续作为待确认项"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-14",
+          "note": "本次先将已确认页面规则结构化，身份匹配与接口方案尚未确认，不新增或猜测正式业务决策"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已新增 mobile.legacy-orders 独立页面契约，并补充入口、返回、失败来源重试、页面状态、字段、接口占位和验收场景"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已将原型中的内部历史订单视图升级为独立 Page ID 和 hash 预览路由，入口和重试动作均可追踪"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已在移动端页面功能说明中增加 P06A，并将独立页面加入 02 移动端 PRD 生成源"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "26 个页面契约、26 条需求工作流、96 个已实现动作、同源冒烟检查和 Vite 构建均通过；浏览器直接打开 mobile.legacy-orders 显示正确 Page/State 且无控制台错误"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-14",
+          "note": "等待用户评审 02 移动端 PRD 中新增的上线前历史订单独立页面说明"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-021",
+      "title": "工程化原型工作流与 Skill 复盘改进",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "第二至第五步及最终试运行均已确认，治理字段、检查证据和只读流程中心已完成同步",
+      "executionState": "completed",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "评估将四维任务控制模型、七项就绪检查、人工介入单、类型化产物、事实源追踪链、分级验证和评审/交付分离纳入工程化原型工作流基线。",
+        "梳理现有六个项目内 Skills 的职责边界，优先将复盘经验合并到现有导航、变更治理、需求质量审查、业务探索、决策建模和页面契约 Skills，避免重复抽象。",
+        "评估新增 scenario-evidence-capture 与 prototype-change-retrospective 两个 Skill 候选；PRD 生成、契约校验、截图索引和交付打包优先保留为确定性脚本。",
+        "处理套件目录仍为 v0.1 但包版本已为 0.2.0 的命名漂移，明确验证文档日期含义，并统一或说明套件与业务原型的 pnpm 版本兼容策略。",
+        "场景截图、PRD 正式格式和 ZIP 交付保持为明确要求后才生成的可选环节，避免默认流程产生大量二进制输出物。",
+        "当前未提交的会议和调研资料只作为业务探索输入；未完成来源分类与事实确认前，不写入正式业务决策、页面契约或原型。",
+        "后续正式启动时先做影响分析，并判断是否需要拆分为多个可独立验收的子需求。",
+        "本次仅登记，不自动修改工程化套件、业务决策、页面契约、原型、页面说明、PRD、生成脚本或交付物。"
+      ],
+      "scope": "CR-021 已完成并关闭",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [],
+      "documents": [
+        "docs/review/CR-021-第三步-分阶段评审与证据新鲜度-验收清单.md",
+        "docs/review/CR-021-第四步-事实源追踪分级验证与评审交付分离-验收清单.md",
+        "docs/review/CR-021-第五步-Skills职责收口与套件版本兼容-验收清单.md",
+        "docs/review/CR-021-最终收口-验收清单.md",
+        "docs/review/CR-021-第四步-4B-场景证据选择Skill-验收清单.md",
+        "docs/review/CR-021-第四步-4C-五个现有Skills增强-验收清单.md",
+        "docs/review/CR-021-第四步-4D-导航证据摘要与第四步收口-验收清单.md",
+        "docs/review/CR-021-第五步-生成截图与分享构建收敛-验收清单.md",
+        "docs/review/CR-021-最终试运行-验收清单.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-14 要求将本周复盘识别出的需要修改项先记录为一个整体待办。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "本周复盘时 engineering-prototype-kit-v0.1 与 prototype 的 pnpm check 均通过。",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-21 执行 pnpm workflow:validate、pnpm workflow:test-ui 与 pnpm build:workflow，28 条需求结构、四类迁移样本、流程中心构建均通过。",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-21 执行 pnpm check，工作流、26 个页面契约、相关纯逻辑测试、链接与 26 页同源冒烟检查均通过。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "2026-08-21 浏览器核对流程中心：CR-021、CR-019、CR-023、CR-026 的执行状态、唯一卡点和执行范围可见，无错误遮罩、控制台警告或错误。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-21 查看 CR-021 第二步评审页后确认无误；该确认只关闭第二批次检查点，不关闭整个 CR。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-21 在第二步确认后要求继续执行，本轮按顺序授权 CR-021 第三步分阶段评审与证据新鲜度建设。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-23 明确确认 CR-021 第三步 SC-1 至 SC-4，允许继续按模型、门禁、展示和收口四个短阶段实施。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-24 执行 pnpm workflow:test-evidence、pnpm workflow:test-review-gate、pnpm workflow:test-ui、pnpm workflow:validate 与 pnpm build:workflow；证据新鲜度、确认门禁、28 条需求展示、工作流校验、26 个页面契约及只读构建检查均通过。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-24 查看 CR-021 第三步评审界面后明确回复“已确认”；本次确认只关闭 batch-3，不关闭整个 CR，也不构成第四至第五步实施授权。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-24 明确要求“完成第四步”，授权实施事实源追踪、分级验证与评审/交付分离；第五步与正式交付仍未授权。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-24 执行 pnpm workflow:test-governance、pnpm workflow:validate、pnpm workflow:test-ui 与 pnpm build:workflow；事实源追踪、L1-L4 验证计划、评审/交付门禁、28 条需求结构、26 个页面契约、只读治理卡片关键内容和单文件构建均通过。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "内置浏览器因本地 file:// 安全策略拒绝自动读取页面；未绕过限制。静态构建内容和只读边界已由 validate-workflow-build.mjs 校验，实际视觉布局保留给用户评审。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-24 查看 CR-021 第四步评审结果后明确回复“确认通过”；本次确认只关闭 batch-4，不关闭整个 CR，不授权正式交付或第五步。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-24 明确询问“继续第五步？”，授权启动六个 Skills 职责收口、候选 Skill 决策、套件版本权威与 pnpm 兼容策略；不授权正式交付。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-24 使用套件声明的 pnpm 10.12.4 执行 skills:validate、pnpm check 与 build:review，并使用业务原型声明的 pnpm 11.6.0 执行 workflow:generate 与 build:workflow；六个 Skill 职责边界、候选 Skill 防重、套件全量检查、评审构建、28 条需求结构、26 个页面契约和只读流程中心构建全部通过，未生成正式交付物。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-24 查看 CR-021 第五步结果后明确回复“确认”；本次确认只关闭 batch-5，不自动关闭整个 CR，不构成正式交付授权。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-24 在收到“如需结束整个 CR-021，请明确回复开始最终收口”后回复“开始”，授权执行最终可关闭性审计和刷新验证；该指令不是最终关闭确认。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-24 最终收口刷新检查：套件使用 pnpm 10.12.4 执行 pnpm check 通过；业务原型使用 pnpm 11.6.0 执行 workflow:generate 与 build:workflow 通过，覆盖 28 条需求结构、26 个页面契约、四个已确认检查点、事实源、验证覆盖、最终收口状态和只读单文件构建；未运行正式交付命令。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-26 明确要求将证据新鲜度修改为源码指纹；本轮只授权 3A 证据核心，不自动进入评审包生成或流程中心展示。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-26 执行 pnpm workflow:test-evidence 通过；覆盖结构化检查报告、确定性 SHA-256 指纹、覆盖文件变化、覆盖文件缺失及历史报告未知状态。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-26 查看结构化检查报告并逐项确认指纹字段与隔离变化测试后回复“通过”；该确认只关闭 3A，不授权启动 3B。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-26 在收到“如需继续请明确回复开始 3B”后回复“开始”，授权生成确定性 Markdown 评审包；不授权流程中心展示或后续样本验证。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-26 执行 pnpm workflow:generate 与 node scripts/test-workflow-review-packages.mjs 通过；28 条 CR 一一生成 Markdown 评审包，相同输入连续渲染一致，并包含非事实源声明、唯一卡点、页面入口和证据状态。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-26 查看 CR-021 评审包和 3B 检查结果后回复“通过”；该确认只关闭 3B，不授权启动 3C。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-26 明确回复“开始3c”，授权在只读流程中心展示源码指纹状态、结构化报告和 Markdown 评审包入口；不授权业务页面修改或 3D 样本验证。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-26 执行 pnpm workflow:generate、评审包确定性测试、pnpm workflow:test-ui、pnpm workflow:validate 与 pnpm build:workflow 通过；覆盖 28 条需求状态生成、七个 CR-021 检查点、源码指纹卡片、评审包入口、26 个页面契约和只读单文件构建。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-27 查看 CR-021 3C 流程中心证据卡片、源码指纹状态和 Markdown 评审包入口后回复“通过”；该确认只关闭 3C，不授权启动 3D、正式交付或关闭整个 CR。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-27 在 3C 确认完成且唯一卡点为是否开始 3D 后回复“开始”，授权验证三类历史需求样本与证据过期防错；不授权修改业务内容、启动 3E 或正式交付。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-27 逐项核对 3D 检查点、旧证据过期、最新证据有效及下一批门禁后回复“通过”；该确认只关闭 3D，不授权启动 3E、正式交付或关闭整个 CR。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-27 在 3D 确认完成且唯一卡点为是否开始 3E 后回复“开始”，授权执行第三步最终收口与完整检查；不授权业务修改、正式交付或自动关闭整个 CR。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-27 查看 3E 检查点、最终源码指纹、Markdown 评审包和完整构建结果后回复“通过”；该确认只关闭 3E，不自动关闭整个 CR，也不授权第四步或正式交付。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-27 在第三步 3A 至 3E 全部确认后回复“开始”，授权启动当前计划的第四步 Skill 迭代；为控制长任务，第四步拆成 4A 至 4D，本轮只实施 4A prototype-change-retrospective。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-27 执行新增 Skill 结构校验、职责边界校验、范围隔离测试、真实 CR-021 范围样本和套件 pnpm check；7 个 Skill 结构完整，真实样本保留 50 个关联改动并排除 135 个无关改动，套件全量检查通过。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-27 查看 4A 原型修改复盘 Skill、真实历史样本、最新证据和流程中心结果后回复“通过”；该确认只关闭 4A，不自动启动 4B、第五步或正式交付。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-27 明确回复“开始4b”，授权在工程化原型套件内新增 scenario-evidence-capture Skill，并用隔离样本验证场景选择与证据充分性判断；不授权修改业务内容、启动 4C/4D、生成截图或正式交付。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-27 执行场景证据计划结构校验、隔离样本对抗测试、8 个 Skill 职责与引用校验、套件 pnpm check、28 条需求工作流与 26 个页面契约校验、流程中心专项测试及只读单文件构建；全部通过，未生成 ZIP 或正式交付物。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-27 查看 4B 场景证据选择 Skill、隔离样本、检查报告和验收结果后回复“通过”；该确认只关闭 4B，不自动启动 4C、4D、第五步或正式交付。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-27 在 4B 确认完成且唯一卡点为是否开始 4C 后回复“开始”，授权增强业务探索、决策建模、页面契约、变更治理和质量审查五个现有 Skill；不授权修改导航 Skill、业务内容、启动 4D 或正式交付。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-28 执行五个现有 Skill 增强矩阵专项测试、8 个 Skill 职责与引用校验、套件 pnpm check、28 条需求工作流与 26 个页面契约校验、流程中心专项测试及只读单文件构建；全部通过，未修改业务内容或生成正式交付物。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-28 查看 4C 五个现有 Skill 增强、矩阵专项测试、检查报告和验收结果后回复“通过”；该确认只关闭 4C，不自动启动 4D、第五步、最终试运行或正式交付。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-28 在 4C 已确认且唯一卡点为是否开始 4D 的上下文中回复“开始”，授权补齐导航路由、区分当前与历史证据摘要并完成第四步收口；不授权第五步、最终试运行或正式交付。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-28 执行导航路由专项测试、8 个 Skill 结构与职责校验、当前与历史证据隔离样本、Markdown 评审包确定性测试、套件 pnpm check、流程中心模型和只读单文件构建；全部通过，未修改业务内容或生成正式交付物。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-31 明确回复“通过”，确认第四步 4D 的导航路由、证据摘要分离和第四步收口；该确认只关闭 4D，不授权第五步、最终试运行或正式交付。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-31 在第五步唯一授权门禁下回复“开始”，授权收敛 PRD 生成、视觉证据和三端分享构建脚本；不授权修改业务内容、执行最终试运行或正式交付。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-31 执行 PRD 来源与确定性测试、三端统一评审构建、视觉证据清单测试、套件 pnpm check、业务原型 pnpm check、流程中心只读构建及差异检查；全部通过，未生成截图或正式 ZIP。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-31 明确回复“通过”，确认第五步的 PRD、视觉证据与三端分享构建收敛；该确认只关闭 batch-5-build-consolidation，不授权最终试运行、正式交付或关闭 CR-021。",
+          "result": null
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-31 在最终试运行唯一授权门禁下回复“开始”，授权验证 CR-021、CR-023、CR-026 三类治理状态；不授权修改业务内容、正式交付或关闭 CR-021。",
+          "result": null
+        },
+        {
+          "type": "check",
+          "reference": "2026-08-31 最终试运行通过：CR-021 历史只登记、CR-023 仅原型、CR-026 完整同步三类状态准确；业务内容和相关页面源码指纹未变化，套件与业务原型完整检查通过。",
+          "result": "passed"
+        },
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-31 在最终关闭唯一门禁下明确回复“关闭”，授权将 CR-021 写入 synced / completed；不授权正式交付、提交或推送。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户要求将本周复盘识别出的工作流、套件和 Skill 改进项先统一记录为整体待办"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-21",
+          "note": "用户明确授权开始 CR-021 第二步：升级任务控制模型"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-24",
+          "note": "已确认影响限于工程化原型工作流、只读流程中心、项目内 Skills 和启动套件校验，不涉及业务 Page、Action、State 或业务事实"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-24",
+          "note": "第二至第五步范围、门禁和成功标准均已逐批授权并确认；本 CR 不新增业务规则"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-24",
+          "note": "本 CR 为工程化工作流治理改进，不修改正式业务决策"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-24",
+          "note": "已完成契约适用性核对：本 CR 未改变业务页面行为，因此无需修改业务 Page、Action 或 State 契约"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-31",
+          "note": "已完成 PRD 来源边界、三端统一分享构建和视觉证据清单工具；未改变业务页面行为"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-31",
+          "note": "已完成适用性核对：第五步不改变业务页面说明，因此无需修改业务页面文档"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-31",
+          "note": "最终试运行验证 CR-021 历史只登记、CR-023 仅原型、CR-026 完整同步三类状态准确，业务内容与相关页面源码指纹未变化"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "completed",
+          "updatedAt": "2026-08-31",
+          "note": "用户明确确认关闭 CR-021"
+        },
+        {
+          "id": "synced",
+          "label": "已同步",
+          "status": "completed",
+          "updatedAt": "2026-08-31",
+          "note": "第二至第五步及最终试运行均已确认，治理字段、检查证据和只读流程中心已完成同步"
+        }
+      ],
+      "confirmedAt": "2026-08-31"
+    },
+    {
+      "id": "CR-022",
+      "title": "预估重量初筛与签收核定重量不足后的权益重选和客服处理",
+      "stageId": "waiting-start",
+      "stage": "待启动",
+      "note": "本次只登记需求，不启动决策、页面契约、原型、页面说明或接口变更",
+      "executionState": "locked",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "用户下单时必须选择预估重量区间；预估重量用于权益门槛初筛，只有整个重量区间都明确达到门槛时权益才允许选择，例如选择 5～10kg 时不得选择满 10kg 的权益。",
+        "预估重量不新增小哥端页面或外部接口；小哥在现有揽收端已经能够看到订单中的重量区间。",
+        "最终权益资格以仓库签收后的核定重量为准，不以揽收称重作为最终门槛依据。签收核定重量不足时，原权益不可继续领取或发放，用户必须重新选择满足实际重量门槛的权益。",
+        "即使仍有符合门槛的权益，只要用户没有想要的权益，也可以选择联系客服处理；页面不向用户提供签收后的自主取消按钮，也不承诺一定能够取消。",
+        "取消、拦截或退回由客服和物流线下人工控制；本需求不建设客服取消操作、物流退回状态、后台人工按钮、取消接口或新外部接口，也不定义哪些物流节点允许人工取消。",
+        "用户端使用联系客服处理等中性文案，不直接承诺取消成功；线下处理结果沿用既有物流或订单状态来源。",
+        "后续启动时需核对并修正当前原型中预估重量未实际参与下单权益初筛，以及实物权益签收后未先校验重量门槛的现有缺口。",
+        "本次仅登记，不自动修改业务决策、页面契约、状态机、原型、页面说明、PRD、后台或接口。"
+      ],
+      "scope": "仅登记，等待用户明确启动",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "decision",
+        "plan",
+        "contract",
+        "prototype",
+        "page-guide",
+        "test-report",
+        "review-report",
+        "user-confirmation",
+        "commit",
+        "release"
+      ],
+      "pages": [],
+      "documents": [],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-14 确认上述需求口径，并要求确认后登记需求池、不要直接实施。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户确认预估重量初筛、签收核定重量复核、权益重选及无满意权益时联系客服处理的需求口径，并要求确认后登记需求池"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-14",
+          "note": "本次只登记需求，不启动决策、页面契约、原型、页面说明或接口变更"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-023",
+      "title": "实物权益运单超时支持人工关闭权益",
+      "stageId": "page-docs-update",
+      "stage": "页面说明",
+      "note": "用户要求先改原型，PRD和页面说明暂不修改",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-023 当前原型验证是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "未确认前保持正式决策、页面说明和 PRD 暂缓，不继续扩大同步范围",
+        "resumeWhen": "产品经理确认原型检查点后，再单独评估正式文档授权"
+      },
+      "pendingQuestions": [],
+      "notes": [
+        "实物权益在订单仓库签收后等待回收商回传物流公司和权益运单号；满24小时未回传时首次提醒且权益保持已提交回收商，满48小时仍未回传时第二次提醒且权益进入待人工处理。",
+        "不再保留独立异常状态；运营人员在后台直接对待人工处理的实物权益执行人工关闭。",
+        "人工关闭后权益状态变为已关闭，表示平台侧已人工结案并停止继续跟进，不代表已收到权益运单回传，也不代表用户已经收到实物。",
+        "人工关闭不得补造物流公司、权益运单号或实物送达事实；后续实现应保留人工关闭与正常回传自动闭环的来源区别。",
+        "原型已设计人工关闭入口、二次确认、关闭结果和审计来源；处理人、关闭原因及权限的正式字段仍待研发方案确认。",
+        "本轮只同步原型及原型契约，PRD、正式决策和页面说明待原型评审后继续。"
+      ],
+      "scope": "仅原型验证，正式文档暂缓",
+      "allowedArtifactTypes": [
+        "contract",
+        "prototype",
+        "test-report",
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "decision",
+        "page-guide",
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "mobile.orders",
+        "mobile.order-detail",
+        "mobile.gift-return",
+        "admin.orders",
+        "admin.dashboard"
+      ],
+      "documents": [],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-14 确认：实物权益运单提醒两次仍未回传后进入权益待人工处理；人工关闭后权益保持已关闭。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/pages/ExceptionPages.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm test:benefit-flow",
+          "result": "passed"
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户确认实物权益运单提醒两次仍未回传时进入待处理异常，并补充人工关闭异常与权益的结案口径"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户明确要求先修改原型"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已定位移动端订单列表与详情、实物权益进度页、后台订单详情和权益状态契约"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户确认48小时仍未回传时权益进入待人工处理；人工关闭后权益保持已关闭，不再保留独立异常状态"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-14",
+          "note": "本轮仅做原型验证，正式决策记录暂不纳入本轮范围，待原型评审后另行同步"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已在原型契约中补充待人工处理、人工关闭动作、审计和验收边界"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已实现48小时未回传进入权益待人工处理，后台可二次确认人工关闭并更新为已关闭"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-14",
+          "note": "用户要求先改原型，PRD和页面说明暂不修改"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-024",
+      "title": "系统日志支持可补偿服务商接口人工重推",
+      "stageId": "page-docs-update",
+      "stage": "页面说明",
+      "note": "用户要求先改原型，PRD和页面说明暂不修改",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-024 当前原型验证是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "未确认前保持正式决策、页面说明和 PRD 暂缓，不继续扩大同步范围",
+        "resumeWhen": "产品经理确认原型检查点后，再单独评估正式文档授权"
+      },
+      "pendingQuestions": [
+        "各服务商接口是否允许补偿的正式清单、自动重试上限、人工重推权限、频率限制及并发控制，待需求启动后的影响分析和研发方案确认。"
+      ],
+      "notes": [
+        "服务商接口经过系统自动重试仍失败后，运营人员可进入系统日志页面查看失败记录并执行人工重推。",
+        "人工重推能力覆盖所有被配置为允许补偿的服务商接口；不允许补偿的接口不展示重推操作。",
+        "人工重推应复用业务幂等约束，避免重复创建订单、重复发放权益、重复绑定或产生其他重复业务结果。",
+        "原失败日志必须保留，不得被人工重推结果覆盖；每次人工重推生成新的调用日志，并关联原日志、业务对象、操作人、操作时间和重推结果。",
+        "后续启动时需设计日志详情中的重推入口、二次确认、执行中状态、成功与失败反馈、权限和审计规则，并明确接口级补偿配置方式。",
+        "本次仅登记，不自动修改既有业务决策、系统日志契约、原型、页面说明、PRD、接口或后台实现。"
+      ],
+      "scope": "仅原型验证，正式文档暂缓",
+      "allowedArtifactTypes": [
+        "contract",
+        "prototype",
+        "test-report",
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "decision",
+        "page-guide",
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "admin.logs"
+      ],
+      "documents": [],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-14 确认：系统日志人工重推适用于所有允许补偿的服务商接口。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/SystemLogsPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm contracts:validate",
+          "result": "passed"
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户确认服务商接口自动重试后仍失败时，需要运营人员进入系统日志执行人工重推，范围覆盖所有允许补偿的服务商接口"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户明确要求先修改原型"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已定位后台系统日志详情、失败记录数据和日志页面契约"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户确认所有配置为允许补偿的服务商接口，在自动重试耗尽后均可人工重推"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-14",
+          "note": "本轮仅做原型验证，正式决策记录暂不纳入本轮范围，待原型评审后另行同步"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已补充人工重推动作、适用条件、审计关系、状态边界和验收场景"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已在失败日志详情实现人工重推二次确认，并新增关联原日志的补偿调用记录"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-14",
+          "note": "用户要求先改原型，PRD和页面说明暂不修改"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-025",
+      "title": "回收商黑名单校验改用寄件地址及地址联系电话",
+      "stageId": "waiting-start",
+      "stage": "待启动",
+      "note": "本次只登记变更，不启动需求说明、页面契约、原型、接口文档或接口实现修改",
+      "executionState": "locked",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "回收商判断用户是否命中黑名单时，不使用用户登录手机号作为判断依据。",
+        "平台进行回收商资格或黑名单校验时，使用本次订单的寄件地址，以及该下单地址信息中填写的联系人手机号。",
+        "平台向回收商提供寄件地址和地址联系电话，由回收商按照自身规则完成黑名单判断并返回校验结果；平台不新增地址与手机号的匹配算法。",
+        "后续启动时需评估并同步受影响的需求说明、下单页面契约、数据字段说明及回收商接口文档；具体 Page、Action、State 和文档范围在影响分析阶段确定。",
+        "本次仅登记，不自动修改业务决策、需求说明、页面契约、原型、接口文档、接口实现或历史交付物。"
+      ],
+      "scope": "仅登记，等待用户明确启动",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "decision",
+        "plan",
+        "contract",
+        "prototype",
+        "page-guide",
+        "test-report",
+        "review-report",
+        "user-confirmation",
+        "commit",
+        "release"
+      ],
+      "pages": [],
+      "documents": [],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-14 确认：实名名单系黑名单；回收商使用订单寄件地址和地址联系电话判断，不使用用户登录手机号，并要求先记录变更。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户确认回收商判断黑名单用户时不使用登录手机号，改用本次订单寄件地址及下单地址中填写的联系电话"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-14",
+          "note": "本次只登记变更，不启动需求说明、页面契约、原型、接口文档或接口实现修改"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-026",
+      "title": "预约页增加我的订单入口并支持订单列表渐进加载",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "原型、页面契约、页面功能说明、移动端 PRD 和需求台账已完成同步",
+      "executionState": "completed",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "预约页在旧衣回收、旧书回收 tab 上方最右侧展示轻量文字形式的我的订单入口，不占用 banner 图片区域；点击进入生活服务订单列表。",
+        "订单列表进入页面或切换状态分组时，首次加载当前平台近 3 个月订单并按下单时间倒序展示；页面不再向用户展示近 3 个月的查看限制说明。",
+        "用户滚动接近列表底部时自动加载更早订单，同时保留加载更早订单的手动入口；加载中、失败可重试和已全部加载需有明确反馈。",
+        "全部、进行中、已完成、已取消分别维护分页游标和是否还有更多标记，加载失败时保留已加载列表且不得重复追加。",
+        "上线前在各回收商产生的历史订单继续走独立入口，不与当前平台订单分页混合；跨回收商查询正式规则仍归 CR-020。"
+      ],
+      "scope": "历史需求已完成并关闭",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "mobile.order",
+        "mobile.orders"
+      ],
+      "documents": [
+        "docs/prd/02-用户移动端需求规格.md",
+        "docs/prd/05-需求验收追踪矩阵.md",
+        "docs/mobile-page-guides/01-移动端下单流程-页面功能说明.md"
+      ],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-14 确认预约页我的订单入口位置，并在订单列表原型移除近 3 个月提示、加入渐进加载后回复已确认。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/pages/OrderPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/pages/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/mobile-fulfillment.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm check",
+          "result": "passed"
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户提出预约下单页需要直达我的订单，并确认订单列表默认加载近 3 个月、向下滚动继续加载更早订单"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户先授权修改原型，原型确认后又明确授权同步需求说明和 PRD"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已定位预约页顶部入口、订单列表滚动容器、移动端页面契约、页面功能说明和生成式 PRD"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已确认我的订单为 tab 上方最右侧的轻量文字入口；近 3 个月仅为首批加载窗口，更早订单分页追加且上线前历史订单保持独立"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-14",
+          "note": "本次为移动端入口与列表加载交互调整，不新增跨页面长期业务决策"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "预约页查看我的订单动作已纳入契约；订单列表新增渐进加载动作、分页规则、异常恢复和验收场景"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已实现预约页我的订单跳转、移除近 3 个月用户提示，以及分组独立的自动加载、手动加载、加载中和全部加载反馈；分页失败恢复在契约中标记为部分实现"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已同步移动端页面功能说明及由契约生成的移动端 PRD"
+        },
+        {
+          "id": "consistency-check",
+          "label": "一致性检查",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "25 个页面契约校验、同源冒烟检查和 26 条需求工作流校验通过"
+        },
+        {
+          "id": "user-review",
+          "label": "用户评审",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户查看修改后的原型并回复已确认"
+        },
+        {
+          "id": "synced",
+          "label": "已同步",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "原型、页面契约、页面功能说明、移动端 PRD 和需求台账已完成同步"
+        }
+      ],
+      "confirmedAt": "2026-08-14"
+    },
+    {
+      "id": "CR-027",
+      "title": "订单单据状态简化为订单状态与权益状态",
+      "stageId": "page-docs-update",
+      "stage": "页面说明",
+      "note": "用户要求先改原型，PRD和页面说明暂不修改",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-027 当前原型验证是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "未确认前保持正式决策、页面说明和 PRD 暂缓，不继续扩大同步范围",
+        "resumeWhen": "产品经理确认原型检查点后，再单独评估正式文档授权"
+      },
+      "pendingQuestions": [],
+      "notes": [
+        "单据层只保留订单状态和权益状态，不再设置或展示独立运单状态、异常状态和综合展示状态。",
+        "主运单号、揽收时间、签收时间及物流轨迹继续作为履约事实保留；运输异常、退回中和已退回归入订单状态枚举。",
+        "实物权益满48小时仍未回传权益运单时，权益状态进入待人工处理；正常回传或人工关闭后进入已关闭。",
+        "服务商接口请求失败、自动重试和人工重推结果只记录在系统日志，不作为订单状态或权益状态。",
+        "本轮只同步可交互原型及原型契约，PRD、正式决策和页面说明待原型评审后继续。"
+      ],
+      "scope": "仅原型验证，正式文档暂缓",
+      "allowedArtifactTypes": [
+        "contract",
+        "prototype",
+        "test-report",
+        "review-report",
+        "user-confirmation"
+      ],
+      "deferredArtifactTypes": [
+        "decision",
+        "page-guide",
+        "commit",
+        "release"
+      ],
+      "pages": [
+        "mobile.orders",
+        "mobile.order-detail",
+        "mobile.gift-return",
+        "admin.dashboard",
+        "admin.orders",
+        "admin.logs"
+      ],
+      "documents": [],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-14 确认：只保留订单状态和权益状态；运单进度归入订单状态，接口请求异常只进入系统日志。",
+          "result": null
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/admin/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/mobile/pages/OrdersPage.jsx",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "file",
+          "reference": "prototype/src/contracts/data/admin-core.js",
+          "result": null,
+          "exists": true
+        },
+        {
+          "type": "check",
+          "reference": "pnpm contracts:validate",
+          "result": "passed"
+        },
+        {
+          "type": "check",
+          "reference": "pnpm exec vite build --outDir /private/tmp/cx-status-simplify-build --emptyOutDir",
+          "result": "passed"
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户提出状态过多，要求单据只保留订单状态和权益状态"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "用户明确要求先修改原型"
+        },
+        {
+          "id": "impact-analysis",
+          "label": "影响分析",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已定位移动端订单列表与详情、实物权益进度、后台订单列表与详情、运营看板、系统日志及对应原型契约"
+        },
+        {
+          "id": "rule-confirmation",
+          "label": "规则确认",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已确认物流正常与异常进度归入订单状态；权益超时归入权益状态；接口请求失败只进入系统日志"
+        },
+        {
+          "id": "decision-record",
+          "label": "决策记录",
+          "status": "skipped",
+          "updatedAt": "2026-08-14",
+          "note": "本轮仅做原型验证，正式状态决策记录暂不纳入本轮范围，待原型评审后另行同步"
+        },
+        {
+          "id": "contract-update",
+          "label": "页面契约",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "已将原型契约中的状态机收敛为回收订单状态与权益状态，物流事件保留为事实信息"
+        },
+        {
+          "id": "prototype-update",
+          "label": "可交互原型",
+          "status": "completed",
+          "updatedAt": "2026-08-14",
+          "note": "移动端与后台订单页面已移除独立运单状态、异常状态和综合展示状态，筛选与状态总览只保留两类状态"
+        },
+        {
+          "id": "page-docs-update",
+          "label": "页面说明",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-14",
+          "note": "用户要求先改原型，PRD和页面说明暂不修改"
+        }
+      ],
+      "confirmedAt": null
+    },
+    {
+      "id": "CR-028",
+      "title": "取消小哥奖励记录独立页面并合并至推广订单",
+      "stageId": "waiting-start",
+      "stage": "待启动",
+      "note": "本次只登记待办，不删除规格章节，不修改页面契约、原型、页面说明或对外分享 HTML",
+      "executionState": "locked",
+      "waiting": null,
+      "pendingQuestions": [],
+      "notes": [
+        "删除小哥端需求规格 7.4 小哥奖励记录，不再保留独立的小哥奖励记录页面。",
+        "奖励金额汇总、激励状态筛选等仍有价值的信息合并至推广详情的推广订单区域，避免与推广订单列表重复展示同一批订单。",
+        "小哥首页的已计算激励入口调整为进入推广详情中的推广订单区域，并可查看奖励汇总与订单明细。",
+        "正式启动后需同步清理独立页面的 Page、Action、State、路由和旧页面编号映射，并更新小哥端规格、页面说明、验收内容及对外分享 HTML。",
+        "本次仅登记，不自动修改业务决策、页面契约、原型、页面说明、PRD、生成脚本或交付物。"
+      ],
+      "scope": "仅登记，等待用户明确启动",
+      "allowedArtifactTypes": [],
+      "deferredArtifactTypes": [
+        "decision",
+        "plan",
+        "contract",
+        "prototype",
+        "page-guide",
+        "test-report",
+        "review-report",
+        "user-confirmation",
+        "commit",
+        "release"
+      ],
+      "pages": [],
+      "documents": [],
+      "evidence": [
+        {
+          "type": "note",
+          "reference": "用户于 2026-08-18 要求将删除小哥端 7.4 小哥奖励记录独立页面、并把必要信息合并到推广订单的调整先记录为待办。",
+          "result": null
+        }
+      ],
+      "stages": [
+        {
+          "id": "registered",
+          "label": "已登记",
+          "status": "completed",
+          "updatedAt": "2026-08-18",
+          "note": "用户评审小哥端需求规格时认为小哥奖励记录页面与推广订单内容重复，并要求先登记为待办"
+        },
+        {
+          "id": "waiting-start",
+          "label": "待启动",
+          "status": "waiting_user",
+          "updatedAt": "2026-08-18",
+          "note": "本次只登记待办，不删除规格章节，不修改页面契约、原型、页面说明或对外分享 HTML"
+        }
+      ],
+      "confirmedAt": null
+    }
+  ]
+}

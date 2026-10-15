@@ -1,0 +1,19 @@
+{
+  "name": "engineering-prototype-kit-workbench",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5174",
+    "build": "vite build",
+    "test": "node scripts/test-strategy-templates.mjs && node scripts/test-template-preview.mjs && node scripts/test-project-discovery.mjs && node scripts/test-kit-analysis.mjs && node scripts/test-kit-job-health.mjs && node scripts/test-strategy-worker.mjs",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "5.0.4",
+    "vite": "6.4.3",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {}
+}

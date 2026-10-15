@@ -41,6 +41,8 @@
     "project-tools:test": "node scripts/test-project-tools.mjs",
     "example:validate": "node scripts/validate-example.mjs",
     "guardrails:test": "node scripts/test-guardrails.mjs",
+    "workbench:test": "node workbench/scripts/test-strategy-templates.mjs && node workbench/scripts/test-template-preview.mjs && node workbench/scripts/test-project-discovery.mjs && node workbench/scripts/test-kit-analysis.mjs && node workbench/scripts/test-kit-job-health.mjs && node workbench/scripts/test-strategy-worker.mjs",
+    "workbench:check": "pnpm workbench:test && pnpm --dir workbench build",
     "check": "node scripts/check-current.mjs",
     "dev": "pnpm --dir prototype dev",
     "build:review": "pnpm check && pnpm --dir prototype build",

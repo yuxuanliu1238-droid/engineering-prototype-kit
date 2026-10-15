@@ -1,0 +1,338 @@
+{
+  "readAt": "2026-09-10T03:15:45.306Z",
+  "sha256": "dbc50e3b66eec8592ab6e062cd96812bea8c49b997461c545eca4dc9e950490d",
+  "source": "docs/requirements/registry.json",
+  "projectId": "cx-recycle",
+  "items": [
+    {
+      "id": "CR-001",
+      "title": "小哥推广绑定规则（扫码成功下单后绑定，有效期 12 个月，再次扫其他小哥码下单可覆盖）",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步",
+      "executionState": "completed",
+      "waiting": null
+    },
+    {
+      "id": "CR-002",
+      "title": "回收商超时未回传寄回物流单号提醒",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步",
+      "executionState": "completed",
+      "waiting": null
+    },
+    {
+      "id": "CR-003",
+      "title": "C 端下单用户统计",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步",
+      "executionState": "completed",
+      "waiting": null
+    },
+    {
+      "id": "CR-004",
+      "title": "实物权益，不需要用户主动点击【领取权益】，红包权益才需要点击领取权益按钮，点击后录入支付宝姓名和账号，实物权益需要更新",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，相关决策、契约、原型、页面说明和检查证据已完成同步",
+      "executionState": "completed",
+      "waiting": null
+    },
+    {
+      "id": "CR-005",
+      "title": "实物权益由回收商主动发放并回传权益运单，24/48小时未回传时分级提醒和异常跟进",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，CR-005决策、状态机、契约、原型、页面说明、检查证据和rc2候选快照已同步",
+      "executionState": "completed",
+      "waiting": null
+    },
+    {
+      "id": "CR-006",
+      "title": "按城市配置权益回收价格",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "必需节点完成、合并全量检查通过并取得用户最终确认",
+      "executionState": "completed",
+      "waiting": null
+    },
+    {
+      "id": "CR-007",
+      "title": "按城市和重量区间配置小哥推广激励",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "必需节点完成、合并全量检查通过并取得用户最终确认；外部配置与接口细节按已确认边界留待后续设计",
+      "executionState": "completed",
+      "waiting": null
+    },
+    {
+      "id": "CR-008",
+      "title": "聚合回收平台不直接对接顺丰物流，由回收商创建物流单并回传主运单及物流状态",
+      "stageId": "waiting-start",
+      "stage": "待启动",
+      "note": "本次仅完成登记，等待用户明确授权启动同步",
+      "executionState": "locked",
+      "waiting": null
+    },
+    {
+      "id": "CR-009",
+      "title": "运营后台原型区分一级和二级菜单，并同步相关页面路径指引",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开推广运营 > 推广激励规则页面，等待用户最终确认菜单层级与路径展示",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-009 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      }
+    },
+    {
+      "id": "CR-010",
+      "title": "统一澄清所有 PRD 中页面状态为前端原型实现状态",
+      "stageId": "waiting-start",
+      "stage": "待启动",
+      "note": "本次仅完成登记，等待用户明确授权统一启动处理",
+      "executionState": "locked",
+      "waiting": null
+    },
+    {
+      "id": "CR-011",
+      "title": "点击回收商编码和权益编码打开对应只读详情抽屉",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "用户评审通过，两个详情入口、页面契约、页面说明和检查证据均已完成同步",
+      "executionState": "completed",
+      "waiting": null
+    },
+    {
+      "id": "CR-012",
+      "title": "修正运营后台订单详情顶部状态信息排版",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开订单详情抽屉展示修复后的顶部状态总览，等待用户确认排版",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-012 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      }
+    },
+    {
+      "id": "CR-013",
+      "title": "推广激励改为订单维度并增加小哥工号及下单签收日期查询",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "页面已停留在推广激励，等待用户确认订单维度及查询条件是否符合预期",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-013 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      }
+    },
+    {
+      "id": "CR-014",
+      "title": "精简回收订单列表页说明文案和规则提示条",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开精简后的回收订单页面，等待用户确认",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-014 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      }
+    },
+    {
+      "id": "CR-015",
+      "title": "调整回收订单列表列名并新增单据序号",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开调整后的回收订单页面，等待用户确认列表列名和序号",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-015 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      }
+    },
+    {
+      "id": "CR-016",
+      "title": "将订单详情抽屉改为独立详情页",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开独立订单详情页，等待用户确认信息架构和可读性",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-016 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      }
+    },
+    {
+      "id": "CR-017",
+      "title": "回收商管理不展示或配置接口设计字段",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已打开清理接口字段后的回收商详情，等待用户确认",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-017 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      }
+    },
+    {
+      "id": "CR-018",
+      "title": "以顺丰速运生活服务旧衣书籍入口替换聚合回收首页",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "等待用户确认顺丰生活服务截图入口及点击旧衣书籍后的跳转效果",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-018 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      }
+    },
+    {
+      "id": "CR-019",
+      "title": "统一小哥端现金激励口径并处理剩余文案与功能调整",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "已落实规格精简、成功下单才覆盖绑定、丰创活动入口身份映射，以及权威事实与成功激励计算结果不可修改，等待用户继续评审",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-019 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      }
+    },
+    {
+      "id": "CR-020",
+      "title": "上线前历史订单跨回收商聚合查询正式同步",
+      "stageId": "user-review",
+      "stage": "用户评审",
+      "note": "等待用户评审 02 移动端 PRD 中新增的上线前历史订单独立页面说明",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-020 当前评审内容是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "缺少本次明确确认，检查通过也不能将需求标记为已同步",
+        "resumeWhen": "产品经理明确记录本次评审结论后恢复"
+      }
+    },
+    {
+      "id": "CR-021",
+      "title": "工程化原型工作流与 Skill 复盘改进",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "第二至第五步及最终试运行均已确认，治理字段、检查证据和只读流程中心已完成同步",
+      "executionState": "completed",
+      "waiting": null
+    },
+    {
+      "id": "CR-022",
+      "title": "预估重量初筛与签收核定重量不足后的权益重选和客服处理",
+      "stageId": "waiting-start",
+      "stage": "待启动",
+      "note": "本次只登记需求，不启动决策、页面契约、原型、页面说明或接口变更",
+      "executionState": "locked",
+      "waiting": null
+    },
+    {
+      "id": "CR-023",
+      "title": "实物权益运单超时支持人工关闭权益",
+      "stageId": "page-docs-update",
+      "stage": "页面说明",
+      "note": "用户要求先改原型，PRD和页面说明暂不修改",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-023 当前原型验证是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "未确认前保持正式决策、页面说明和 PRD 暂缓，不继续扩大同步范围",
+        "resumeWhen": "产品经理确认原型检查点后，再单独评估正式文档授权"
+      }
+    },
+    {
+      "id": "CR-024",
+      "title": "系统日志支持可补偿服务商接口人工重推",
+      "stageId": "page-docs-update",
+      "stage": "页面说明",
+      "note": "用户要求先改原型，PRD和页面说明暂不修改",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-024 当前原型验证是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "未确认前保持正式决策、页面说明和 PRD 暂缓，不继续扩大同步范围",
+        "resumeWhen": "产品经理确认原型检查点后，再单独评估正式文档授权"
+      }
+    },
+    {
+      "id": "CR-025",
+      "title": "回收商黑名单校验改用寄件地址及地址联系电话",
+      "stageId": "waiting-start",
+      "stage": "待启动",
+      "note": "本次只登记变更，不启动需求说明、页面契约、原型、接口文档或接口实现修改",
+      "executionState": "locked",
+      "waiting": null
+    },
+    {
+      "id": "CR-026",
+      "title": "预约页增加我的订单入口并支持订单列表渐进加载",
+      "stageId": "synced",
+      "stage": "已同步",
+      "note": "原型、页面契约、页面功能说明、移动端 PRD 和需求台账已完成同步",
+      "executionState": "completed",
+      "waiting": null
+    },
+    {
+      "id": "CR-027",
+      "title": "订单单据状态简化为订单状态与权益状态",
+      "stageId": "page-docs-update",
+      "stage": "页面说明",
+      "note": "用户要求先改原型，PRD和页面说明暂不修改",
+      "executionState": "waiting-human",
+      "waiting": {
+        "code": "review-required",
+        "question": "请确认 CR-027 当前原型验证是否通过？",
+        "requestedFrom": "产品经理",
+        "impact": "未确认前保持正式决策、页面说明和 PRD 暂缓，不继续扩大同步范围",
+        "resumeWhen": "产品经理确认原型检查点后，再单独评估正式文档授权"
+      }
+    },
+    {
+      "id": "CR-028",
+      "title": "取消小哥奖励记录独立页面并合并至推广订单",
+      "stageId": "waiting-start",
+      "stage": "待启动",
+      "note": "本次只登记待办，不删除规格章节，不修改页面契约、原型、页面说明或对外分享 HTML",
+      "executionState": "locked",
+      "waiting": null
+    }
+  ]
+}

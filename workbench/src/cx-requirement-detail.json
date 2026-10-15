@@ -1,0 +1,122 @@
+{
+  "readAt": "2026-09-09T14:22:56.747Z",
+  "source": "docs/requirements/registry.json",
+  "sha256": "dbc50e3b66eec8592ab6e062cd96812bea8c49b997461c545eca4dc9e950490d",
+  "id": "CR-027",
+  "title": "订单单据状态简化为订单状态与权益状态",
+  "stage": "页面说明",
+  "notes": [
+    "单据层只保留订单状态和权益状态，不再设置或展示独立运单状态、异常状态和综合展示状态。",
+    "主运单号、揽收时间、签收时间及物流轨迹继续作为履约事实保留；运输异常、退回中和已退回归入订单状态枚举。",
+    "实物权益满48小时仍未回传权益运单时，权益状态进入待人工处理；正常回传或人工关闭后进入已关闭。",
+    "服务商接口请求失败、自动重试和人工重推结果只记录在系统日志，不作为订单状态或权益状态。",
+    "本轮只同步可交互原型及原型契约，PRD、正式决策和页面说明待原型评审后继续。"
+  ],
+  "waiting": {
+    "code": "review-required",
+    "question": "请确认 CR-027 当前原型验证是否通过？",
+    "requestedFrom": "产品经理",
+    "impact": "未确认前保持正式决策、页面说明和 PRD 暂缓，不继续扩大同步范围",
+    "resumeWhen": "产品经理确认原型检查点后，再单独评估正式文档授权"
+  },
+  "scope": "仅原型验证，正式文档暂缓",
+  "pages": [
+    "mobile.orders",
+    "mobile.order-detail",
+    "mobile.gift-return",
+    "admin.dashboard",
+    "admin.orders",
+    "admin.logs"
+  ],
+  "documents": [],
+  "evidence": [
+    {
+      "type": "note",
+      "reference": "用户于 2026-08-14 确认：只保留订单状态和权益状态；运单进度归入订单状态，接口请求异常只进入系统日志。"
+    },
+    {
+      "type": "file",
+      "reference": "prototype/src/admin/OrdersPage.jsx",
+      "exists": true
+    },
+    {
+      "type": "file",
+      "reference": "prototype/src/mobile/pages/OrdersPage.jsx",
+      "exists": true
+    },
+    {
+      "type": "file",
+      "reference": "prototype/src/contracts/data/admin-core.js",
+      "exists": true
+    },
+    {
+      "type": "check",
+      "reference": "pnpm contracts:validate",
+      "result": "passed"
+    },
+    {
+      "type": "check",
+      "reference": "pnpm exec vite build --outDir /private/tmp/cx-status-simplify-build --emptyOutDir",
+      "result": "passed"
+    }
+  ],
+  "stages": [
+    {
+      "id": "registered",
+      "label": "已登记",
+      "status": "completed",
+      "updatedAt": "2026-08-14",
+      "note": "用户提出状态过多，要求单据只保留订单状态和权益状态"
+    },
+    {
+      "id": "waiting-start",
+      "label": "待启动",
+      "status": "completed",
+      "updatedAt": "2026-08-14",
+      "note": "用户明确要求先修改原型"
+    },
+    {
+      "id": "impact-analysis",
+      "label": "影响分析",
+      "status": "completed",
+      "updatedAt": "2026-08-14",
+      "note": "已定位移动端订单列表与详情、实物权益进度、后台订单列表与详情、运营看板、系统日志及对应原型契约"
+    },
+    {
+      "id": "rule-confirmation",
+      "label": "规则确认",
+      "status": "completed",
+      "updatedAt": "2026-08-14",
+      "note": "已确认物流正常与异常进度归入订单状态；权益超时归入权益状态；接口请求失败只进入系统日志"
+    },
+    {
+      "id": "decision-record",
+      "label": "决策记录",
+      "status": "skipped",
+      "updatedAt": "2026-08-14",
+      "note": "本轮仅做原型验证，正式状态决策记录暂不纳入本轮范围，待原型评审后另行同步"
+    },
+    {
+      "id": "contract-update",
+      "label": "页面契约",
+      "status": "completed",
+      "updatedAt": "2026-08-14",
+      "note": "已将原型契约中的状态机收敛为回收订单状态与权益状态，物流事件保留为事实信息"
+    },
+    {
+      "id": "prototype-update",
+      "label": "可交互原型",
+      "status": "completed",
+      "updatedAt": "2026-08-14",
+      "note": "移动端与后台订单页面已移除独立运单状态、异常状态和综合展示状态，筛选与状态总览只保留两类状态"
+    },
+    {
+      "id": "page-docs-update",
+      "label": "页面说明",
+      "status": "waiting_user",
+      "updatedAt": "2026-08-14",
+      "note": "用户要求先改原型，PRD和页面说明暂不修改"
+    }
+  ],
+  "confirmedAt": null
+}
