@@ -1,6 +1,7 @@
 // Stable public entry; implementation is separated by responsibility.
 export {
   EXPECTED_STAGE_IDS,
+  REQUIREMENT_LIFECYCLE_STAGE_IDS,
   STAGE_LABELS,
   EXPECTED_ACTIVITY_STATUSES,
   EXPECTED_EXECUTION_STATES,
@@ -14,12 +15,21 @@ export {
   EXPECTED_EVIDENCE_SOURCE_TYPES,
   EXPECTED_EVIDENCE_STATUSES,
   ACTIVITY_LABELS,
+  REQUIREMENT_TYPES,
+  IMPACT_TAGS,
+  CLASSIFICATION_PRIORITY,
+  recommendMainType,
+  shouldSuggestSplit,
+  validateAITypeRecommendation,
+  REQUIREMENT_TEMPLATE_VERSION,
+  buildRequirementTemplateSnapshot,
 } from "./workflow/model.mjs";
 export {
   buildActivityIds,
   makeActivities,
   makeReadiness,
   makeEmptyRegistry,
+  makeRecordedRequirement,
   deriveReadiness,
   deriveOverallStatus,
   deriveStatusCard,

@@ -70,6 +70,15 @@ export async function validateProject({ strict = false } = {}) {
       }
     }
   }
+  const workbenchRequirements=status.capabilities?.workbenchRequirements;
+  if(workbenchRequirements!==undefined){
+    if(typeof workbenchRequirements.enabled!=="boolean")errors.push("capabilities.workbenchRequirements.enabled 必须是布尔值");
+    if(!["confirmed","not-enabled"].includes(workbenchRequirements.state))errors.push("capabilities.workbenchRequirements.state 无效");
+    if(workbenchRequirements.enabled===true&&
+      (workbenchRequirements.state!=="confirmed"||!hasText(workbenchRequirements.reason)||
+       !hasText(workbenchRequirements.confirmedBy)||!hasText(workbenchRequirements.confirmedAt)))
+      errors.push("启用工作台需求管理时必须记录 confirmed 状态、原因、确认人与确认时间");
+  }
   try {
     const baseline = await fs.readFile(path.join(ROOT, "docs/business-baseline.md"), "utf8");
     if (!baseline.includes(`当前模式：${status.currentMode}`)) {
@@ -137,6 +146,23 @@ export async function validateProject({ strict = false } = {}) {
     "docs/page-guides/README.md",
   ];
   let registry = null;
+  async function validateRequirementLedger(){
+    for(const relativePath of [config.paths.requirements,config.paths.requirementsSummary])
+      if(!(await pathExists(relativePath)))errors.push(`工作台需求管理缺少：${relativePath}`);
+    if(!(await projectPathExists(config.paths.requirements)))return;
+    registry=JSON.parse(await fs.readFile(safeProjectPath(config.paths.requirements),"utf8"));
+    errors.push(...validateRegistryData(registry));
+    for(const item of registry.items||[]){
+      const strictErrors=validateRegistryData({...registry,items:[item]},{strict:true});
+      if(strict||["ready","in-progress"].includes(item.executionState))
+        errors.push(...strictErrors,...(process.env.KIT_CHECK_RUNNING==="1"?[]:await verifyEvidenceFiles(item,ROOT)));
+      else if(strictErrors.length)console.log(`${item.id}：未按新规则验证（保留原状态；重新推进或交付必须核验）`);
+    }
+    try{
+      const actualView=await fs.readFile(safeProjectPath(config.paths.requirementsSummary),"utf8");
+      if(actualView!==renderRequirements(registry))errors.push("需求可读视图与 Schema v3 台账不同步，请先运行 workflow:generate");
+    }catch{errors.push("无法读取需求可读视图");}
+  }
   const profile = status.validationProfile;
   const scenariosPath = config.paths.reviewScenarios || "prototype/src/review-scenarios.json";
   if (await projectPathExists(scenariosPath)) {
@@ -161,45 +187,24 @@ export async function validateProject({ strict = false } = {}) {
     ) {
       errors.push("部分充分输入或启用评审中心时必须创建 Demo 蓝图");
     }
+    const allowedWorkbenchPaths=workbenchRequirements?.enabled===true?
+      new Set([config.paths.requirements,config.paths.requirementsSummary]):new Set();
     for (const relativePath of [
       ...continuousPaths,
       "docs/domain",
       "docs/scenarios",
       "prototype/src/contracts",
     ]) {
-      if (await pathExists(relativePath)) {
+      if (!allowedWorkbenchPaths.has(relativePath)&&await pathExists(relativePath)) {
         errors.push(`快速验证模式不得默认创建持续迭代材料：${relativePath}`);
       }
     }
+    if(workbenchRequirements?.enabled===true)await validateRequirementLedger();
   } else {
     for (const relativePath of continuousPaths) {
       if (!(await pathExists(relativePath))) errors.push(`持续迭代模式缺少：${relativePath}`);
     }
-    if (await projectPathExists(config.paths.requirements)) {
-      registry = JSON.parse(await fs.readFile(safeProjectPath(config.paths.requirements), "utf8"));
-      errors.push(...validateRegistryData(registry));
-      for (const item of registry.items || []) {
-        const strictErrors = validateRegistryData({ ...registry, items: [item] }, { strict: true });
-        if (strict || ["ready", "in-progress"].includes(item.executionState)) {
-          errors.push(
-            ...strictErrors,
-            ...(process.env.KIT_CHECK_RUNNING === "1" ? [] : await verifyEvidenceFiles(item, ROOT)),
-          );
-        } else if (strictErrors.length)
-          console.log(`${item.id}：未按新规则验证（保留原状态；重新推进或交付必须核验）`);
-      }
-      const expectedView = renderRequirements(registry);
-      try {
-        const actualView = await fs.readFile(
-          safeProjectPath(config.paths.requirementsSummary),
-          "utf8",
-        );
-        if (actualView !== expectedView)
-          errors.push("需求可读视图与 Schema v3 台账不同步，请先运行 workflow:generate");
-      } catch {
-        errors.push("无法读取需求可读视图");
-      }
-    }
+    await validateRequirementLedger();
     const contractsPath = config.paths.contracts || "prototype/src/contracts/contracts.json";
     const pageGuidesPath = config.paths.pageGuides || "docs/page-guides/pages.md";
     if (await projectPathExists(contractsPath)) {

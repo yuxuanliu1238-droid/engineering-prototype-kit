@@ -1,5 +1,6 @@
 import {
   EXPECTED_STAGE_IDS,
+  REQUIREMENT_LIFECYCLE_STAGE_IDS,
   STAGE_LABELS,
   EXPECTED_ACTIVITY_STATUSES,
   EXPECTED_EXECUTION_STATES,
@@ -12,6 +13,9 @@ import {
   EXPECTED_RISK_TRIGGERS,
   EXPECTED_EVIDENCE_SOURCE_TYPES,
   EXPECTED_EVIDENCE_STATUSES,
+  REQUIREMENT_TYPES,
+  IMPACT_TAGS,
+  REQUIREMENT_TEMPLATE_VERSION,
 } from "./model.mjs";
 import { buildActivityIds, deriveReadiness } from "./policy.mjs";
 import { assertObject, hasText, requireStringArray } from "../project-lib.mjs";
@@ -132,7 +136,7 @@ export function validateActivities(item, label, errors) {
     errors.push(`${label}.activities 必须是数组`);
     return;
   }
-  const expectedIds = buildActivityIds(item.riskAssessment);
+  const expectedIds = buildActivityIds(item.riskAssessment, item.requirementType, item.impactTags);
   const actualIds = item.activities.map((activity) => activity?.id);
   if (JSON.stringify(actualIds) !== JSON.stringify(expectedIds)) {
     errors.push(`${label}.activities 与风险等级和触发因素不一致`);
@@ -247,8 +251,9 @@ export function validateRegistryShape(registry) {
   if (registry.schemaVersion !== 3) errors.push("需求台账 schemaVersion 必须为 3");
 
   const stageIds = (registry.stageDefinitions || []).map((stage) => stage?.id);
-  if (JSON.stringify(stageIds) !== JSON.stringify(EXPECTED_STAGE_IDS)) {
-    errors.push("流程阶段必须为 V0.3 五个主阶段并保持顺序");
+  const acceptedStages=[EXPECTED_STAGE_IDS,REQUIREMENT_LIFECYCLE_STAGE_IDS];
+  if (!acceptedStages.some(ids=>JSON.stringify(stageIds)===JSON.stringify(ids))) {
+    errors.push("流程阶段必须为兼容的五阶段或需求执行六阶段，并保持顺序");
   }
   (registry.stageDefinitions || []).forEach((stage, index) => {
     if (!assertObject(stage, `stageDefinitions[${index}]`, errors)) return;
@@ -294,7 +299,7 @@ export function validateRegistryShape(registry) {
     for (const field of ["summary", "originalRequest", "source", "proposedAt"]) {
       if (!hasText(item[field])) errors.push(`${label}.${field} 缺失`);
     }
-    if (!EXPECTED_STAGE_IDS.includes(item.currentStageId)) {
+    if (!stageIds.includes(item.currentStageId)) {
       errors.push(`${label}.currentStageId 无效`);
     }
     if (!EXPECTED_EXECUTION_STATES.includes(item.executionState)) {
@@ -305,6 +310,34 @@ export function validateRegistryShape(registry) {
     }
     for (const field of ["pageIds", "actionIds", "stateIds", "documents"]) {
       requireStringArray(item[field], `${label}.${field}`, errors);
+    }
+    if (item.requirementType !== undefined) {
+      if (!REQUIREMENT_TYPES[item.requirementType]) errors.push(`${label}.requirementType 无效`);
+      requireStringArray(item.impactTags, `${label}.impactTags`, errors);
+      for (const tag of item.impactTags || []) {
+        if (!IMPACT_TAGS[tag]) errors.push(`${label}.impactTags 包含无效标签：${tag}`);
+      }
+      if (new Set(item.impactTags || []).size !== (item.impactTags || []).length) {
+        errors.push(`${label}.impactTags 不得重复`);
+      }
+      if(item.workbenchTemplate!==undefined){
+        const template=item.workbenchTemplate;
+        if(assertObject(template,`${label}.workbenchTemplate`,errors)){
+          if(template.version!==REQUIREMENT_TEMPLATE_VERSION)errors.push(`${label}.workbenchTemplate.version 无效`);
+          if(template.requirementType!==item.requirementType)errors.push(`${label}.workbenchTemplate 与主类型不一致`);
+          for(const field of ["analyze","outputs","acceptance","documentStructure","evidence"])
+            requireStringArray(template[field],`${label}.workbenchTemplate.${field}`,errors);
+          if(assertObject(template.questions,`${label}.workbenchTemplate.questions`,errors))
+            for(const field of ["ask","recommend","aiDecides"])
+              requireStringArray(template.questions[field],`${label}.workbenchTemplate.questions.${field}`,errors);
+          if(!Array.isArray(template.impactBranches)||template.impactBranches.some(branch=>!item.impactTags.includes(branch?.id)))
+            errors.push(`${label}.workbenchTemplate.impactBranches 与影响标签不一致`);
+        }
+      }
+      if (item.requirementType==="existing-page-adjustment" &&
+        !item.impactTags?.includes("frontend-page")) {
+        errors.push(`${label} 现有页面调整必须标记前端页面影响`);
+      }
     }
     if (item.overallStatus !== undefined) {
       errors.push(`${label}.overallStatus 不得重复存储，应由阶段和执行状态派生`);
@@ -321,6 +354,23 @@ export function validateRegistryShape(registry) {
     validateEvidence(item, label, errors);
     validateArtifacts(item, label, errors);
     validateReviewConfirmation(item, label, errors);
+    if(item.workbenchLifecycle!==undefined){
+      const lifecycle=item.workbenchLifecycle,states=new Set(["awaiting-analysis","awaiting-plan","awaiting-authorization","executing","awaiting-review","completed"]),
+        activities=new Set(["idle","submitted","running","blocked"]);
+      if(!assertObject(lifecycle,`${label}.workbenchLifecycle`,errors))return;
+      if(!states.has(lifecycle.state))errors.push(`${label}.workbenchLifecycle.state 无效`);
+      if(!activities.has(lifecycle.activity))errors.push(`${label}.workbenchLifecycle.activity 无效`);
+      if(!hasText(lifecycle.updatedAt)||Number.isNaN(Date.parse(lifecycle.updatedAt)))errors.push(`${label}.workbenchLifecycle.updatedAt 无效`);
+      if(!Array.isArray(lifecycle.history)||!lifecycle.history.length)errors.push(`${label}.workbenchLifecycle.history 缺失`);
+      else{
+        lifecycle.history.forEach((entry,historyIndex)=>{
+          if(!entry||!states.has(entry.state)||!activities.has(entry.activity)||!hasText(entry.actor)||!hasText(entry.event)||Number.isNaN(Date.parse(entry.at)))
+            errors.push(`${label}.workbenchLifecycle.history[${historyIndex}] 无效`);
+        });
+        if(lifecycle.history.at(-1)?.state!==lifecycle.state||lifecycle.history.at(-1)?.activity!==lifecycle.activity)
+          errors.push(`${label}.workbenchLifecycle 当前状态与历史末项不一致`);
+      }
+    }
 
     const readiness = deriveReadiness(item);
     if (["ready", "in-progress"].includes(item.executionState)) {
@@ -336,9 +386,15 @@ export function validateRegistryShape(registry) {
       errors.push(`${item.id} 仅授权规划，不得在实施阶段进行中`);
     }
 
-    const stageIndex = EXPECTED_STAGE_IDS.indexOf(item.currentStageId);
+    const stageIndex = stageIds.indexOf(item.currentStageId);
+    if (stageIds.length===REQUIREMENT_LIFECYCLE_STAGE_IDS.length &&
+      stageIndex>=stageIds.indexOf("implementation") &&
+      item.executionState!=="cancelled" &&
+      item.readinessChecklist?.find(check=>check.id==="authorization-confirmed")?.status!=="met") {
+      errors.push(`${item.id} 未记录单独实施授权，不得进入执行或验收阶段`);
+    }
     if (
-      stageIndex < EXPECTED_STAGE_IDS.indexOf("implementation") &&
+      stageIndex < stageIds.indexOf("implementation") &&
       [...(item.pageIds || []), ...(item.actionIds || []), ...(item.stateIds || [])].length
     ) {
       errors.push(`${item.id} 尚未进入实施阶段，不得预填 Page、Action 或 State ID`);

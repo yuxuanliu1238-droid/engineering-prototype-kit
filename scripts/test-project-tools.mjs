@@ -240,7 +240,8 @@ const pageCr = {
   remainingRisks: [],
   openQuestions: [],
 };
-const pageRegistry = makeEmptyRegistry();
+// This fixture exercises legacy page-contract generation, not the new authorization lifecycle.
+const pageRegistry = makeEmptyRegistry({legacyStages:true});
 pageRegistry.items = [pageCr];
 await fs.writeFile(
   path.join(continuousRoot, "docs/requirements/registry.json"),

@@ -1,11 +1,31 @@
 {
   "schemaVersion": 3,
   "stageDefinitions": [
-    { "id": "recorded", "label": "已记录", "required": true },
-    { "id": "analysis-confirmation", "label": "分析确认", "required": true },
-    { "id": "implementation", "label": "实施中", "required": true },
-    { "id": "awaiting-review", "label": "待评审", "required": true },
-    { "id": "completed", "label": "已完成", "required": true }
+    {
+      "id": "recorded",
+      "label": "已记录",
+      "required": true
+    },
+    {
+      "id": "analysis-confirmation",
+      "label": "分析确认",
+      "required": true
+    },
+    {
+      "id": "implementation",
+      "label": "实施阶段",
+      "required": true
+    },
+    {
+      "id": "awaiting-review",
+      "label": "待评审",
+      "required": true
+    },
+    {
+      "id": "completed",
+      "label": "已完成",
+      "required": true
+    }
   ],
   "activityStatuses": [
     "未开始",
@@ -61,7 +81,11 @@
       "commit",
       "release"
     ],
-    "riskLevels": ["light", "standard", "high"],
+    "riskLevels": [
+      "light",
+      "standard",
+      "high"
+    ],
     "riskTriggers": [
       "product-outcome",
       "prohibited-restoration",
@@ -89,7 +113,12 @@
       "legacy-reference",
       "other"
     ],
-    "evidenceStatuses": ["candidate", "confirmed", "rejected", "legacy"]
+    "evidenceStatuses": [
+      "candidate",
+      "confirmed",
+      "rejected",
+      "legacy"
+    ]
   },
   "items": []
 }

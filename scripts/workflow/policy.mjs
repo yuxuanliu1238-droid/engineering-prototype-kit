@@ -1,6 +1,7 @@
 import { validateEvidencePolicy } from "../evidence-policy.mjs";
 import {
   EXPECTED_STAGE_IDS,
+  REQUIREMENT_LIFECYCLE_STAGE_IDS,
   STAGE_LABELS,
   EXPECTED_ACTIVITY_STATUSES,
   EXPECTED_EXECUTION_STATES,
@@ -19,16 +20,35 @@ import {
   DOMAIN_TRIGGERS,
   EXCEPTION_TRIGGERS,
   SPECIALIST_TRIGGERS,
+  REQUIREMENT_TYPES,
+  IMPACT_TAGS,
+  buildRequirementTemplateSnapshot,
 } from "./model.mjs";
 
 export function hasAnyTrigger(triggers, expected) {
   return (triggers || []).some((trigger) => expected.has(trigger));
 }
 
-export function buildActivityIds(riskAssessment) {
+export function buildActivityIds(riskAssessment, requirementType = null, impactTags = []) {
   const level = riskAssessment?.confirmedLevel;
   const triggers = riskAssessment?.triggers || [];
   if (!level) return [];
+  if (requirementType && REQUIREMENT_TYPES[requirementType]) {
+    const ids = level === "light" ? ["scope-confirmation"] : ["impact-analysis", "rule-confirmation"];
+    if (level === "high" && hasAnyTrigger(triggers, DECISION_TRIGGERS)) ids.push("decision-record");
+    if (level === "high" && hasAnyTrigger(triggers, DOMAIN_TRIGGERS)) ids.push("domain-model");
+    if (level === "high" && hasAnyTrigger(triggers, EXCEPTION_TRIGGERS)) ids.push("exception-analysis");
+    ids.push("implementation");
+    const branches = new Set([REQUIREMENT_TYPES[requirementType].check]);
+    for (const tag of impactTags) {
+      for (const activity of IMPACT_TAGS[tag]?.activities || []) branches.add(activity);
+    }
+    // Only frontend impact requests a prototype; document-only and backend routes do not.
+    for (const activity of branches) ids.push(activity);
+    if (level === "high" && hasAnyTrigger(triggers, SPECIALIST_TRIGGERS)) ids.push("specialist-review");
+    ids.push("product-review");
+    return ids;
+  }
   if (level === "light") {
     return ["scope-confirmation", "implementation", "page-check", "product-review"];
   }
@@ -51,8 +71,8 @@ export function buildActivityIds(riskAssessment) {
   return ids;
 }
 
-export function makeActivities(riskAssessment) {
-  return buildActivityIds(riskAssessment).map((id) => ({
+export function makeActivities(riskAssessment, requirementType = null, impactTags = []) {
+  return buildActivityIds(riskAssessment, requirementType, impactTags).map((id) => ({
     id,
     status: "未开始",
     evidence: [],
@@ -68,10 +88,10 @@ export function makeReadiness(status = "not-assessed") {
   }));
 }
 
-export function makeEmptyRegistry() {
+export function makeEmptyRegistry({ legacyStages = false } = {}) {
   return {
     schemaVersion: 3,
-    stageDefinitions: EXPECTED_STAGE_IDS.map((id) => ({
+    stageDefinitions: (legacyStages ? EXPECTED_STAGE_IDS : REQUIREMENT_LIFECYCLE_STAGE_IDS).map((id) => ({
       id,
       label: STAGE_LABELS[id],
       required: true,
@@ -90,6 +110,26 @@ export function makeEmptyRegistry() {
     },
     items: [],
   };
+}
+
+export function makeRecordedRequirement({id,description,requirementType,impactTags=[],source="本机工作台",requestId,time=new Date().toISOString()}) {
+  if(!/^CR-\d{3,}$/.test(id||"")||typeof description!=="string"||!description.trim()||
+    !REQUIREMENT_TYPES[requirementType]||!Array.isArray(impactTags)||impactTags.some(tag=>!IMPACT_TAGS[tag]))
+    throw new Error("INVALID_RECORDED_REQUIREMENT");
+  const summary=[...description.trim().split(/\r?\n/).find(line=>line.trim())].slice(0,40).join("");
+  const proposedAt=new Date(time).toLocaleDateString("sv-SE",{timeZone:"Asia/Shanghai"});
+  return {id,summary,originalRequest:description.trim(),source,proposedAt,
+    currentStageId:"recorded",executionState:"locked",aiPolicy:"unassessed",
+    executionScope:{objective:"仅登记需求；等待明确启动分析与单独实施授权",included:[],excluded:[],deferred:["项目实施"]},
+    riskAssessment:null,activities:[],readinessChecklist:makeReadiness(),waitingReason:null,pauseReason:null,
+    cancellationReason:null,artifacts:[],reviewConfirmation:null,pageIds:[],actionIds:[],stateIds:[],documents:[],
+    evidence:[],remainingRisks:[],openQuestions:[],requirementType,impactTags:[...new Set(impactTags)],
+    workbenchRegistration:{requestId,registeredAt:time,mode:"record-only"},
+    workbenchTemplate:buildRequirementTemplateSnapshot(requirementType,impactTags),
+    workbenchLifecycle:{state:"awaiting-analysis",activity:"idle",updatedAt:time,
+      history:[{state:"awaiting-analysis",activity:"idle",at:time,actor:"产品经理",event:"需求已登记；尚未启动分析"}]},
+    workbenchProgress:[{id:`registration:${requestId||id}`,at:time,actor:"产品经理",action:"登记需求",
+      result:"已记录原始需求，尚未启动 AI 或授权实施。",authorization:false,nextActor:"产品经理"}]};
 }
 
 export function deriveReadiness(item) {

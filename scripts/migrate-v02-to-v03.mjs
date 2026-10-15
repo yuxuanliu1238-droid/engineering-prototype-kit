@@ -278,7 +278,8 @@ for (const item of registry.items || []) {
 
 if (!questions.length) {
   try {
-    migrated = makeEmptyRegistry();
+    // Historical v0.2 migration retains its five-stage v0.3 semantics.
+    migrated = makeEmptyRegistry({legacyStages:true});
     migrated.items = (registry.items || []).map((item) =>
       migrateItem(item, riskMap[item.id], reviewMap[item.id]),
     );
