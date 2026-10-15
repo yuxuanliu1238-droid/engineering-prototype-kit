@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>工作台视觉对照</title>
+    <style>
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: 12px; background: #dfe4ea; font-family: sans-serif; color: #17223b; }
+      h1 { margin: 0 0 10px; font-size: 14px; }
+      .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      figure { margin: 0; min-width: 0; }
+      figcaption { margin-bottom: 6px; font-size: 11px; font-weight: 700; }
+      .frame { position: relative; width: 100%; aspect-ratio: 1440 / 1024; overflow: hidden; background: white; border: 1px solid #c7ced8; }
+      img { display: block; width: 100%; height: 100%; object-fit: fill; }
+      iframe { width: 1440px; height: 1024px; border: 0; transform-origin: 0 0; transform: scale(var(--scale)); }
+      .focus-title { margin: 14px 0 6px; font-size: 12px; font-weight: 700; }
+      .focus-grid { display: grid; gap: 8px; }
+      .focus-frame { position: relative; height: 190px; overflow: hidden; background: white; border: 1px solid #c7ced8; }
+      .focus-frame img { width: 100%; height: auto; transform: translateY(-25%); }
+      .focus-frame iframe { transform: scale(var(--focus-scale)) translateY(-250px); }
+    </style>
+  </head>
+  <body>
+    <h1>1440 × 1024 首页首屏对照</h1>
+    <div class="compare">
+      <figure><figcaption>视觉目标</figcaption><div class="frame"><img src="/design-reference.png" alt="视觉目标" /></div></figure>
+      <figure><figcaption>当前实现</figcaption><div class="frame" id="live"><iframe src="/" title="当前实现"></iframe></div></figure>
+    </div>
+    <div class="focus-title">重点区域：待你处理卡片</div>
+    <div class="focus-grid">
+      <div class="focus-frame"><img src="/design-reference.png" alt="视觉目标的待处理卡片" /></div>
+      <div class="focus-frame" id="focus-live"><iframe src="/" title="当前实现的待处理卡片"></iframe></div>
+    </div>
+    <script>
+      const frame = document.querySelector('#live');
+      const focus = document.querySelector('#focus-live');
+      const setScale = () => {
+        frame.style.setProperty('--scale', frame.clientWidth / 1440);
+        focus.style.setProperty('--focus-scale', focus.clientWidth / 1440);
+      };
+      setScale(); window.addEventListener('resize', setScale);
+    </script>
+  </body>
+</html>
