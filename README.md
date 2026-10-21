@@ -178,3 +178,5 @@ V0.3 已通过匿名 B 端新项目的快速验证回放、旧项目的轻量/�
 ## License
 
 本项目采用 [MIT License](./LICENSE)。
+
+业务模板已提供 [Demo 与需求对照评审](docs/review/comparison-review.md)：独立 `/compare` 入口支持当前说明、相关说明、完整文本目录和全局条款；默认不携带业务正文。
