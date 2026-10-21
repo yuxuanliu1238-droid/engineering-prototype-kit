@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { reviewConfig } from "./config.js";
 import { ReviewCenter, ConclusionModal } from "./review.jsx";
 import { BusinessShell } from "./shell.jsx";
+import { publishReviewLocation } from "./comparison-bridge.js";
 export function readLocation() {
   const path = window.location.pathname;
   if (path.startsWith("/review"))
@@ -27,6 +28,7 @@ export default function App() {
   const [statuses, setStatuses] = useState({});
   const [conclusion, setConclusion] = useState(null);
   const [demoKey, setDemoKey] = useState(0);
+  useEffect(() => { publishReviewLocation(location); }, [location]);
   useEffect(() => {
     if (window.location.pathname === "/")
       window.history.replaceState(

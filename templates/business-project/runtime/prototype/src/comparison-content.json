@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "title": "需求对照评审",
+  "demoEntry": "/app/overview",
+  "minimumDemoWidth": 1180,
+  "source": {
+    "title": "尚未接入业务文档",
+    "url": "",
+    "revision": "待采用",
+    "capturedAt": ""
+  },
+  "sections": [],
+  "pageMappings": [],
+  "actionMappings": [],
+  "globalSectionIds": []
+}
