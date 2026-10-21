@@ -9,6 +9,7 @@ import { ROOT } from "./project-lib.mjs";
 import { parseFocuses, validateValidationProfile } from "./rapid-validation-lib.mjs";
 import { makeEmptyRegistry, renderRequirements } from "./workflow-v3-lib.mjs";
 import { renderDevelopmentTaskList } from "./development-handoff-lib.mjs";
+import { selectActivationFiles, selectTemplateFiles } from "./template-manifest.mjs";
 
 export const KIT_VERSION = JSON.parse(
   await fs.readFile(new URL("../package.json", import.meta.url), "utf8"),
@@ -49,9 +50,14 @@ async function writeManaged(targetRoot, relativePath, content, files, ownership 
   });
 }
 
-async function copyMaterial(targetRoot, source, target, files, ownership) {
-  const content = await fs.readFile(path.join(ROOT, "templates/business-project", source));
-  await writeManaged(targetRoot, target, content, files, ownership);
+async function copyTemplateEntry(targetRoot, entry, files, values = {}) {
+  const source = path.join(ROOT, "templates/business-project", entry.source);
+  const content = Buffer.from(renderTemplate(await fs.readFile(source, "utf8"), values));
+  await writeManaged(targetRoot, entry.target, content, files, entry.ownership);
+}
+
+async function copyTemplateEntries(targetRoot, entries, files, values = {}) {
+  for (const entry of entries) await copyTemplateEntry(targetRoot, entry, files, values);
 }
 
 export function makeEmptyDevelopmentHandoff(projectName, timestamp) {
@@ -106,19 +112,11 @@ export async function addDevelopmentHandoffStructure(
 ) {
   const files = [];
   const values = { PROJECT_NAME: projectName };
-  const readme = renderTemplate(
-    await fs.readFile(
-      path.join(ROOT, "templates/business-project/optional/development-handoff/README.md"),
-      "utf8",
-    ),
-    values,
-  );
-  await writeManaged(
+  await copyTemplateEntries(
     targetRoot,
-    "docs/development/README.md",
-    Buffer.from(readme),
+    selectActivationFiles("development-handoff"),
     files,
-    "kit-managed",
+    values,
   );
 
   const handoff = makeEmptyDevelopmentHandoff(projectName, timestamp);
@@ -271,19 +269,19 @@ async function materializeBusinessProject(options) {
   }
   await materializeRuntime(runtimeRoot);
 
-  await copyMaterial(
+  const initialActivations = [];
+  if (
+    mode === "rapid-validation" &&
+    (validationProfile.inputSufficiency.level === "partial" ||
+      validationProfile.reviewCenter.enabled)
+  ) {
+    initialActivations.push("demo-blueprint");
+  }
+  await copyTemplateEntries(
     targetRoot,
-    "shared/docs/business-baseline.md",
-    "docs/business-baseline.md",
+    selectTemplateFiles({ mode, activations: initialActivations }),
     files,
-    "business",
-  );
-  await copyMaterial(
-    targetRoot,
-    "shared/docs/review/review-confirmation.md",
-    "docs/review/review-confirmation.md",
-    files,
-    "business",
+    values,
   );
   const baselinePath = path.join(targetRoot, "docs/business-baseline.md");
   let baseline = await fs.readFile(baselinePath, "utf8");
@@ -296,49 +294,7 @@ async function materializeBusinessProject(options) {
   const baselineEntry = files.find((entry) => entry.path === "docs/business-baseline.md");
   baselineEntry.sha256 = createHash("sha256").update(baseline).digest("hex");
 
-  if (
-    mode === "rapid-validation" &&
-    (validationProfile.inputSufficiency.level === "partial" ||
-      validationProfile.reviewCenter.enabled)
-  ) {
-    const blueprint = renderTemplate(
-      await fs.readFile(
-        path.join(ROOT, "templates/business-project/shared/docs/demo-blueprint.md"),
-        "utf8",
-      ),
-      values,
-    );
-    await writeManaged(
-      targetRoot,
-      "docs/demo-blueprint.md",
-      Buffer.from(blueprint),
-      files,
-      "business",
-    );
-  }
-
   if (mode === "continuous-iteration") {
-    await copyMaterial(
-      targetRoot,
-      "continuous/docs/decisions/decisions.md",
-      "docs/decisions/decisions.md",
-      files,
-      "business",
-    );
-    await copyMaterial(
-      targetRoot,
-      "continuous/docs/requirements/README.md",
-      "docs/requirements/README.md",
-      files,
-      "kit-managed",
-    );
-    await copyMaterial(
-      targetRoot,
-      "continuous/docs/page-guides/README.md",
-      "docs/page-guides/README.md",
-      files,
-      "kit-managed",
-    );
     const registry = `${JSON.stringify(makeEmptyRegistry(), null, 2)}\n`;
     await writeManaged(
       targetRoot,
@@ -390,6 +346,8 @@ async function materializeBusinessProject(options) {
       contracts: "prototype/src/contracts/contracts.json",
       pageGuides: "docs/page-guides/pages.md",
       demoBlueprint: "docs/demo-blueprint.md",
+      businessRequirements: "docs/business-requirements.md",
+      interfaceSpecification: "docs/interface-specification.md",
       reviewScenarios: "prototype/src/review-scenarios.json",
       developmentHandoff: "docs/development/development-handoff.json",
       developmentTaskList: "docs/development/development-task-list.md",
@@ -475,13 +433,12 @@ async function materializeBusinessProject(options) {
 
 export async function addContinuousStructure(targetRoot, { paths = {} } = {}) {
   const files = [];
-  const copies = [
-    ["continuous/docs/decisions/decisions.md", "docs/decisions/decisions.md", "business"],
-    ["continuous/docs/requirements/README.md", "docs/requirements/README.md", "kit-managed"],
-    ["continuous/docs/page-guides/README.md", "docs/page-guides/README.md", "kit-managed"],
-  ];
+  const copies = selectTemplateFiles({
+    mode: "continuous-iteration",
+    includeAlways: false,
+  });
   const allTargets = [
-    ...copies.map(([, target]) => target),
+    ...copies.map((entry) => entry.target),
     paths.requirements || "docs/requirements/registry.json",
     paths.requirementsSummary || "docs/requirements/requirements.md",
   ];
@@ -494,9 +451,7 @@ export async function addContinuousStructure(targetRoot, { paths = {} } = {}) {
       if (error.code !== "ENOENT") throw error;
     }
   }
-  for (const [source, target, ownership] of copies) {
-    await copyMaterial(targetRoot, source, target, files, ownership);
-  }
+  await copyTemplateEntries(targetRoot, copies, files);
   const registry = makeEmptyRegistry();
   await writeManaged(
     targetRoot,

@@ -8,6 +8,7 @@ import {
   ROOT,
   walk,
 } from "./project-lib.mjs";
+import { resolveActivationIds } from "./template-manifest.mjs";
 
 const errors = [];
 const manifestPath = "templates/business-project/template-manifest.json";
@@ -28,8 +29,8 @@ const REQUIRED_INTERNAL_PATHS = [
 ];
 
 if (manifest.schemaVersion !== 1) errors.push("模板清单 schemaVersion 必须为 1");
-if (manifest.templateVersion !== "0.4.0") {
-  errors.push("模板清单 templateVersion 必须为 0.4.0");
+if (manifest.templateVersion !== (await readJson("package.json")).version) {
+  errors.push("模板清单 templateVersion 必须与 package.json.version 一致");
 }
 if (JSON.stringify(manifest.modes) !== JSON.stringify(EXPECTED_MODES)) {
   errors.push("模板清单必须按顺序声明两种 V0.3 模式");
@@ -72,6 +73,18 @@ for (const [index, file] of (manifest.files || []).entries()) {
   } else if (file.activationId !== undefined) {
     errors.push(`${label} 非按需模板不得声明 activationId`);
   }
+}
+
+for (const [id, dependencies] of Object.entries(manifest.activationDependencies || {})) {
+  if (!Array.isArray(dependencies) || dependencies.some((dependency) => !activationIds.has(dependency))) {
+    errors.push(`按需材料依赖无效：${id}`);
+  }
+  try { resolveActivationIds([id]); } catch (error) { errors.push(error.message); }
+}
+for (const id of manifest.materialActivations || []) {
+  if (!activationIds.has(id)) errors.push(`材料入口指向未知 activationId：${id}`);
+  const entry = manifest.files.find((file) => file.activationId === id);
+  if (entry?.ownership !== "business" || !hasText(entry.configKey)) errors.push(`材料入口必须声明 business 归属及 configKey：${id}`);
 }
 
 const alwaysTargets = (manifest.files || [])

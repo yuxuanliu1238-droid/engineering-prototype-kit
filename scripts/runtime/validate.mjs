@@ -1,4 +1,5 @@
 import { verifyEvidenceFiles } from "../evidence-policy.mjs";
+import { validateConfiguredDocuments } from "../documents-validate.mjs";
 
 import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
@@ -15,6 +16,8 @@ export async function validateProject({ strict = false } = {}) {
   const config = await readJson("project.config.json");
   const status = await readJson("project-status.json");
   const manifest = await readJson(".prototype-kit/manifest.json");
+  const documents = await validateConfiguredDocuments({ root: ROOT, config });
+  errors.push(...documents.issues.map((issue) => `文档基线 ${issue.field}：${issue.reason}`));
   const modes = ["rapid-validation", "continuous-iteration"];
 
   if (config.schemaVersion !== 2) errors.push("project.config.json schemaVersion 必须为 2");

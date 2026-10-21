@@ -72,6 +72,14 @@
   ],
   "deterministicCapabilities": [
     {
+      "id": "business-material-preparation",
+      "script": "scripts/project-material.mjs"
+    },
+    {
+      "id": "document-baseline-validation",
+      "script": "scripts/documents-validate.mjs"
+    },
+    {
       "id": "requirements-generation",
       "script": "scripts/generate-requirements.mjs"
     },

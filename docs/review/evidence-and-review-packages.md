@@ -2,26 +2,45 @@
 
 ## 目的
 
-检查报告必须记录执行时间、命令、覆盖文件和源码指纹。覆盖文件变化或缺失后，旧报告分别显示 `stale` 或 `missing`，不能继续冒充当前结论。
+检查报告必须来自 `check:scope` 的真实进程退出码，并记录执行时间、命令、覆盖文件和源码指纹。治理规则、采用的文档基线或本地快照变化后，旧报告显示为过期，不能继续冒充当前结论。
 
-Markdown 评审包只汇总结构化台账中的状态、范围、就绪检查、唯一卡点和类型化证据。它可以重复生成，但不能反向成为需求、决策或页面契约的事实源。
+Markdown 评审包汇总结构化台账中的状态、范围、就绪检查、唯一卡点和类型化证据，并生成交付证据卡。它可以重复生成，但不能反向成为需求、决策或页面契约的事实源。
 
 ## 通用命令
 
-生成检查报告：
+运行当前范围的真实检查：
 
 ```bash
-node scripts/source-fingerprint.mjs --id example-check --command "pnpm check" --result passed --executed-at 2099-01-01T00:00:00.000Z --file prototype/src/App.jsx --output dist/check-reports/example-check.json
+pnpm check:scope -- --cr CR-001 --no-cache
 ```
+
+输出会明确列出已验证、未验证、阻断项和 `报告位置`。在完整影响关系建立前，`check:scope` 保守回退全量适用检查。执行器不会核验台账引用的每个证据文件，也不会判断产品业务结论或代替人工最终评审；这些未验证项会直接列在输出中。
 
 生成某条需求的 Markdown 评审包：
 
 ```bash
-node scripts/review-package.mjs --cr CR-001 --output dist/review-packages/CR-001.md
+node scripts/review-package.mjs --cr CR-001 --report dist/checks/<报告文件>.json --output dist/review-packages/CR-001.md
 ```
 
-两条命令都只读取项目内相对路径。评审包默认不生成 Word、PDF、截图或 ZIP；正式交付仍需单独授权并运行 `pnpm build:delivery`。
+业务项目将脚本路径替换为 `.prototype-kit/review-package.mjs`。所有输入都必须是项目内相对路径。评审包只接受 Schema 2 的实际执行报告，并区分报告缺失、过期、检查失败和覆盖不足；任一情况都不能支持当前就绪或完成结论。即使报告有效，产品确认仍需独立记录。
+
+## 交付证据卡
+
+证据卡沿用当前 CR 的 `acceptanceCriteria`、`artifacts` 和 `evidence`，不新增任务或状态台账：
+
+- 每条验收列出 `supports` 对应的登记产物，须对照实际差异；未登记时显示待补证据。
+- 关键自主决策、方案替换和偏离原因写在已有决策或评审记录中。用 `decision` 类型产物引用到具体条目，并以相同 `location` 的 `evidence.originalClaim` 摘录采用方案、原因及与原目标的差异；确认依据继续使用该证据的确认字段。`aiInterpretation` 单列为 AI 解读，不作验证结论。
+- 没有决策引用或没有对应记录时显示待核对，不推断没有偏离。记录存在或标记 confirmed，也不代替源文件、实际改动与授权核对。
+- 显示实际检查报告链接、执行时间及命令退出码。文件只有出现在当前有效报告的覆盖清单中，才标为纳入覆盖；这不证明业务含义或单条验收正确。外部引用、未覆盖文件及产品确认继续单独核验。
+
+CLI 生成的链接按输出文件目录定位；不要把生成视图回填为新的决策来源。快速验证继续使用场景证据与评审确认材料，不为生成此 CR 评审包而创建正式 CR。
+
+`scripts/source-fingerprint.mjs` 保留用于兼容旧流程和生成指纹快照。它接受调用方填写的命令、时间和 `passed`，因此只能说明所列文件后来是否变化，不能证明检查命令真实执行成功，也不能作为评审包的检查报告。
+
+评审包默认不生成 Word、PDF、截图或 ZIP；正式交付仍需单独授权并运行 `pnpm build:delivery`。
 
 ## 隔离样本
 
-`examples/review-workflow-isolated.json` 只包含匿名入口、动作和状态，不对应任何宿主项目业务。`pnpm review-evidence:test` 会验证 `fresh、stale、missing` 和连续生成一致性。
+`examples/review-workflow-isolated.json` 与 `examples/review-decision-isolated.md` 仅含合成资料；其中“真实接口换成 mock”是故意植入、未获确认的偏差，不对应宿主项目。`pnpm review-evidence:test` 验证报告有效性、验收与产物关联、决策来源/确认展示和连续生成一致性。
+
+日常 `pnpm check` 自动执行 `test-*.mjs`，包括隔离的错误实现验收。测试对真实检查器副本植入少量错误，运行既有验收测试，输出“规则—错误实现—捕获测试”。原始实现须通过，错误实现须因验收断言失败；语法或导入错误不算捕获。该试点不代表完整变异覆盖率，也不设通用上线分数。

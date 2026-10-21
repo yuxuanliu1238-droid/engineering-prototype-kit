@@ -8,6 +8,39 @@ import { safePath } from "./safe-path.mjs";
 import { parseOptions, issue } from "./cli-lib.mjs";
 const exec = promisify(execFile);
 const digest = (value) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
+
+function collectSnapshotPaths(value, output = new Set()) {
+  if (Array.isArray(value)) {
+    for (const entry of value) collectSnapshotPaths(entry, output);
+    return output;
+  }
+  if (!value || typeof value !== "object") return output;
+  for (const [key, entry] of Object.entries(value)) {
+    if (
+      (key === "snapshotPath" || key === "locator") &&
+      typeof entry === "string" &&
+      entry.trim() &&
+      !/^[a-z][a-z0-9+.-]*:/i.test(entry) &&
+      !entry.startsWith("//")
+    )
+      output.add(entry);
+    else collectSnapshotPaths(entry, output);
+  }
+  return output;
+}
+
+async function documentEvidenceFiles(root, config) {
+  const baselinePath = config.paths?.documentBaseline;
+  if (typeof baselinePath !== "string" || !baselinePath.trim()) return [];
+  try {
+    const baseline = JSON.parse(await fs.readFile(safePath(root, baselinePath), "utf8"));
+    return [baselinePath, ...collectSnapshotPaths(baseline)];
+  } catch (error) {
+    if (error.code === "ENOENT") return [baselinePath];
+    throw error;
+  }
+}
+
 export async function captureInputs(root) {
   const files = [];
   const excluded = new Set(["node_modules", ".git", "dist", "backups", "checks", ".transactions"]);
@@ -29,6 +62,9 @@ export async function captureInputs(root) {
   }
   const roots = ["prototype/src", "prototype/public"];
   const core = [
+    "AGENTS.md",
+    "README.md",
+    "START-HERE.md",
     "package.json",
     "pnpm-lock.yaml",
     "project.config.json",
@@ -43,9 +79,13 @@ export async function captureInputs(root) {
   } catch (e) {
     if (e.code !== "ENOENT") throw e;
   }
-  if (config.instanceKind === "kit") roots.push("scripts", "skills", "templates", "examples");
-  else roots.push(".prototype-kit");
+  if (config.instanceKind === "kit") {
+    roots.push("scripts", "skills", "templates", "examples");
+    core.push("docs/review/review-baseline.md", "docs/review/review-checklist.md");
+  } else roots.push(".prototype-kit");
   for (const directory of roots) await visit(directory);
+  const documentEvidence = await documentEvidenceFiles(root, config);
+  const governanceFiles = new Set(["AGENTS.md", ...documentEvidence]);
   for (const file of [
     ...core,
     ...Object.entries(config.paths || {})
@@ -56,11 +96,13 @@ export async function captureInputs(root) {
           /\.(json|md)$/.test(value),
       )
       .map(([, value]) => value),
+    ...documentEvidence,
   ]) {
     try {
       if ((await fs.stat(safePath(root, file))).isFile()) files.push(file);
     } catch (e) {
-      if (e.code !== "ENOENT") throw e;
+      if (e.code === "ENOENT" && governanceFiles.has(file)) files.push(file);
+      else if (e.code !== "ENOENT") throw e;
     }
   }
   const snapshot = await fingerprintSources(files, { root });
@@ -73,32 +115,65 @@ export async function captureInputs(root) {
   };
 }
 export async function evaluateCheckReport(report, { root }) {
-  if (
-    report?.schemaVersion !== 2 ||
-    report.origin !== "process-exit" ||
-    !report.runs?.length ||
-    !report.coveredFiles?.length
-  )
-    return { valid: false, reason: "报告未运行或覆盖为空", freshness: "unknown" };
+  if (report?.schemaVersion !== 2 || report.origin !== "process-exit")
+    return {
+      valid: false,
+      status: "unsupported",
+      reason: "报告不是 check:scope 生成的 Schema 2 实际执行报告",
+      freshness: "unknown",
+    };
+  if (!report.runs?.length)
+    return {
+      valid: false,
+      status: "failed",
+      reason: "报告未记录实际执行的检查命令",
+      freshness: "unknown",
+    };
+  if (!report.coveredFiles?.length)
+    return {
+      valid: false,
+      status: "incomplete",
+      reason: "检查报告覆盖不足：覆盖文件为空",
+      freshness: "unknown",
+    };
   const current = await captureInputs(root);
   const fresh =
     current.sourceFingerprint === report.sourceFingerprint &&
     current.nodeVersion === report.nodeVersion &&
     current.checkerVersion === report.checkerVersion;
+  if (!fresh)
+    return {
+      valid: false,
+      status: "stale",
+      freshness: "stale",
+      reason: "输入文件集合、内容或执行环境已变化",
+    };
+  if (
+    report.coverage !== "complete" ||
+    JSON.stringify(current.coveredFiles) !== JSON.stringify(report.coveredFiles)
+  )
+    return {
+      valid: false,
+      status: "incomplete",
+      freshness: "fresh",
+      reason: "检查报告覆盖不足或检查期间输入发生变化",
+    };
   const passed =
-    report.coverage === "complete" &&
-    JSON.stringify(current.coveredFiles) === JSON.stringify(report.coveredFiles) &&
     report.result === "passed" &&
     report.runs.every((r) => r.exitCode === 0 && !r.timedOut && typeof r.command === "string") &&
     Number.isFinite(Date.parse(report.executedAt));
+  if (!passed)
+    return {
+      valid: false,
+      status: "failed",
+      freshness: "fresh",
+      reason: "检查未通过或缺少有效执行时间",
+    };
   return {
-    valid: fresh && passed,
-    freshness: fresh ? "fresh" : "stale",
-    reason: !fresh
-      ? "输入文件集合、内容或执行环境已变化"
-      : passed
-        ? "实际检查通过且覆盖完整"
-        : "检查未通过",
+    valid: true,
+    status: "valid",
+    freshness: "fresh",
+    reason: "实际检查通过且覆盖完整",
   };
 }
 export async function runChecks({ root, target, commands, cache = false }) {
@@ -151,6 +226,7 @@ export async function runChecks({ root, target, commands, cache = false }) {
     runs,
     ...before,
     coverage: stable ? "complete" : "changed-during-run",
+    limitations: ["证据文件核验（执行器内部跳过）", "产品业务结论与人工最终评审", "在线文档最新修订核对"],
     cacheKey: key,
   };
   await fs.mkdir(path.dirname(reportPath), { recursive: true });
@@ -188,11 +264,15 @@ export async function scopeCommand(root, args = []) {
     已验证: report.runs
       .filter((r) => r.exitCode === 0)
       .map((r) => [r.command, ...r.args].join(" ")),
-    未验证: ["产品业务结论与人工最终评审"],
+    未验证: [
+      "证据文件核验（检查执行器内部跳过；需由证据策略和人工评审处理）",
+      "产品业务结论与人工最终评审",
+    ],
     阻断项: valid ? [] : [issue("CHECK_FAILED", "runs", "检查失败或输入变化", "修复后重新检查")],
     需谁确认: "产品经理",
     下一动作: valid ? "核对验收事实；不自动完成需求" : "处理阻断项",
     范围: "影响关系未完整声明，已回退全量检查",
+    报告位置: `dist/checks/${report.cacheKey}.json`,
     report,
   };
   console.log(JSON.stringify(output, null, 2));

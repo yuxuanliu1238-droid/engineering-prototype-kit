@@ -15,6 +15,9 @@ try {
   } else if (command === "task-context") {
     const { contextCommand } = await import("./task-context.mjs");
     await contextCommand(ROOT, process.argv.slice(3));
+  } else if (command === "documents-validate") {
+    const { documentsValidateCommand } = await import("./documents-validate.mjs");
+    await documentsValidateCommand(ROOT);
   } else if (command === "check") await validateProject();
   else if (command === "generate") await writeRequirements();
   else if (command === "generate-page-guides") await writePageGuides();

@@ -8,6 +8,7 @@ const scripts = [
   "validate-skills.mjs",
   "validate-templates.mjs",
   "validate-example.mjs",
+  "documents-validate.mjs",
   ...readdirSync(new URL(".", import.meta.url))
     .filter(
       (f) =>

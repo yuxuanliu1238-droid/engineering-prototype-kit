@@ -7,6 +7,9 @@
   "pageIds": ["sample.entry"],
   "actionIds": ["sample.entry.open"],
   "stateIds": ["sample-entry-default"],
+  "acceptanceCriteria": [
+    {"id": "entry-review", "text": "入口反馈可见，关键方案调整须显式记录并等待产品评审"}
+  ],
   "readinessChecklist": [
     {"id": "goal-clear", "status": "met", "evidence": ["sample:goal"]},
     {"id": "scope-clear", "status": "met", "evidence": ["sample:scope"]},
@@ -25,7 +28,22 @@
   },
   "artifacts": [
     {"type": "prototype", "location": "sample:prototype", "supports": ["entry-review"]},
-    {"type": "test-report", "location": "sample:check-report", "supports": ["entry-review"]}
+    {"type": "test-report", "location": "sample:check-report", "supports": ["entry-review"]},
+    {"type": "decision", "location": "examples/review-decision-isolated.md#sample-decision", "supports": ["entry-review"]}
+  ],
+  "evidence": [
+    {
+      "id": "EV-SAMPLE-DECISION",
+      "sourceType": "document",
+      "location": "examples/review-decision-isolated.md#sample-decision",
+      "originalClaim": "合成偏差：将真实接口替换为 mock；原因是离线演示；偏离了真实接口验收目标，尚未获产品确认。",
+      "aiInterpretation": "页面可演示不能证明真实接口已验收，应单列此方案偏离并等待产品确认。",
+      "scope": "entry-review",
+      "confirmationStatus": "candidate",
+      "occurredAt": null,
+      "confirmedBy": null,
+      "confirmedAt": null
+    }
   ],
   "pendingQuestions": ["是否确认本次匿名评审样本？"]
 }

@@ -2,13 +2,13 @@
 
 > 业务材料 + Codex + Engineering Prototype Kit = 可评审 Demo → 可持续迭代的业务原型
 
-[![Version](https://img.shields.io/badge/version-v0.3.0-2459c4)](./package.json)
+[![Version](https://img.shields.io/badge/version-v0.4.0-2459c4)](./package.json)
 [![Node](https://img.shields.io/badge/Node-%3E%3D20-43853d)](./package.json)
 [![License](https://img.shields.io/badge/license-MIT-172033)](./LICENSE)
 
 面向产品经理与 Codex 的 B 端工程化原型工具仓库。它把零散的会议记录、调研材料和 BRD，逐步转化为可运行、可评审、可追溯的前端原型；项目进入持续建设后，再按风险补齐规则、变更、验收和交付治理。
 
-**2 种工作模式 · 12 个材料模板 · 8 个专项 Skills · 10 类护栏测试**
+**双模式工作流 · 按需业务材料 · 专项 Skills · 分级验证与人工确认**
 
 ## 它解决什么问题
 
@@ -103,6 +103,14 @@ AI 先推荐模式，产品经理负责确认。快速模式只有在需求评�
 
 ## 开发者与维护者
 
+### 需求与接口文档
+
+按当前采用的业务格式，Kit 可按需准备需求说明书和八章接口说明书。在线文档继续作为正文事实源，Git 保存模板、采用修订及必要快照。本地正文标注草稿、格式参考或镜像；CR 可读台账和页面说明继续由各自来源生成。
+
+在 Kit 中执行 `pnpm project:material -- --project <业务目录> --activation business-requirements` 或 `interface-specification` 预览；明确准备材料后增加 `--apply`。首次同时准备空文档基线，已有正文禁止覆盖，两种模式都可使用，不自动创建 CR、正式契约或开启产研交接。
+
+业务项目中运行 `pnpm documents:validate` 校验已启用基线的结构、本地引用和快照摘要；未启用时跳过。它不访问在线文档，也不判断业务规则正确性。三方对照检查需求、接口、Demo 的差异及确认方；修订改变后，旧结论需重新核对。
+
 ```bash
 git clone https://github.com/yuxuanliu1238-droid/engineering-prototype-kit.git
 cd engineering-prototype-kit
@@ -129,6 +137,10 @@ pnpm build:kit-release
 - `pnpm project:switch-mode -- --project <目录> ...`：默认只预览，增加 `--apply` 才切换模式；
 - `pnpm project:migrate -- --project <目录> --mode continuous-iteration --confirmed-by <确认人>`：默认只生成 V0.2 → V0.3 影响报告；
 - `pnpm project:upgrade -- --project <目录>`：默认只生成 Kit 升级预览；
+- `pnpm project:material -- --project <目录> --activation <材料>`：按需准备需求或接口文档，默认预览；
+- `pnpm documents:validate`：离线文档基线校验；
+- `pnpm check:scope -- --no-cache`：实际执行适用检查，当前保守回退全量；不自动改变任务状态；
+- `pnpm check`：当前源码与隔离回归；`pnpm check:archive`：包含历史全文校验，旧台账差异不自动升级为当前业务阻断；
 - `pnpm build:kit-release`：生成完整 Kit 发布包；
 - 业务项目中的 `pnpm package:review`：只生成该业务项目的评审交付包。
 
@@ -167,13 +179,13 @@ engineering-prototype-kit/
 
 V0.3 已通过匿名 B 端新项目的快速验证回放、旧项目的轻量/标准/高风险需求回放，以及模式门禁、动态活动、迁移、恢复、升级保护、业务实例生成和前端生产构建检查。
 
-八个项目内 Skills 的唯一主职责、候选 Skill 结论和确定性脚本边界记录在 `skills/skill-boundaries.json`，并由 `pnpm skills:validate` 校验。
+项目内 Skills 的唯一主职责、候选 Skill 结论和确定性脚本边界记录在 `skills/skill-boundaries.json`，并由 `pnpm skills:validate` 校验。
 
 这些验证用于确认流程边界、材料精简和工具行为正确，不用于宣称真实项目已经节省了固定时间或成本。完整记录见 [V0.3 验证报告](./docs/review/v0.3-verification.md)。
 
 ## 当前版本
 
-当前发布候选版本为 **V0.3.0**。V0.4 尚未立项；后续版本只有在范围确认和明确授权后才会开始。
+当前源码版本为 **V0.4.0**，以 `package.json.version` 为准。源码检查、产品评审、Git 提交和正式发布分别记录；本地更新候选不代表已经发布。后续版本须确认范围并明确授权。
 
 ## License
 

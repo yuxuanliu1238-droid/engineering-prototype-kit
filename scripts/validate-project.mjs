@@ -47,6 +47,10 @@ for (const relativePath of requiredPaths.filter((p) => archive || !p.startsWith(
 
 const config = await readJson("project.config.json");
 const packageJson = await readJson("package.json");
+const readme = await fs.readFile(path.join(ROOT, "README.md"), "utf8");
+if (readme.match(/badge\/version-v([0-9.]+)-/)?.[1] !== packageJson.version) {
+  errors.push("README 版本徽章与 package.json.version 不一致");
+}
 if (config.schemaVersion !== 2) errors.push("project.config.json schemaVersion 必须为 2");
 if (config.instanceKind !== "kit") errors.push("Kit 根项目 instanceKind 必须为 kit");
 if (!hasText(config.projectName)) errors.push("projectName 必须存在");

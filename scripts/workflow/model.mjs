@@ -64,6 +64,8 @@ export const EXPECTED_WAITING_REASON_CODES = [
 
 export const EXPECTED_ARTIFACT_TYPES = [
   "business-baseline",
+  "requirement-document",
+  "interface-document",
   "decision",
   "plan",
   "contract",

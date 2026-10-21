@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "documents": [
+    {
+      "id": "EXAMPLE-REQ",
+      "type": "requirement",
+      "locator": "examples/document-review/requirements.md",
+      "revisionLabel": "合成格式示例 V1",
+      "readAt": "2026-10-16T10:00:00+08:00",
+      "sections": ["页面详细需求：预约详情"],
+      "confirmationEvidence": ["examples/document-review/comparison.md"]
+    },
+    {
+      "id": "EXAMPLE-INTERFACE",
+      "type": "interface",
+      "locator": "examples/document-review/interface.md",
+      "revisionLabel": "合成格式示例 V1",
+      "readAt": "2026-10-16T10:00:00+08:00",
+      "sections": ["4. 接口明细", "7. 联调验收"],
+      "confirmationEvidence": ["examples/document-review/comparison.md"]
+    }
+  ]
+}
