@@ -5,6 +5,7 @@ import path from "node:path";
 import { createTaskContext, verifyTaskContext } from "./task-context.mjs";
 const root = await fs.mkdtemp(path.join(os.tmpdir(), "kit-context-"));
 try {
+  await fs.writeFile(path.join(root, "AGENTS.md"), "synthetic governance\n");
   await fs.mkdir(path.join(root, "src"));
   await fs.writeFile(path.join(root, "src/a.js"), "export const value=1;");
   const config = { paths: { requirements: "registry.json" } };

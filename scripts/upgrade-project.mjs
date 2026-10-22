@@ -7,6 +7,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { KIT_VERSION } from "./project-generator-lib.mjs";
 import { ROOT } from "./project-lib.mjs";
+import { selectTemplateFiles, templateFileForTarget } from "./template-manifest.mjs";
 
 function parseArgs(argv) {
   const result = parseOptions(argv, { values: ["project", "restore"], flags: ["apply"] });
@@ -50,18 +51,13 @@ async function desiredContent(relativePath, config, status) {
   const direct = {
     ...Object.fromEntries(runtimeEntries({ handoff: true }).map((e) => [e.target, e.source])),
     "pnpm-lock.yaml": "pnpm-lock.yaml",
-    "docs/requirements/README.md":
-      "templates/business-project/continuous/docs/requirements/README.md",
-    "docs/page-guides/README.md":
-      "templates/business-project/continuous/docs/page-guides/README.md",
   };
   if (direct[relativePath]) return fs.readFile(path.join(ROOT, direct[relativePath]));
-  if (relativePath === "docs/development/README.md") {
-    const source = await fs.readFile(
-      path.join(ROOT, "templates/business-project/optional/development-handoff/README.md"),
-      "utf8",
-    );
-    return Buffer.from(render(source, { PROJECT_NAME: config.projectName }));
+  const material = templateFileForTarget(relativePath);
+  if (material?.ownership === "kit-managed") {
+    return Buffer.from(render(await fs.readFile(
+      path.join(ROOT, "templates/business-project", material.source), "utf8",
+    ), values));
   }
   const runtimeTargets = new Set([
     "AGENTS.md",
@@ -132,7 +128,6 @@ function currentManagedPaths(status) {
       ...runtimeEntries({ handoff: true })
         .filter((e) => e.capability)
         .map((e) => e.target),
-      "docs/development/README.md",
     );
   }
   if (status.legacyCompatibility === true) return runtimePaths;
@@ -145,9 +140,10 @@ function currentManagedPaths(status) {
     "pnpm-workspace.yaml",
     "pnpm-lock.yaml",
   ];
-  if (status.currentMode === "continuous-iteration") {
-    paths.push("docs/requirements/README.md", "docs/page-guides/README.md");
-  }
+  paths.push(...selectTemplateFiles({
+    mode: status.currentMode,
+    activations: status.capabilities?.developmentHandoff?.enabled ? ["development-handoff"] : [],
+  }).filter((entry) => entry.ownership === "kit-managed").map((entry) => entry.target));
   return paths;
 }
 

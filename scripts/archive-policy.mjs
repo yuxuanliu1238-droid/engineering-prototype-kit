@@ -1,6 +1,24 @@
 import path from "node:path";
 import { promises as fs } from "node:fs";
 import { safePath } from "./safe-path.mjs";
+import { validateConfiguredDocuments } from "./documents-validate.mjs";
+
+export async function resolveArchiveConfig(root, kind, config = {}) {
+  if (kind !== "business" || !config.paths?.documentBaseline) return config;
+  const result = await validateConfiguredDocuments({ root, config });
+  if (!result.valid) throw new Error(`文档基线无效，不能打包：${result.issues.map((issue) => issue.reason).join("；")}`);
+  const files = new Set();
+  for (const entry of result.baseline.documents) {
+    for (const reference of [entry.locator, entry.snapshotPath, ...entry.confirmationEvidence.filter((item) => /^(docs|inbox|examples)\//.test(item))]) {
+      if (!reference || /^[a-z][a-z0-9+.-]*:/i.test(reference)) continue;
+      const file = reference.split("#")[0];
+      safePath(root, file);
+      if (forbiddenArchivePath(file)) throw new Error(`文档交付引用不在安全文件范围：${file}`);
+      files.add(file);
+    }
+  }
+  return { ...config, documentEvidenceFiles: [...files] };
+}
 const fixed = new Set([
   "AGENTS.md",
   "README.md",
@@ -41,6 +59,7 @@ export function allowedArchivePath(file, kind, config = {}) {
     );
   }
   const documents = new Set([
+    ...(config.documentEvidenceFiles || []),
     "docs/business-baseline.md",
     "docs/demo-blueprint.md",
     "docs/review/review-confirmation.md",
@@ -81,6 +100,13 @@ export async function collectArchiveFiles(root, kind, config = {}) {
     }
   }
   await visit();
+  if (kind === "business") {
+    for (const file of config.documentEvidenceFiles || []) {
+      if (!allowedArchivePath(file, kind, config)) throw new Error(`文档引用不在交付清单：${file}`);
+      if (!(await fs.stat(safePath(root, file))).isFile()) throw new Error(`文档交付引用不是文件：${file}`);
+      if (!output.includes(file)) output.push(file);
+    }
+  }
   return output.sort();
 }
 export function validateArchiveEntries(entries, prefix, kind, config = {}) {

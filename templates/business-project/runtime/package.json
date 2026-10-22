@@ -9,6 +9,7 @@
   },
   "scripts": {
     "check": "node .prototype-kit/business-cli.mjs check",
+    "documents:validate": "node .prototype-kit/business-cli.mjs documents-validate",
     "workflow:generate": "node .prototype-kit/business-cli.mjs generate",
     "page-guides:generate": "node .prototype-kit/business-cli.mjs generate-page-guides",
     "handoff:generate": "node .prototype-kit/business-cli.mjs generate-development-handoff",

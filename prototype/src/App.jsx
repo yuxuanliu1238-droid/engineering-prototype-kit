@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { version } from "../../package.json";
 
 const stages = [
   ["01", "业务探索", "分离事实、假设、角色、流程和待确认问题"],
@@ -73,19 +74,27 @@ export default function App() {
 
   return (
     <main>
-      <section className="hero">
-        <nav>
-          <span className="brand">Prototype OS</span>
-          <span className="version">Starter Kit · V0.2</span>
+      <a className="skip-link" href="#workspace">跳到工作台</a>
+      <header className="site-header">
+        <nav aria-label="工作台导航">
+          <a className="brand" href="#workspace">Prototype OS<span>工程化原型</span></a>
+          <div className="nav-links">
+            <a href="#workflow">工作流程</a>
+            <a href="#control">任务核对</a>
+            <a href="#guardrails">协作原则</a>
+          </div>
+          <span className="version">Kit · {version}</span>
         </nav>
+      </header>
+      <section className="hero" id="workspace">
 
         <div className="hero-grid">
           <div>
             <p className="eyebrow">给产品经理的工程化原型工作台</p>
             <h1>
-              不从空白目录开始，
+              从正确的问题开始，
               <br />
-              从正确的问题开始。
+              让原型逐步成形。
             </h1>
             <p className="summary">
               把业务资料逐步转化为可运行、可验证、可审查、可追溯的前端原型。
@@ -102,7 +111,7 @@ export default function App() {
           <aside className={`readiness ${ready ? "is-ready" : ""}`}>
             <div className="readiness-head">
               <div>
-                <span className="micro">START CHECK</span>
+                <span className="micro">准备工作</span>
                 <h2>开始前核对</h2>
               </div>
               <span className="counter">{completedText}</span>
@@ -110,19 +119,18 @@ export default function App() {
             <div className="check-list">
               {readinessItems.map((item, index) => (
                 <button
+                  aria-pressed={checked.includes(index)}
                   className={checked.includes(index) ? "checked" : ""}
                   key={item}
                   onClick={() => toggle(index)}
                   type="button"
                 >
-                  <span className="check-mark">
-                    {checked.includes(index) ? "✓" : ""}
-                  </span>
+                  <span className="check-mark" aria-hidden="true" />
                   {item}
                 </button>
               ))}
             </div>
-            <p className="readiness-result">
+            <p className="readiness-result" aria-live="polite">
               {ready
                 ? "准备完成。现在可以让 Codex 开始业务探索。"
                 : "逐项确认后再启动，避免资料污染和范围误解。"}
@@ -131,10 +139,10 @@ export default function App() {
         </div>
       </section>
 
-      <section className="workflow">
+      <section className="workflow" id="workflow">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">GUIDED WORKFLOW</p>
+            <p className="eyebrow">工作流程</p>
             <h2>八个阶段，一个事实链路</h2>
           </div>
           <p>
@@ -152,11 +160,11 @@ export default function App() {
         </div>
       </section>
 
-      <section className="control-plane">
+      <section className="control-plane" id="control">
         <div className="section-heading">
           <div>
-            <p className="eyebrow">TASK CONTROL</p>
-            <h2>先判断能不能做，再让 AI 开始做。</h2>
+            <p className="eyebrow">任务核对</p>
+            <h2>确认就绪，再开始。</h2>
           </div>
           <p>
             阶段记录交付位置，执行状态记录当前是否可执行，两者不再混用。
@@ -166,10 +174,11 @@ export default function App() {
         <div className="control-grid">
           <div className="control-editor">
             <div className="control-block">
-              <span className="micro">AI POLICY</span>
+              <span className="micro">AI 执行权限</span>
               <div className="policy-options">
                 {policies.map(([value, label]) => (
                   <button
+                    aria-pressed={policy === value}
                     className={policy === value ? "active" : ""}
                     key={value}
                     onClick={() => setPolicy(value)}
@@ -181,16 +190,17 @@ export default function App() {
               </div>
             </div>
             <div className="control-block">
-              <span className="micro">READINESS CHECK</span>
+              <span className="micro">就绪条件</span>
               <div className="task-checks">
                 {taskChecks.map((item, index) => (
                   <button
+                    aria-pressed={taskChecked.includes(index)}
                     className={taskChecked.includes(index) ? "checked" : ""}
                     key={item}
                     onClick={() => toggleTaskCheck(index)}
                     type="button"
                   >
-                    <span>{taskChecked.includes(index) ? "✓" : ""}</span>
+                    <span aria-hidden="true" />
                     {item}
                   </button>
                 ))}
@@ -199,8 +209,9 @@ export default function App() {
           </div>
 
           <aside className="verdict-card" aria-live="polite">
-            <span className="micro">DETERMINISTIC VERDICT</span>
-            <strong>{taskVerdict.code}</strong>
+            <span className="micro">当前判断</span>
+            <strong>{taskVerdict.state === "ready" ? "准备就绪" : "待补齐信息"}</strong>
+            <span className="verdict-code">{taskVerdict.code}</span>
             <dl>
               <div>
                 <dt>当前阶段</dt>
@@ -220,10 +231,10 @@ export default function App() {
         </div>
       </section>
 
-      <section className="guardrails">
+      <section className="guardrails" id="guardrails">
         <div>
-          <p className="eyebrow">BUILT-IN GUARDRAILS</p>
-          <h2>新人容易遗漏的约束，放进流程里。</h2>
+          <p className="eyebrow">协作原则</p>
+          <h2>把重要的约束，留在流程里。</h2>
         </div>
         <div className="guardrail-list">
           <div>

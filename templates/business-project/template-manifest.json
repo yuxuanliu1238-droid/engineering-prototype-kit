@@ -5,6 +5,18 @@
     "rapid-validation",
     "continuous-iteration"
   ],
+  "materialActivations": [
+    "business-requirements",
+    "interface-specification"
+  ],
+  "activationDependencies": {
+    "business-requirements": [
+      "document-baseline"
+    ],
+    "interface-specification": [
+      "document-baseline"
+    ]
+  },
   "files": [
     {
       "source": "shared/docs/business-baseline.md",
@@ -26,6 +38,30 @@
       "ownership": "business"
     },
     {
+      "source": "optional/documents/document-baseline.json",
+      "target": "docs/review/document-baseline.json",
+      "inclusion": "on-demand",
+      "activationId": "document-baseline",
+      "configKey": "documentBaseline",
+      "ownership": "business"
+    },
+    {
+      "source": "optional/documents/business-requirements.md",
+      "target": "docs/business-requirements.md",
+      "inclusion": "on-demand",
+      "activationId": "business-requirements",
+      "configKey": "businessRequirements",
+      "ownership": "business"
+    },
+    {
+      "source": "optional/documents/interface-specification.md",
+      "target": "docs/interface-specification.md",
+      "inclusion": "on-demand",
+      "activationId": "interface-specification",
+      "configKey": "interfaceSpecification",
+      "ownership": "business"
+    },
+    {
       "source": "continuous/docs/decisions/decisions.md",
       "target": "docs/decisions/decisions.md",
       "inclusion": "continuous-iteration",
@@ -41,7 +77,7 @@
       "source": "continuous/docs/page-guides/README.md",
       "target": "docs/page-guides/README.md",
       "inclusion": "continuous-iteration",
-      "ownership": "generated-view"
+      "ownership": "kit-managed"
     },
     {
       "source": "optional/domain/docs/business-model.md",
@@ -128,6 +164,10 @@
     "docs/review/v0.2-verification.md"
   ],
   "runtimeFiles": [
+    {
+      "source": "scripts/documents-validate.mjs",
+      "target": ".prototype-kit/documents-validate.mjs"
+    },
     {
       "source": "scripts/project-lib.mjs",
       "target": ".prototype-kit/project-lib.mjs"

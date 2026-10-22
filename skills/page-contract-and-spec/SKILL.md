@@ -1,6 +1,6 @@
 ---
 name: page-contract-and-spec
-description: Create source-traceable page contracts and readable specifications from confirmed decisions, state machines, and runnable prototype behavior, including merge, deletion, and Page, Action, or State ID retirement control. Use when behavior must become testable acceptance facts or documentation must synchronize without inventing APIs, restoring removed fields, reusing retired IDs, or treating screenshots as requirements.
+description: Write business requirement and interface review documents, or create source-traceable page contracts and generated page guides. Use for PRDs, interface specifications, testable page behavior, and document synchronization without inventing APIs or treating screenshots as requirements.
 ---
 
 # 页面契约与说明
@@ -8,7 +8,7 @@ description: Create source-traceable page contracts and readable specifications 
 ## 按需事实源顺序
 
 1. `AGENTS.md` 和 `project.config.json`。
-2. 当前有效正向、负向决策。
+2. 当前明确采用的需求、接口文档修订及有效正向、负向决策；互相冲突时报告待统一。
 3. 状态机。
 4. 目标页面现有契约。
 5. 当前原型。
@@ -16,6 +16,14 @@ description: Create source-traceable page contracts and readable specifications 
 7. 关联 CR。
 
 字段说明、页面合并/删除和 ID 退役清单见 `references/contract-spec-format.md`。
+
+## 业务需求与接口正文
+
+用户要求编写或整理业务文档时，读取 `references/business-documents.md`。正文按用户已采用格式组织；两份按需模板分别服务业务需求说明书、接口说明书。
+
+在线文档为正文事实源时，Git 只保留模板、修订引用及必要快照；本地文档须标明草稿、格式参考或镜像，不独立维护第二份正式正文。确认记录与三方差异放关联评审记录。
+
+两种模式都可在用户授权范围内准备文档，不因写文档自动创建 CR、领域模型、正式页面契约或启用产研交接。业务正文与 CR 台账生成视图、契约生成页面说明用途不同。
 
 ## 页面契约
 
@@ -57,7 +65,7 @@ V0.3 业务实例的条件性事实源固定为 `prototype/src/contracts/contrac
 
 在 Kit 中修改后运行 `pnpm contracts:validate`；业务实例在契约存在时运行 `pnpm page-guides:generate` 和 `pnpm check`。未触发页面契约时，不得因契约目录不存在报错。如果原型行为变化，同时运行与风险等级匹配的页面和链接检查。
 
-关联 CR 时，分别登记 `contract、prototype、page-guide` 产物，用 `supports` 关联验收 ID，并用 `sourceRefs` 指向采用的决策、状态机、原型或治理依据。
+关联 CR 时，按实际产物登记 `contract、prototype、page-guide、requirement-document、interface-document`，用 `supports` 关联验收 ID，并用 `sourceRefs` 指向采用的决策、状态机、原型或治理依据。
 
 契约校验、链接检查和证据索引属于确定性脚本职责。本 Skill 负责选择与解释验证范围，不用自然语言代替脚本结果。截图、截图索引和正式格式文档只在用户明确要求时生成；后续需要自动化时新增脚本，不新增同名治理 Skill。
 

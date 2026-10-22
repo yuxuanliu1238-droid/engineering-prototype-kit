@@ -1,4 +1,4 @@
-import { collectArchiveFiles, validateArchiveEntries } from "../archive-policy.mjs";
+import { collectArchiveFiles, validateArchiveEntries, resolveArchiveConfig } from "../archive-policy.mjs";
 import { safePath } from "../safe-path.mjs";
 import { createHash } from "node:crypto";
 import { promises as fs } from "node:fs";
@@ -11,7 +11,7 @@ export async function packageReview() {
   await validateProject({ strict: true });
   if (process.exitCode) throw new Error("项目检查失败，未生成评审包");
 
-  const config = await readJson("project.config.json");
+  const config = await resolveArchiveConfig(ROOT, "business", await readJson("project.config.json"));
   const { runChecks, evaluateCheckReport } = await import("../check-runner.mjs");
   const report = await runChecks({
     root: ROOT,

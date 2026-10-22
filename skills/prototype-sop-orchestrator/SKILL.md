@@ -32,6 +32,7 @@ AI 只推荐，产品经理确认。已有内容时先审计，不覆盖、不�
 - 业务资料、会议纪要、访谈准备：使用 `$business-discovery`。
 - 评审反馈、正式决策、状态机：使用 `$decision-and-domain`。
 - 页面契约和页面说明：使用 `$page-contract-and-spec`。
+- 需求说明书、PRD 或接口说明书编写：使用 `$page-contract-and-spec` 的业务文档分支；不因此启用产研交接或强制创建正式契约。
 - 一致性和需求质量检查：使用 `$requirement-quality-review`。
 - CR 登记、影响分析、验证和交付：使用 `$change-and-delivery-governance`。
 - “复盘最近修改”、复盘指定 CR 或时间范围：使用 `$prototype-change-retrospective`；只读取用户指定范围和直接关联差异。
@@ -48,6 +49,7 @@ AI 只推荐，产品经理确认。已有内容时先审计，不覆盖、不�
 - 修改复盘使用 `$prototype-change-retrospective` 形成只读分类结论，再由 `$change-and-delivery-governance` 控制是否登记或启动修正。
 - 研发任务清单和单任务提示词使用 `$development-handoff`；收到明确任务实施授权后仍返回 `$change-and-delivery-governance` 核对七项就绪检查。
 - 结构化边界以 `skills/skill-boundaries.json` 为准，校验脚本负责防止职责漂移和重复入口。
+- 业务文档结构与字段校验使用 `documents:validate`，模板准备使用 `project:material`；在线读取使用当前可用的文档工具，缺少访问能力时说明未核对，不猜测修订。
 
 ## 执行规则
 
